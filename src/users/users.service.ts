@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { IUserService, SearchUserParams } from './types/users';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { User } from 'src/generated/prisma/client';
+import { PrismaPromise } from 'src/generated/prisma/internal/prismaNamespace';
 
 const initialUser = {
+  id: 0,
   email: "string",
   passwordHash: "string",
   name: "string",
@@ -11,6 +15,8 @@ const initialUser = {
 
 @Injectable()
 export class UsersService implements IUserService {
+  constructor(private prisma: PrismaService) {}
+
   create(data) {
     return Promise.resolve(initialUser);
   }
@@ -24,6 +30,20 @@ export class UsersService implements IUserService {
   }
 
   findAll(params: SearchUserParams) {
-    return Promise.resolve([initialUser]);
+    return this.prisma.user.findMany({
+      skip: params.offset,
+      take: params.limit,
+      where: {
+        email: {
+          contains: params.email,
+        },
+        name: {
+          contains: params.name,
+        },
+        contactPhone: {
+          contains: params.contactPhone,
+        },
+      }
+    });
   }
 }

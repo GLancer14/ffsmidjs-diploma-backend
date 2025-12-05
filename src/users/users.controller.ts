@@ -9,13 +9,13 @@ export class UsersController {
 
   @Post("admin/users/")
   @Roles("admin")
-  createUser(@Body() user: CreateUserDto) {
+  async createUser(@Body() user: CreateUserDto) {
     return this.usersService.create(user);
   }
 
   @Get("admin/users/")
   @Roles("admin")
-  getUsersForAdmin(
+  async getUsersForAdmin(
     @Query("limit") limit: number,
     @Query("offset") offset: number,
     @Query("name") name: string,
@@ -33,7 +33,7 @@ export class UsersController {
 
   @Get("manager/users/")
   @Roles("manager")
-  getUsersForManager(
+  async getUsersForManager(
     @Query("limit") limit: number,
     @Query("offset") offset: number,
     @Query("name") name: string,

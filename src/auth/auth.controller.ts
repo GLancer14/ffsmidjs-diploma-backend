@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common'
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from './auth.service';
 import type { RegisterUserDto } from 'src/users/types/dto/users';
-import { Role } from 'src/roles/roles.decorator';
+import { Roles } from 'src/roles/roles.decorator';
 
 @Controller("api")
 export class AuthController {
@@ -21,7 +21,7 @@ export class AuthController {
   }
 
   @Post("auth/register")
-  @Role("client")
+  @Roles("client")
   register(@Body() userData: RegisterUserDto) {
     return this.authService.register(userData);
   }

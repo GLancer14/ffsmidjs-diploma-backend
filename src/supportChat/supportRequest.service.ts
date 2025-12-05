@@ -12,7 +12,7 @@ const initialMessage: Message = {
 }
 
 const initalSupportRequest: SupportRequest = {
-  _id: 0,
+  id: 0,
   user: 0,
   createdAt: new Date,
   messages: [initialMessage],

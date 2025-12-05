@@ -11,6 +11,7 @@ const initialMessage: Message = {
 }
 
 const initalSupportRequest: SupportRequest = {
+  id: 0,
   user: 0,
   createdAt: new Date,
   messages: [initialMessage],

@@ -9,6 +9,7 @@ import { BookRentalModule } from './bookRental/bookRental.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './roles/roles.guard';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RolesGuard } from './roles/roles.guard';
     LibrariesModule,
     BookRentalModule,
     AuthModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [

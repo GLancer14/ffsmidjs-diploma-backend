@@ -6,6 +6,7 @@ import { type CreateSupportRequestDto } from './types/dto/supportChat';
 import { type Request } from 'express';
 import { type ID } from 'src/types/commonTypes';
 import { SupportRequestEmployeeService } from './supportRequestEmployee.service';
+import { RequestUser } from 'src/users/types/dto/users';
 
 @Controller("api")
 export class SupportChatController {
@@ -29,8 +30,9 @@ export class SupportChatController {
     @Query("offset") offset: number,
     @Query("isActive") isActive: boolean,
   ) {
+    const user = req.user as RequestUser;
     return this.supportRequestService.findSupportRequests({
-      user: req?.user?.id || null,
+      user: user.id || null,
       limit,
       offset,
       isActive,
@@ -65,8 +67,9 @@ export class SupportChatController {
     @Body("text") text: string,
     @Param("id") id: ID,
   ) {
+    const user = req.user as RequestUser;
     return this.supportRequestService.sendMessage({
-      author: req?.user?.id,
+      author: user.id,
       supportRequest: id,
       text,
     });
@@ -79,13 +82,14 @@ export class SupportChatController {
     @Body("createBefore") createdBefore: Date,
     @Param("id") id: ID,
   ) {
+    const user = req.user as RequestUser;
     const messageObject = {
-      user: req?.user?.id,
+      user: user.id,
       supportRequest: id,
       createdBefore,
     };
 
-    if (req?.user?.role === "client") {
+    if (user.role === "client") {
       return this.supportRequestClientService.markMessageAsRead(messageObject);
     } else {
       return this.supportRequestEmployeeService.markMessageAsRead(messageObject);

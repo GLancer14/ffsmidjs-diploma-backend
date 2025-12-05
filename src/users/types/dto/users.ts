@@ -6,6 +6,7 @@
 //   role: string;
 // }
 
+import { ID } from "src/types/commonTypes";
 import { Role } from "../users";
 
 export interface RegisterUserDto {
@@ -18,6 +19,14 @@ export interface RegisterUserDto {
 export interface LoginUserDto {
   email: string;
   password: string;
+}
+
+export interface RequestUser {
+  id: ID;
+  email: string;
+  name: string;
+  contactPhone: string;
+  role: string;
 }
 
 export interface CreateUserDto {

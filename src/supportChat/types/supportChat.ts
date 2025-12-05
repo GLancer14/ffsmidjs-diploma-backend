@@ -9,7 +9,7 @@ export interface Message {
 }
 
 export interface SupportRequest {
-  _id: number;
+  id: number;
   user: number;
   createdAt: Date;
   messages: Message[];

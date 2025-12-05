@@ -1,0 +1,68 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
+  passwordHash String
+  name         String
+  contactPhone String?
+  role         String  @default("client")
+}
+
+model Library {
+  id          Int      @id @default(autoincrement())
+  name        String
+  address     String
+  description String?
+  createdAt   DateTime
+  updatedAt   DateTime
+}
+
+model Book {
+  id              Int     @id @default(autoincrement())
+  libraryId       Int
+  title           String
+  author          String
+  year            Int?
+  description     String?
+  coverImage      String?
+  isAvailable     Boolean @default(true)
+  totalCopies     Int     @default(1)
+  availableCopies Int     @default(1)
+}
+
+model BookRental {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  libraryId Int
+  bookId    Int
+  dateStart DateTime
+  dateEnd   DateTime
+  status    String   @default("reserved")
+}
+
+model SupportRequest {
+  id        Int       @id @unique
+  user      Int
+  createdAt DateTime
+  isActive  Boolean
+  messages  Message[]
+}
+
+model Message {
+  id               Int            @id @unique
+  author           String
+  sentAt           DateTime
+  text             String
+  readAt           DateTime?
+  supportRequest   SupportRequest @relation(fields: [supportRequestId], references: [id])
+  supportRequestId Int
+}
