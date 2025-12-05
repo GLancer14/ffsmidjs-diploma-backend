@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { BookRentalService } from './bookRental.service';
 import { type BookRentalDto } from './types/dto/bookRental';
-import { BookRental } from './types/bookRental';
+import { BookRental } from 'src/generated/prisma/client';
+// import { BookRental } from './types/bookRental';
 
 @Controller("api")
 export class BookRentalController {

@@ -1,9 +1,10 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, ParseFilePipe, ParseFilePipeBuilder, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { LibrariesService } from './libraries.service';
-import { Book } from './types/libraries';
+// import { Book } from './types/libraries';
 import { type ID } from 'src/types/commonTypes';
 import { type BookDto, type LibraryDto } from './types/dto/libraries';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Book } from 'src/generated/prisma/client';
 
 @Controller("api")
 export class LibrariesController {
@@ -52,7 +53,7 @@ export class LibrariesController {
   ) {
     return this.librariesService.createBook({
       ...bookData,
-      coverImage: file
+      coverImage: file.filename
     });
   }
 

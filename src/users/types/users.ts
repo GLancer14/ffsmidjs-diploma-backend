@@ -19,10 +19,10 @@ export interface SearchUserParams {
 }
 
 export interface IUserService {
-  create(data: Partial<User>): Promise<User>;
-  findById(id: ID): Promise<User>;
-  findByEmail(email: string): Promise<User>;
-  findAll(params: SearchUserParams): PrismaPromise<User[]>;
+  create(data: Partial<User>): Promise<User> | undefined;
+  findById(id: ID): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;
+  findAll(params: SearchUserParams): Promise<User[]>;
 }
 
 export type Role = "client" | "admin" | "manager";

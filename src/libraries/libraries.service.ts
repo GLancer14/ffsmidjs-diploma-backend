@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Book, ILibrariesService, SearchBookParams } from './types/libraries';
+import { ILibrariesService, SearchBookParams } from './types/libraries';
 import { ID } from 'src/types/commonTypes';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Book } from 'src/generated/prisma/client';
 
 const initialBook = {
   libraryId: 0,
@@ -24,27 +26,70 @@ const initialLibrary = {
 
 @Injectable()
 export class LibrariesService implements ILibrariesService {
-  createBook(data: Partial<Book>) {
-    return Promise.resolve(initialBook);
+  constructor(private prisma: PrismaService) {}
+
+  createBook(data) {
+    return this.prisma.book.create({
+      data: {
+        libraryId: data.libraryId,
+        title: data.title,
+        author: data.author,
+        year: data.year,
+        description: data.description,
+        coverImage: data.coverImage,
+        isAvailable: data.isAvailable,
+      }
+    });
   }
 
   deleteBook(id: ID) {
-    return Promise.resolve(initialBook);
+    return this.prisma.book.delete({
+      where: { id },
+    });
   }
 
-  createLibrary(data: Partial<Book>) {
-    return Promise.resolve(initialLibrary);
+  createLibrary(data) {
+    return this.prisma.library.create({
+      data: {
+        name: data.name,
+        address: data.address,
+        description: data.description,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    });
   }
 
   deleteLibrary(id: ID) {
-    return Promise.resolve(initialLibrary);
+    return this.prisma.library.delete({
+      where: { id },
+    });
   }
 
   findBookById(id: ID) {
-    return Promise.resolve(initialBook);
+    return this.prisma.book.findUnique({
+      where: { id },
+    });
   }
 
   findAllBooks(params: Partial<SearchBookParams>) {
-    return Promise.resolve([initialBook]);
+    return this.prisma.book.findMany({
+      where: {
+        OR: [
+          {
+            id: params.libraryId,
+          },
+          {
+            author: params.author
+          },
+          {
+            title: params.title,
+          },
+          {
+            isAvailable: params.isAvailable,
+          },
+        ]
+      }
+    });
   }
 }

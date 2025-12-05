@@ -26,7 +26,7 @@ export class AuthService {
     if (user) {
       const passwordIsMatch = await bcrypt.compare(password, user.passwordHash);
       if (passwordIsMatch) {
-        const { passwordHash, role, ...userData } = user;
+        const { passwordHash, ...userData } = user;
 
         return userData;
       }
@@ -43,10 +43,12 @@ export class AuthService {
       passwordHash,
     };
 
+    const savedUser = await this.usersService.create(userWithHashedPass);
+
     return {
-      id: 1,
-      email: userWithHashedPass.email,
-      name: userWithHashedPass.name,
+      id: savedUser?.id,
+      email: savedUser?.email,
+      name: savedUser?.name,
     }
   }
 }

@@ -21,7 +21,6 @@ export class AuthController {
   }
 
   @Post("auth/register")
-  @Roles("client")
   register(@Body() userData: RegisterUserDto) {
     return this.authService.register(userData);
   }
