@@ -1,0 +1,33 @@
+import { Injectable } from '@nestjs/common';
+import { ISupportRequestClientService, Message, SupportRequest } from './types/supportChat';
+import { ID } from 'src/types/commonTypes';
+import { CreateSupportRequestDto, MarkMessageAsReadDto } from './types/dto/supportChat';
+
+const initialMessage: Message = {
+  author: 0,
+  sentAt: new Date,
+  text: "",
+  readAt: new Date,
+}
+
+const initalSupportRequest: SupportRequest = {
+  user: 0,
+  createdAt: new Date,
+  messages: [initialMessage],
+  isActive: true,
+}
+
+@Injectable()
+export class SupportRequestClientService implements ISupportRequestClientService {
+  createSupportRequest(data: CreateSupportRequestDto): Promise<SupportRequest> {
+    return Promise.resolve(initalSupportRequest);
+  }
+
+  markMessageAsRead(params: MarkMessageAsReadDto) {
+    
+  }
+
+  getUnreadCount(supportRequest: ID): Promise<Message[]> {
+    return Promise.resolve([initialMessage]);
+  }
+}
