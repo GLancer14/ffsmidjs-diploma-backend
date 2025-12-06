@@ -19,15 +19,21 @@ export class SupportChatGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody("chatId") chatId: ID,
   ) {
-    this.eventEmitter.emit("sendMessage", this.supportRequestService.subscribe((supportRequest, message) => {
+    const subscribe = this.supportRequestService.subscribe((supportRequest, message) => {
       client.to(supportRequest.toString()).emit("subscribeToChat", {
         ...message,
       })
-    }));
+    })
+
+    // this.eventEmitter.emit("subcribeToChat", this.supportRequestService.subscribe((supportRequest, message) => {
+    //   client.to(supportRequest.toString()).emit("subscribeToChat", {
+    //     ...message,
+    //   })
+    // }));
   }
 
-  @OnEvent("subscribe")
-  subscribe(payload: string) {
-    
+  @OnEvent("sendMessage")
+  sendMessage(payload) {
+    const sendMessageBySocket = payload;
   }
 }

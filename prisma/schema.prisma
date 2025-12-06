@@ -50,7 +50,7 @@ model BookRental {
 }
 
 model SupportRequest {
-  id        Int       @id @unique
+  id        Int       @id @default(autoincrement())
   user      Int
   createdAt DateTime
   isActive  Boolean

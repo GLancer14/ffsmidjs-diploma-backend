@@ -232,7 +232,7 @@ export type SupportRequestWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"SupportRequest"> | Date | string
   isActive?: Prisma.BoolFilter<"SupportRequest"> | boolean
   messages?: Prisma.MessageListRelationFilter
-}, "id" | "id">
+}, "id">
 
 export type SupportRequestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -257,7 +257,6 @@ export type SupportRequestScalarWhereWithAggregatesInput = {
 }
 
 export type SupportRequestCreateInput = {
-  id: number
   user: number
   createdAt: Date | string
   isActive: boolean
@@ -265,7 +264,7 @@ export type SupportRequestCreateInput = {
 }
 
 export type SupportRequestUncheckedCreateInput = {
-  id: number
+  id?: number
   user: number
   createdAt: Date | string
   isActive: boolean
@@ -273,7 +272,6 @@ export type SupportRequestUncheckedCreateInput = {
 }
 
 export type SupportRequestUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -289,14 +287,13 @@ export type SupportRequestUncheckedUpdateInput = {
 }
 
 export type SupportRequestCreateManyInput = {
-  id: number
+  id?: number
   user: number
   createdAt: Date | string
   isActive: boolean
 }
 
 export type SupportRequestUpdateManyMutationInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -360,14 +357,13 @@ export type SupportRequestUpdateOneRequiredWithoutMessagesNestedInput = {
 }
 
 export type SupportRequestCreateWithoutMessagesInput = {
-  id: number
   user: number
   createdAt: Date | string
   isActive: boolean
 }
 
 export type SupportRequestUncheckedCreateWithoutMessagesInput = {
-  id: number
+  id?: number
   user: number
   createdAt: Date | string
   isActive: boolean
@@ -390,7 +386,6 @@ export type SupportRequestUpdateToOneWithWhereWithoutMessagesInput = {
 }
 
 export type SupportRequestUpdateWithoutMessagesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean

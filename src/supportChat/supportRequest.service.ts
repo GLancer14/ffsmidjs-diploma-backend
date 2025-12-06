@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { GetChatListParams, ISupportRequestService } from './types/supportChat';
 import { ID } from 'src/types/commonTypes';
 import { SendMessageDto } from './types/dto/supportChat';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Message, SupportRequest } from 'src/generated/prisma/client';
 
@@ -58,16 +58,19 @@ export class SupportRequestService implements ISupportRequestService {
       where: { id: data.author },
     });
 
-    this.eventEmitter.emit("sendMessage", {
-      id: createdMessage.id,
-      createdAt: createdMessage.sentAt,
-      text: createdMessage.text,
-      readAt: createdMessage.readAt,
-      author: {
-        id: createdMessage.author,
-        name: authorName,
+    this.eventEmitter.emit("message.created", {
+      supportRequest: data.supportRequest,
+      message: {
+        id: createdMessage.id,
+        createdAt: createdMessage.sentAt,
+        text: createdMessage.text,
+        readAt: createdMessage.readAt,
+        author: {
+          id: createdMessage.author,
+          name: authorName,
+        }
       }
-    });
+    })
     
     return createdMessage;
   }
@@ -78,7 +81,15 @@ export class SupportRequestService implements ISupportRequestService {
     });
   }
 
-  subscribe(handler: (supportRequest: SupportRequest, message: Message) => void) {
-    return handler;
+  subscribe(handler: (supportRequest: SupportRequest, message: Message) => void): () => void {
+    const listener = (({ supportRequest, message }: { supportRequest: SupportRequest, message: Message }) => {
+      handler(supportRequest, message);
+    });
+
+    this.eventEmitter.on("message.created", listener);
+
+    return () => {
+      this.eventEmitter.off("message.created", listener);
+    };
   }
 }

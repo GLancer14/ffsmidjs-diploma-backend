@@ -18,8 +18,14 @@ export class SupportChatController {
 
   @Post("client/support-requests/")
   @Roles("client")
-  createClientRequest(@Body() message: CreateSupportRequestDto) {
-    return this.supportRequestClientService.createSupportRequest(message);
+  createClientRequest(
+    @Req() req,
+    @Body("text") text: string
+  ) {
+    return this.supportRequestClientService.createSupportRequest({
+      text,
+      user: req.user.id
+    });
   }
 
   @Get("client/support-requests/")

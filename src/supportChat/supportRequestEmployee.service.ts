@@ -1,34 +1,63 @@
 import { Injectable } from '@nestjs/common';
-import { ISupportRequestEmployeeService, Message, SupportRequest } from './types/supportChat';
+import { ISupportRequestEmployeeService } from './types/supportChat';
 import { ID } from 'src/types/commonTypes';
 import { MarkMessageAsReadDto } from './types/dto/supportChat';
+import { Message } from 'src/generated/prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 
-const initialMessage: Message = {
-  author: 0,
-  sentAt: new Date,
-  text: "",
-  readAt: new Date,
-}
+// const initialMessage: Message = {
+//   author: 0,
+//   sentAt: new Date,
+//   text: "",
+//   readAt: new Date,
+// }
 
-const initalSupportRequest: SupportRequest = {
-  id: 0,
-  user: 0,
-  createdAt: new Date,
-  messages: [initialMessage],
-  isActive: true,
-}
+// const initalSupportRequest: SupportRequest = {
+//   id: 0,
+//   user: 0,
+//   createdAt: new Date,
+//   messages: [initialMessage],
+//   isActive: true,
+// }
 
 @Injectable()
 export class SupportRequestEmployeeService implements ISupportRequestEmployeeService {
+  constructor(private prisma: PrismaService) {}
+
   markMessageAsRead(params: MarkMessageAsReadDto) {
-    
+    return this.prisma.message.updateMany({
+      where: {
+        author: params.user,
+        supportRequestId: params.supportRequest,
+        sentAt: {
+          lt: params.createdBefore
+        }
+      },
+      data: {
+        readAt: new Date()
+      }
+    });
   }
 
   getUnreadCount(supportRequest: ID): Promise<Message[]> {
-    return Promise.resolve([initialMessage]);
+    return this.prisma.message.findMany({
+      where: {
+        supportRequestId: supportRequest,
+        readAt: {
+          not: null
+        }
+      }
+    });
   }
 
-  closeRequest(supportRequest: ID): Promise<void> {
-    return Promise.resolve();
+  async closeRequest(supportRequest: ID): Promise<void> {
+    this.prisma.supportRequest.update({
+      where: {
+        id: supportRequest
+      },
+      data: {
+        isActive: false
+      }
+    });
   }
 }
