@@ -3,6 +3,7 @@ import { SupportChatController } from './supportChat.controller';
 import { SupportRequestService } from './supportRequest.service';
 import { SupportRequestClientService } from './supportRequestClient.service';
 import { SupportRequestEmployeeService } from './supportRequestEmployee.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Module({
   imports: [],
@@ -11,6 +12,7 @@ import { SupportRequestEmployeeService } from './supportRequestEmployee.service'
     SupportRequestService,
     SupportRequestClientService,
     SupportRequestEmployeeService,
+    PrismaService,
   ],
 })
 export class SupportChatModule {}

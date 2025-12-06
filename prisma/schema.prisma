@@ -58,8 +58,8 @@ model SupportRequest {
 }
 
 model Message {
-  id               Int            @id @unique
-  author           String
+  id               Int            @id @default(autoincrement())
+  author           Int
   sentAt           DateTime
   text             String
   readAt           DateTime?

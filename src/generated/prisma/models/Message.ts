@@ -28,17 +28,19 @@ export type AggregateMessage = {
 
 export type MessageAvgAggregateOutputType = {
   id: number | null
+  author: number | null
   supportRequestId: number | null
 }
 
 export type MessageSumAggregateOutputType = {
   id: number | null
+  author: number | null
   supportRequestId: number | null
 }
 
 export type MessageMinAggregateOutputType = {
   id: number | null
-  author: string | null
+  author: number | null
   sentAt: Date | null
   text: string | null
   readAt: Date | null
@@ -47,7 +49,7 @@ export type MessageMinAggregateOutputType = {
 
 export type MessageMaxAggregateOutputType = {
   id: number | null
-  author: string | null
+  author: number | null
   sentAt: Date | null
   text: string | null
   readAt: Date | null
@@ -67,11 +69,13 @@ export type MessageCountAggregateOutputType = {
 
 export type MessageAvgAggregateInputType = {
   id?: true
+  author?: true
   supportRequestId?: true
 }
 
 export type MessageSumAggregateInputType = {
   id?: true
+  author?: true
   supportRequestId?: true
 }
 
@@ -191,7 +195,7 @@ export type MessageGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type MessageGroupByOutputType = {
   id: number
-  author: string
+  author: number
   sentAt: Date
   text: string
   readAt: Date | null
@@ -223,7 +227,7 @@ export type MessageWhereInput = {
   OR?: Prisma.MessageWhereInput[]
   NOT?: Prisma.MessageWhereInput | Prisma.MessageWhereInput[]
   id?: Prisma.IntFilter<"Message"> | number
-  author?: Prisma.StringFilter<"Message"> | string
+  author?: Prisma.IntFilter<"Message"> | number
   sentAt?: Prisma.DateTimeFilter<"Message"> | Date | string
   text?: Prisma.StringFilter<"Message"> | string
   readAt?: Prisma.DateTimeNullableFilter<"Message"> | Date | string | null
@@ -246,13 +250,13 @@ export type MessageWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.MessageWhereInput | Prisma.MessageWhereInput[]
   OR?: Prisma.MessageWhereInput[]
   NOT?: Prisma.MessageWhereInput | Prisma.MessageWhereInput[]
-  author?: Prisma.StringFilter<"Message"> | string
+  author?: Prisma.IntFilter<"Message"> | number
   sentAt?: Prisma.DateTimeFilter<"Message"> | Date | string
   text?: Prisma.StringFilter<"Message"> | string
   readAt?: Prisma.DateTimeNullableFilter<"Message"> | Date | string | null
   supportRequestId?: Prisma.IntFilter<"Message"> | number
   supportRequest?: Prisma.XOR<Prisma.SupportRequestScalarRelationFilter, Prisma.SupportRequestWhereInput>
-}, "id" | "id">
+}, "id">
 
 export type MessageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -273,7 +277,7 @@ export type MessageScalarWhereWithAggregatesInput = {
   OR?: Prisma.MessageScalarWhereWithAggregatesInput[]
   NOT?: Prisma.MessageScalarWhereWithAggregatesInput | Prisma.MessageScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Message"> | number
-  author?: Prisma.StringWithAggregatesFilter<"Message"> | string
+  author?: Prisma.IntWithAggregatesFilter<"Message"> | number
   sentAt?: Prisma.DateTimeWithAggregatesFilter<"Message"> | Date | string
   text?: Prisma.StringWithAggregatesFilter<"Message"> | string
   readAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Message"> | Date | string | null
@@ -281,8 +285,7 @@ export type MessageScalarWhereWithAggregatesInput = {
 }
 
 export type MessageCreateInput = {
-  id: number
-  author: string
+  author: number
   sentAt: Date | string
   text: string
   readAt?: Date | string | null
@@ -290,8 +293,8 @@ export type MessageCreateInput = {
 }
 
 export type MessageUncheckedCreateInput = {
-  id: number
-  author: string
+  id?: number
+  author: number
   sentAt: Date | string
   text: string
   readAt?: Date | string | null
@@ -299,8 +302,7 @@ export type MessageUncheckedCreateInput = {
 }
 
 export type MessageUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  author?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.IntFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   text?: Prisma.StringFieldUpdateOperationsInput | string
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -309,7 +311,7 @@ export type MessageUpdateInput = {
 
 export type MessageUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  author?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.IntFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   text?: Prisma.StringFieldUpdateOperationsInput | string
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -317,8 +319,8 @@ export type MessageUncheckedUpdateInput = {
 }
 
 export type MessageCreateManyInput = {
-  id: number
-  author: string
+  id?: number
+  author: number
   sentAt: Date | string
   text: string
   readAt?: Date | string | null
@@ -326,8 +328,7 @@ export type MessageCreateManyInput = {
 }
 
 export type MessageUpdateManyMutationInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  author?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.IntFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   text?: Prisma.StringFieldUpdateOperationsInput | string
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -335,7 +336,7 @@ export type MessageUpdateManyMutationInput = {
 
 export type MessageUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  author?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.IntFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   text?: Prisma.StringFieldUpdateOperationsInput | string
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -363,6 +364,7 @@ export type MessageCountOrderByAggregateInput = {
 
 export type MessageAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  author?: Prisma.SortOrder
   supportRequestId?: Prisma.SortOrder
 }
 
@@ -386,6 +388,7 @@ export type MessageMinOrderByAggregateInput = {
 
 export type MessageSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  author?: Prisma.SortOrder
   supportRequestId?: Prisma.SortOrder
 }
 
@@ -436,16 +439,15 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
 }
 
 export type MessageCreateWithoutSupportRequestInput = {
-  id: number
-  author: string
+  author: number
   sentAt: Date | string
   text: string
   readAt?: Date | string | null
 }
 
 export type MessageUncheckedCreateWithoutSupportRequestInput = {
-  id: number
-  author: string
+  id?: number
+  author: number
   sentAt: Date | string
   text: string
   readAt?: Date | string | null
@@ -482,7 +484,7 @@ export type MessageScalarWhereInput = {
   OR?: Prisma.MessageScalarWhereInput[]
   NOT?: Prisma.MessageScalarWhereInput | Prisma.MessageScalarWhereInput[]
   id?: Prisma.IntFilter<"Message"> | number
-  author?: Prisma.StringFilter<"Message"> | string
+  author?: Prisma.IntFilter<"Message"> | number
   sentAt?: Prisma.DateTimeFilter<"Message"> | Date | string
   text?: Prisma.StringFilter<"Message"> | string
   readAt?: Prisma.DateTimeNullableFilter<"Message"> | Date | string | null
@@ -490,16 +492,15 @@ export type MessageScalarWhereInput = {
 }
 
 export type MessageCreateManySupportRequestInput = {
-  id: number
-  author: string
+  id?: number
+  author: number
   sentAt: Date | string
   text: string
   readAt?: Date | string | null
 }
 
 export type MessageUpdateWithoutSupportRequestInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  author?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.IntFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   text?: Prisma.StringFieldUpdateOperationsInput | string
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -507,7 +508,7 @@ export type MessageUpdateWithoutSupportRequestInput = {
 
 export type MessageUncheckedUpdateWithoutSupportRequestInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  author?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.IntFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   text?: Prisma.StringFieldUpdateOperationsInput | string
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -515,7 +516,7 @@ export type MessageUncheckedUpdateWithoutSupportRequestInput = {
 
 export type MessageUncheckedUpdateManyWithoutSupportRequestInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  author?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.IntFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   text?: Prisma.StringFieldUpdateOperationsInput | string
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -580,7 +581,7 @@ export type $MessagePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    author: string
+    author: number
     sentAt: Date
     text: string
     readAt: Date | null
@@ -1010,7 +1011,7 @@ export interface Prisma__MessageClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface MessageFieldRefs {
   readonly id: Prisma.FieldRef<"Message", 'Int'>
-  readonly author: Prisma.FieldRef<"Message", 'String'>
+  readonly author: Prisma.FieldRef<"Message", 'Int'>
   readonly sentAt: Prisma.FieldRef<"Message", 'DateTime'>
   readonly text: Prisma.FieldRef<"Message", 'String'>
   readonly readAt: Prisma.FieldRef<"Message", 'DateTime'>

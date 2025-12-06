@@ -32,7 +32,7 @@ export class SupportChatController {
   ) {
     const user = req.user as RequestUser;
     return this.supportRequestService.findSupportRequests({
-      user: user.id || null,
+      user: user.id,
       limit,
       offset,
       isActive,
@@ -47,7 +47,6 @@ export class SupportChatController {
     @Query("isActive") isActive: boolean,
   ) {
     return this.supportRequestService.findSupportRequests({
-      user: null,
       limit,
       offset,
       isActive,
@@ -56,7 +55,7 @@ export class SupportChatController {
 
   @Get("common/support-requests/:id/messages")
   @Roles("manager", "client")
-  getAllRequests(@Param("id") id: ID) {
+  getAllMessages(@Param("id") id: ID) {
     return this.supportRequestService.getMessages(id);
   }
 
