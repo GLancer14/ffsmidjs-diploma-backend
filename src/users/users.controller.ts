@@ -2,8 +2,8 @@ import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/comm
 import { UsersService } from './users.service';
 import { type CreateUserDto } from './types/dto/users';
 import { Roles } from 'src/roles/roles.decorator';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 import { RolesGuard } from 'src/roles/roles.guard';
+import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
 
 @Controller("api")
 export class UsersController {
@@ -15,9 +15,9 @@ export class UsersController {
     return this.usersService.create(user);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("admin/users/")
-  @Roles("admin")
+  @Roles("manager")
   async getUsersForAdmin(
     @Req() req,
     @Query("limit") limit: number,
@@ -36,7 +36,7 @@ export class UsersController {
     })
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Get("manager/users/")
   @Roles("manager")
   async getUsersForManager(

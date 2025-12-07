@@ -1,5 +1,4 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import bcrypt from "bcrypt";
 import { BookRental, IBookRentalService, SearchBookRentalParams } from './types/auth';
 import { ID } from 'src/types/commonTypes';
@@ -22,7 +21,6 @@ const initialBookRental: BookRental = {
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
@@ -39,26 +37,6 @@ export class AuthService {
     return null;
   }
 
-  async validateUserByJwt(id: ID) {
-    const user = await this.usersService.findById(id);
-    if (user) {
-      const result = {
-        id: user.id,
-        email: user.email,
-        firstName: user.name,
-        role: user.role
-      };
-
-      return result;
-    }
-
-    return null;
-  }
-
-  login(user){
-    return this.jwtService.sign(user);
-  }
-
   async register(userData: RegisterUserDto) {
     const { password, ...userWithoutPass } = userData;
     const passwordHash = await bcrypt.hash(userData.password, 10);
@@ -69,11 +47,11 @@ export class AuthService {
 
     const savedUser = await this.usersService.create(userWithHashedPass);
 
-    return this.jwtService.sign({
+    return {
       id: savedUser?.id,
       email: savedUser?.email,
       name: savedUser?.name,
       role: savedUser?.role,
-    });
+    };
   }
 }

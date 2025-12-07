@@ -7,10 +7,7 @@ import { UsersModule } from './users/users.module';
 import { LibrariesModule } from './libraries/libraries.module';
 import { BookRentalModule } from './bookRental/bookRental.module';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './roles/roles.guard';
 import { PrismaModule } from './prisma/prisma.module';
-import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -25,7 +22,6 @@ import { JwtService } from '@nestjs/jwt';
   controllers: [AppController],
   providers: [
     AppService,
-    JwtService,
   ],
 })
 export class AppModule {}
