@@ -6,7 +6,7 @@ export interface BookDto {
   author: string;
   year: number;
   description: string;
-  coverImage: Express.Multer.File | null;
+  coverImage?: Express.Multer.File;
   totalCopies: number;
 }
 

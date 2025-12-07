@@ -24,8 +24,8 @@ export class BookRentalService implements IBookRentalService {
     const savedBook = await this.prisma.bookRental.create({
       data: {
         userId: data.userId,
-        libraryId: data.libraryId,
-        bookId: data.bookId,
+        libraryId: +data.libraryId,
+        bookId: +data.bookId,
         dateStart: new Date(data.dateStart),
         dateEnd: new Date(data.dateEnd),
       }

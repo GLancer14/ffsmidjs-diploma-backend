@@ -9,6 +9,7 @@ import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(AuthenticatedGuard, RolesGuard)
   @Post("admin/users/")
   @Roles("admin")
   async createUser(@Body() user: CreateUserDto) {
@@ -36,7 +37,7 @@ export class UsersController {
     })
   }
 
-  @UseGuards(RolesGuard)
+  @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("manager/users/")
   @Roles("manager")
   async getUsersForManager(

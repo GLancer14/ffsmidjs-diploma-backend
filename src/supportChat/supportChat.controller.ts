@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { SupportRequestService } from './supportRequest.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { SupportRequestClientService } from './supportRequestClient.service';
@@ -7,6 +7,8 @@ import { type Request } from 'express';
 import { type ID } from 'src/types/commonTypes';
 import { SupportRequestEmployeeService } from './supportRequestEmployee.service';
 import { RequestUser } from 'src/users/types/dto/users';
+import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
+import { RolesGuard } from 'src/roles/roles.guard';
 
 @Controller("api")
 export class SupportChatController {
@@ -16,6 +18,7 @@ export class SupportChatController {
     private readonly supportRequestEmployeeService: SupportRequestEmployeeService,
   ) {}
 
+  @UseGuards(AuthenticatedGuard, RolesGuard)
   @Post("client/support-requests/")
   @Roles("client")
   createClientRequest(
@@ -28,6 +31,7 @@ export class SupportChatController {
     });
   }
 
+  @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("client/support-requests/")
   @Roles("client")
   getClientRequests(
@@ -45,6 +49,7 @@ export class SupportChatController {
     });
   }
 
+  @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("manager/support-requests/")
   @Roles("manager")
   getRequestsForManager(
@@ -59,12 +64,14 @@ export class SupportChatController {
     });
   }
 
+  @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("common/support-requests/:id/messages")
   @Roles("manager", "client")
   getAllMessages(@Param("id") id: ID) {
     return this.supportRequestService.getMessages(id);
   }
 
+  @UseGuards(AuthenticatedGuard, RolesGuard)
   @Post("common/support-requests/:id/messages")
   @Roles("manager", "client")
   sendMessage(
@@ -80,6 +87,7 @@ export class SupportChatController {
     });
   }
 
+  @UseGuards(AuthenticatedGuard, RolesGuard)
   @Post("common/support-requests/:id/messages/read")
   @Roles("manager", "client")
   markAsRead(

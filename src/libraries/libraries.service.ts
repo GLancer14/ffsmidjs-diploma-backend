@@ -31,10 +31,10 @@ export class LibrariesService implements ILibrariesService {
   createBook(data) {
     return this.prisma.book.create({
       data: {
-        libraryId: data.libraryId,
+        libraryId: Number(data.libraryId),
         title: data.title,
         author: data.author,
-        year: data.year,
+        year: Number(data.year),
         description: data.description,
         coverImage: data.coverImage,
         isAvailable: data.isAvailable,
@@ -44,7 +44,7 @@ export class LibrariesService implements ILibrariesService {
 
   deleteBook(id: ID) {
     return this.prisma.book.delete({
-      where: { id },
+      where: { id: +id },
     });
   }
 
@@ -62,13 +62,13 @@ export class LibrariesService implements ILibrariesService {
 
   deleteLibrary(id: ID) {
     return this.prisma.library.delete({
-      where: { id },
+      where: { id: +id },
     });
   }
 
   findBookById(id: ID) {
     return this.prisma.book.findUnique({
-      where: { id },
+      where: { id: +id },
     });
   }
 
@@ -77,7 +77,7 @@ export class LibrariesService implements ILibrariesService {
       where: {
         OR: [
           {
-            id: params.libraryId,
+            id: Number(params.libraryId),
           },
           {
             author: params.author
