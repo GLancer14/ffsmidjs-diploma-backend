@@ -17,7 +17,7 @@ export class UsersController {
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("admin/users/")
-  @Roles("manager")
+  @Roles("admin")
   async getUsersForAdmin(
     @Req() req,
     @Query("limit") limit: number,

@@ -16,7 +16,7 @@ export class SessionSerializer extends PassportSerializer {
   async deserializeUser(payload: any, done: Function) {
     console.log("deserializing user: ", payload);
     try {
-      const user = this.prisma.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: { id: payload }
       });
       console.log(user)
