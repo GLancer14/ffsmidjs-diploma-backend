@@ -13,7 +13,13 @@ export class UsersController {
   @Post("admin/users/")
   @Roles("admin")
   async createUser(@Body() user: CreateUserDto) {
-    return this.usersService.create(user);
+    const createdUser = await this.usersService.create(user);
+    return {
+      id: createdUser?.id,
+      email: createdUser?.email,
+      name: createdUser?.name,
+      role: createdUser?.role,
+    };
   }
 
   @UseGuards(AuthenticatedGuard, RolesGuard)

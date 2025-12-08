@@ -4,29 +4,10 @@ import { ID } from 'src/types/commonTypes';
 import { CreateSupportRequestDto, MarkMessageAsReadDto } from './types/dto/supportChat';
 import { Message, SupportRequest } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { SupportRequestService } from './supportRequest.service';
-
-// const initialMessage: Message = {
-//   author: 0,
-//   sentAt: new Date,
-//   text: "",
-//   readAt: new Date,
-// }
-
-// const initalSupportRequest: SupportRequest = {
-//   id: 0,
-//   user: 0,
-//   createdAt: new Date,
-//   messages: [initialMessage],
-//   isActive: true,
-// }
 
 @Injectable()
 export class SupportRequestClientService implements ISupportRequestClientService {
-  constructor(
-    private prisma: PrismaService,
-    private supportRequest: SupportRequestService
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async createSupportRequest(data: CreateSupportRequestDto): Promise<SupportRequest> {
     const requestCreationTime = new Date();
@@ -38,34 +19,30 @@ export class SupportRequestClientService implements ISupportRequestClientService
       },
     });
 
-    await this.prisma.message.create({
-      data: {
-        author: data.user,
-        sentAt: requestCreationTime,
-        text: data.text,
-        supportRequestId: savedRequest.id
-      }
-    })
+    // await this.prisma.message.create({
+    //   data: {
+    //     author: data.user,
+    //     sentAt: requestCreationTime,
+    //     text: data.text,
+    //     supportRequestId: savedRequest.id
+    //   }
+    // })
     
-    return {
-      id: savedRequest.id,
-      createdAt: requestCreationTime,
-      isActive: true,
-      user: data.user,
-    };
+    return savedRequest;
   }
 
   markMessageAsRead(params: MarkMessageAsReadDto) {
     return this.prisma.message.updateMany({
       where: {
-        author: params.user,
-        supportRequestId: params.supportRequest,
+        author: { not: +params.user },
+        supportRequestId: +params.supportRequest,
         sentAt: {
-          lt: params.createdBefore
-        }
+          lt: new Date(params.createdBefore),
+        },
+        readAt: null,
       },
       data: {
-        readAt: new Date()
+        readAt: new Date(),
       }
     });
   }

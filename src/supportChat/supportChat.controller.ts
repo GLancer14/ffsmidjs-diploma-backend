@@ -9,6 +9,8 @@ import { SupportRequestEmployeeService } from './supportRequestEmployee.service'
 import { RequestUser } from 'src/users/types/dto/users';
 import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
 import { RolesGuard } from 'src/roles/roles.guard';
+import { UsersService } from 'src/users/users.service';
+import { ClientIdCheckGuard } from './guards/clientCheck.guard';
 
 @Controller("api")
 export class SupportChatController {
@@ -16,6 +18,7 @@ export class SupportChatController {
     private readonly supportRequestService: SupportRequestService,
     private readonly supportRequestClientService: SupportRequestClientService,
     private readonly supportRequestEmployeeService: SupportRequestEmployeeService,
+    private readonly usersService: UsersService,
   ) {}
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
@@ -34,65 +37,121 @@ export class SupportChatController {
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("client/support-requests/")
   @Roles("client")
-  getClientRequests(
+  async getClientRequests(
     @Req() req: Request, 
     @Query("limit") limit: number,
     @Query("offset") offset: number,
     @Query("isActive") isActive: boolean,
   ) {
     const user = req.user as RequestUser;
-    return this.supportRequestService.findSupportRequests({
+    const supportRequests = await this.supportRequestService.findSupportRequests({
       user: user.id,
       limit,
       offset,
       isActive,
     });
+    const supportRequestsForResponse = await Promise.all(supportRequests.map(async (supportRequest) => {
+      return {
+        id: supportRequest.id,
+        createdAt: supportRequest.createdAt,
+        isActive: supportRequest.isActive,
+        hasNewMessages: Boolean(
+          (await this.supportRequestClientService.getUnreadCount(supportRequest.id)).length
+        ),
+      };
+    }));
+
+    return supportRequestsForResponse;
   }
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("manager/support-requests/")
   @Roles("manager")
-  getRequestsForManager(
+  async getRequestsForManager(
     @Query("limit") limit: number,
     @Query("offset") offset: number,
     @Query("isActive") isActive: boolean,
   ) {
-    return this.supportRequestService.findSupportRequests({
+    const supportRequests = await this.supportRequestService.findSupportRequests({
       limit,
       offset,
       isActive,
     });
+    const supportRequestsForResponse = await Promise.all(supportRequests.map(async (supportRequest) => {
+      const clientData = await this.usersService.findById(supportRequest.user);
+
+      return {
+        id: supportRequest.id,
+        createdAt: supportRequest.createdAt,
+        isActive: supportRequest.isActive,
+        hasNewMessages: Boolean(
+          (await this.supportRequestClientService.getUnreadCount(supportRequest.id)).length
+        ),
+        client: {
+          id: clientData?.id,
+          name: clientData?.name,
+          email: clientData?.email,
+          contactPhone: clientData?.contactPhone,
+        }
+      };
+    }));
+
+    return supportRequestsForResponse;
   }
 
-  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @UseGuards(
+    AuthenticatedGuard,
+    RolesGuard,
+    ClientIdCheckGuard
+  )
   @Get("common/support-requests/:id/messages")
   @Roles("manager", "client")
-  getAllMessages(@Param("id") id: ID) {
+  async getAllMessages(@Param("id") id: ID) {
     return this.supportRequestService.getMessages(id);
   }
 
-  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @UseGuards(
+    AuthenticatedGuard,
+    RolesGuard,
+    ClientIdCheckGuard
+  )
   @Post("common/support-requests/:id/messages")
   @Roles("manager", "client")
-  sendMessage(
+  async sendMessage(
     @Req() req: Request,
     @Body("text") text: string,
     @Param("id") id: ID,
   ) {
     const user = req.user as RequestUser;
-    return this.supportRequestService.sendMessage({
+    const authorName = await this.usersService.findById(user.id);
+    const sentMessage = await this.supportRequestService.sendMessage({
       author: user.id,
       supportRequest: id,
       text,
     });
+
+    return {
+      id: sentMessage.id,
+      createdAt: sentMessage.sentAt,
+      text: sentMessage.text,
+      readAt: sentMessage.readAt,
+      author: {
+        id: sentMessage.author,
+        name: authorName?.name,
+      },
+    };
   }
 
-  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @UseGuards(
+    AuthenticatedGuard,
+    RolesGuard,
+    ClientIdCheckGuard
+  )
   @Post("common/support-requests/:id/messages/read")
   @Roles("manager", "client")
-  markAsRead(
+  async markAsRead(
     @Req() req: Request,
-    @Body("createBefore") createdBefore: Date,
+    @Body("createdBefore") createdBefore: Date,
     @Param("id") id: ID,
   ) {
     const user = req.user as RequestUser;
@@ -103,9 +162,11 @@ export class SupportChatController {
     };
 
     if (user.role === "client") {
-      return this.supportRequestClientService.markMessageAsRead(messageObject);
+      await this.supportRequestClientService.markMessageAsRead(messageObject);
     } else {
-      return this.supportRequestEmployeeService.markMessageAsRead(messageObject);
+      await this.supportRequestEmployeeService.markMessageAsRead(messageObject);
     }
+
+    return { success: true };
   }
 }

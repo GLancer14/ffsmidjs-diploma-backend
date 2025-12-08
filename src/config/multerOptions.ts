@@ -1,6 +1,6 @@
 import { UnprocessableEntityException } from "@nestjs/common";
 import { existsSync, mkdirSync } from "fs";
-import multer, { diskStorage } from "multer";
+import { diskStorage } from "multer";
 
 const multerOptions = {
     dest: "../uploads/images",

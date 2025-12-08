@@ -30,18 +30,19 @@ export class SupportRequestService implements ISupportRequestService {
 
   findSupportRequestById(id: ID): Promise<SupportRequest | null> {
     return this.prisma.supportRequest.findUnique({
-      where: { id },
+      where: { id: +id },
     });
   }
 
   findSupportRequests(params: GetChatListParams) {
+    const user = params.user && +params.user;
     return this.prisma.supportRequest.findMany({
-      skip: params.offset,
-      take: params.limit,
+      skip: +params.offset || undefined,
+      take: +params.limit || undefined,
       where: {
-        user: params.user,
-        isActive: params.isActive,
-      }
+        user: user,
+        isActive: Boolean(params.isActive),
+      },
     });
   }
 
@@ -51,7 +52,7 @@ export class SupportRequestService implements ISupportRequestService {
         author: data.author,
         sentAt: new Date(),
         text: data.text,
-        supportRequestId: data.supportRequest,
+        supportRequestId: +data.supportRequest,
       }
     });
     const authorName = await this.prisma.user.findUnique({
@@ -67,7 +68,7 @@ export class SupportRequestService implements ISupportRequestService {
         readAt: createdMessage.readAt,
         author: {
           id: createdMessage.author,
-          name: authorName,
+          name: authorName?.name,
         }
       }
     })
@@ -77,7 +78,10 @@ export class SupportRequestService implements ISupportRequestService {
 
   getMessages(supportRequest: ID): Promise<Message[]> {
     return this.prisma.message.findMany({
-      where: { supportRequestId: supportRequest }
+      where: { supportRequestId: +supportRequest },
+      orderBy: {
+        sentAt: "asc",
+      }
     });
   }
 

@@ -27,14 +27,15 @@ export class SupportRequestEmployeeService implements ISupportRequestEmployeeSer
   markMessageAsRead(params: MarkMessageAsReadDto) {
     return this.prisma.message.updateMany({
       where: {
-        author: params.user,
-        supportRequestId: params.supportRequest,
+        author: { not: +params.user },
+        supportRequestId: +params.supportRequest,
         sentAt: {
-          lt: params.createdBefore
-        }
+          lt: new Date(params.createdBefore),
+        },
+        readAt: null,
       },
       data: {
-        readAt: new Date()
+        readAt: new Date(),
       }
     });
   }

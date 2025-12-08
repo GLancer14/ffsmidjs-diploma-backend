@@ -2,27 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { ILibrariesService, SearchBookParams } from './types/libraries';
 import { ID } from 'src/types/commonTypes';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Book } from 'src/generated/prisma/client';
-
-const initialBook = {
-  libraryId: 0,
-  title: "string",
-  author: "string",
-  year: 0,
-  description: "string",
-  coverImage: null,
-  isAvailable: false,
-  totalCopies: 0,
-  availableCopies: 0,
-}
-
-const initialLibrary = {
-  name: "string",
-  address: "string",
-  description: "string",
-  createdAt: new Date,
-  updatedAt: new Date,
-};
 
 @Injectable()
 export class LibrariesService implements ILibrariesService {
@@ -77,7 +56,7 @@ export class LibrariesService implements ILibrariesService {
       where: {
         OR: [
           {
-            id: Number(params.libraryId),
+            id: Number(params.libraryId) || undefined,
           },
           {
             author: params.author

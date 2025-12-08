@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import bcrypt from "bcrypt";
 import { IUserService, SearchUserParams } from './types/users';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ID } from 'src/types/commonTypes';
@@ -16,15 +17,18 @@ const initialUser = {
 export class UsersService implements IUserService {
   constructor(private prisma: PrismaService) {}
 
-  create(data) {
+  async create(data) {
     try {
+      const { password, ...userWithoutPass } = data;
+      const passwordHash = await bcrypt.hash(data.password, 10);
+      const userWithHashedPass = {
+        ...userWithoutPass,
+        passwordHash,
+      };
+
       const user = this.prisma.user.create({
         data: {
-          email: data.email,
-          name: data.name,
-          passwordHash: data.passwordHash,
-          contactPhone: data.contactPhone,
-          role: data.role,
+          ...userWithHashedPass
         }
       });
 
@@ -32,7 +36,6 @@ export class UsersService implements IUserService {
     } catch(e) {
       console.log(e)
     }
-    
   }
 
   findById(id: ID) {
@@ -48,20 +51,16 @@ export class UsersService implements IUserService {
   }
 
   findAll(params: SearchUserParams) {
+    const orCondition = [
+      params.email ? { email: { contains: params.email } } : { email: undefined },
+      params.name ? { name: { contains: params.name } } : { name: undefined },
+      params.contactPhone ? { contactPhone: { contains: params.contactPhone } } : { contactPhone: undefined },
+    ].filter(Boolean);
+
     return this.prisma.user.findMany({
-      skip: params.offset,
-      take: params.limit,
-      where: {
-        email: {
-          contains: params.email,
-        },
-        name: {
-          contains: params.name,
-        },
-        contactPhone: {
-          contains: params.contactPhone,
-        },
-      }
+      skip: +params.offset || undefined,
+      take: +params.limit || undefined,
+      where: orCondition.length !== 0 ? { OR: orCondition } : undefined,
     });
   }
 }

@@ -4,6 +4,7 @@ import { SupportRequestService } from './supportRequest.service';
 import { SupportRequestClientService } from './supportRequestClient.service';
 import { SupportRequestEmployeeService } from './supportRequestEmployee.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UsersService } from 'src/users/users.service';
 
 @Module({
   imports: [],
@@ -12,6 +13,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
     SupportRequestService,
     SupportRequestClientService,
     SupportRequestEmployeeService,
+    UsersService,
     PrismaService,
   ],
 })

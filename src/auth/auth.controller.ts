@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from './auth.service';
 import type { RegisterUserDto } from 'src/users/types/dto/users';
@@ -24,7 +24,11 @@ export class AuthController {
   @UseGuards(AuthenticatedGuard)
   @Post("auth/logout")
   logout(@Request() req) {
-    return req.logout();
+    return req.logout(err => {
+      if (err) {
+        throw new BadRequestException("Ошибка при выходе из учётной записи");
+      }
+    });
   }
 
   @Post("auth/register")

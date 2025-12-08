@@ -8,6 +8,7 @@ import { LibrariesModule } from './libraries/libraries.module';
 import { BookRentalModule } from './bookRental/bookRental.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { SupportChatModule } from './supportChat/supportChat.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PrismaModule } from './prisma/prisma.module';
     LibrariesModule,
     BookRentalModule,
     AuthModule,
+    SupportChatModule,
     PrismaModule,
   ],
   controllers: [AppController],
