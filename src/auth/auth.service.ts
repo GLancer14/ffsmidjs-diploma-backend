@@ -1,21 +1,7 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import bcrypt from "bcrypt";
-import { BookRental, IBookRentalService, SearchBookRentalParams } from './types/auth';
-import { ID } from 'src/types/commonTypes';
 import { UsersService } from 'src/users/users.service';
-import { RegisterUserDto } from 'src/users/types/dto/users';
-
-const initialBookRental: BookRental = {
-  id: 0,
-  userId: 0,
-  libraryId: 0,
-  bookId: 0,
-  dateStart: new Date(),
-  dateEnd: new Date(),
-  status: "reserved",
-  cretedAt: new Date(),
-  updatedAt: new Date(),
-}
+import { RegisterUserDto, RegisterUserResponseDto, RequestUser } from 'src/users/types/dto/users';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +9,7 @@ export class AuthService {
     private usersService: UsersService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<RequestUser | null> {
     const user = await this.usersService.findByEmail(email);
     if (user) {
       const passwordIsMatch = await bcrypt.compare(password, user.passwordHash);
@@ -37,14 +23,15 @@ export class AuthService {
     return null;
   }
 
-  async register(userData: RegisterUserDto) {
+  async register(userData: RegisterUserDto): Promise<RegisterUserResponseDto | undefined> {
     const savedUser = await this.usersService.create(userData);
 
-    return {
-      id: savedUser?.id,
-      email: savedUser?.email,
-      name: savedUser?.name,
-      role: savedUser?.role,
-    };
+    if (savedUser) {
+      return {
+        id: savedUser.id,
+        email: savedUser.email,
+        name: savedUser.name,
+      };
+    }
   }
 }

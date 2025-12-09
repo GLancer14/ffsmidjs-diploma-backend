@@ -11,7 +11,6 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 @Module({
   imports: [
     PrismaModule,
-    ConfigModule.forRoot(),
     UsersModule,
     PassportModule.register({
       session: true

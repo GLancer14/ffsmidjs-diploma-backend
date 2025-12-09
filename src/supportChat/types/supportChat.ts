@@ -1,5 +1,5 @@
 import { ID } from "src/types/commonTypes";
-import { CreateSupportRequestDto, MarkMessageAsReadDto, SendMessageDto } from "./dto/supportChat";
+import { CreateSupportRequestDto, GetChatListParamsDto, MarkMessageAsReadDto, SendMessageDto } from "./dto/supportChat";
 import { Message, SupportRequest } from "src/generated/prisma/client";
 
 // export interface Message {
@@ -26,7 +26,7 @@ export interface GetChatListParams {
 
 export interface ISupportRequestService {
   findSupportRequestById(id: ID): Promise<SupportRequest | null>;
-  findSupportRequests(params: GetChatListParams): Promise<SupportRequest[]>;
+  findSupportRequests(params: GetChatListParamsDto & { user?: number }): Promise<SupportRequest[]>;
   sendMessage(data: SendMessageDto): Promise<Message>;
   getMessages(supportRequest: ID): Promise<Message[]>;
   subscribe(handler: (supportRequest: SupportRequest, message: Message) => void): () => void;

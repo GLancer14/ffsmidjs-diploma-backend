@@ -17,3 +17,8 @@ export interface MarkMessageAsReadDto {
   createdBefore: Date;
 }
 
+export interface GetChatListParamsDto {
+  limit?: number;
+  offset?: number;
+  isActive?: boolean;
+}

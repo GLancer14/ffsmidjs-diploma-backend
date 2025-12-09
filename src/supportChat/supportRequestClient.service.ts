@@ -16,17 +16,15 @@ export class SupportRequestClientService implements ISupportRequestClientService
         user: data.user,
         createdAt: requestCreationTime,
         isActive: true,
+        messages: {
+          create: {
+            author: data.user,
+            sentAt: requestCreationTime,
+            text: data.text,
+          },
+        }
       },
     });
-
-    // await this.prisma.message.create({
-    //   data: {
-    //     author: data.user,
-    //     sentAt: requestCreationTime,
-    //     text: data.text,
-    //     supportRequestId: savedRequest.id
-    //   }
-    // })
     
     return savedRequest;
   }

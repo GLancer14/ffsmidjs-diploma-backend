@@ -3,7 +3,6 @@ import { ID } from "src/types/commonTypes";
 // export type RentalStatus = "reserved" | "active" | "completed" | "cancelled"
 
 export interface BookRentalDto {
-  userId: ID;
   libraryId: number;
   bookId: number;
   dateStart: string;

@@ -3,6 +3,7 @@ import { IBookRentalService } from './types/bookRental';
 import { ID } from 'src/types/commonTypes';
 import { BookRentalDto } from './types/dto/bookRental';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { BookRental } from 'src/generated/prisma/client';
 
 // const initialBookRental: BookRental = {
 //   id: 0,
@@ -20,18 +21,18 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class BookRentalService implements IBookRentalService {
   constructor(private prisma: PrismaService) {}
 
-  async rentBook(data: BookRentalDto) {
-    const savedBook = await this.prisma.bookRental.create({
+  async rentBook(data: BookRentalDto & { userId: ID }): Promise<BookRental> {
+    const bookRentRecord = await this.prisma.bookRental.create({
       data: {
         userId: data.userId,
-        libraryId: +data.libraryId,
-        bookId: +data.bookId,
+        libraryId: data.libraryId,
+        bookId: data.bookId,
         dateStart: new Date(data.dateStart),
         dateEnd: new Date(data.dateEnd),
       }
     });
 
-    return savedBook;
+    return bookRentRecord;
   }
 
   // delete(id: ID) {

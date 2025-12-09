@@ -1,10 +1,11 @@
-import { BadRequestException, Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
-import { AuthGuard } from "@nestjs/passport";
+import { BadRequestException, Body, Controller, Post, Req, UseGuards, UsePipes } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import type { RegisterUserDto } from 'src/users/types/dto/users';
-import { Roles } from 'src/roles/roles.decorator';
+import type { RegisterUserDto, RequestUser } from 'src/users/types/dto/users';
 import { AuthenticatedGuard } from './guards/local.authenticated.guard';
 import { LocalAuthGuard } from './guards/local.auth.guard';
+import { AuthValidationPipe } from 'src/validation/auth.pipe';
+import { registerValidationSchema } from 'src/validation/schemas/auth.joiSchema';
+import { type Request } from 'express';
 
 @Controller("api")
 export class AuthController {
@@ -12,18 +13,18 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post("auth/login")
-  login(@Request() req) {
+  login(@Req() req: Request) {
+    const user = req.user as RequestUser;
     return {
-      id: req.user.id,
-      email: req.user.name,
-      name: req.user.name,
-      role: req.user.role,
+      email: user.email,
+      name: user.name,
+      contactPhone: user.contactPhone,
     };
   }
 
   @UseGuards(AuthenticatedGuard)
   @Post("auth/logout")
-  logout(@Request() req) {
+  logout(@Req() req: Request) {
     return req.logout(err => {
       if (err) {
         throw new BadRequestException("Ошибка при выходе из учётной записи");
@@ -31,6 +32,7 @@ export class AuthController {
     });
   }
 
+  @UsePipes(new AuthValidationPipe(registerValidationSchema))
   @Post("auth/register")
   register(@Body() userData: RegisterUserDto) {
     return this.authService.register(userData);

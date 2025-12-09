@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nest
 import { SupportRequestService } from './supportRequest.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { SupportRequestClientService } from './supportRequestClient.service';
-import { type CreateSupportRequestDto } from './types/dto/supportChat';
+import type { GetChatListParamsDto, CreateSupportRequestDto } from './types/dto/supportChat';
 import { type Request } from 'express';
 import { type ID } from 'src/types/commonTypes';
 import { SupportRequestEmployeeService } from './supportRequestEmployee.service';
@@ -11,6 +11,9 @@ import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { UsersService } from 'src/users/users.service';
 import { ClientIdCheckGuard } from './guards/clientCheck.guard';
+import { SupportChatValidationPipe } from 'src/validation/supportChat.pipe';
+import { sendMessageValidationSchema, supportSearchParamsValidationSchema } from 'src/validation/schemas/supportChat.joiSchema';
+import { type GetChatListParams } from './types/supportChat';
 
 @Controller("api")
 export class SupportChatController {
@@ -24,13 +27,16 @@ export class SupportChatController {
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Post("client/support-requests/")
   @Roles("client")
-  createClientRequest(
-    @Req() req,
-    @Body("text") text: string
+  createRequest(
+    @Req() req: Request,
+    @Body(new SupportChatValidationPipe(
+      sendMessageValidationSchema
+    )) body: { text: string }
   ) {
+    const user = req.user as RequestUser;
     return this.supportRequestClientService.createSupportRequest({
-      text,
-      user: req.user.id
+      text: body.text,
+      user: user.id,
     });
   }
 
@@ -38,17 +44,20 @@ export class SupportChatController {
   @Get("client/support-requests/")
   @Roles("client")
   async getClientRequests(
-    @Req() req: Request, 
-    @Query("limit") limit: number,
-    @Query("offset") offset: number,
-    @Query("isActive") isActive: boolean,
+    @Req() req: Request,
+    @Query(new SupportChatValidationPipe(
+      supportSearchParamsValidationSchema
+    )) query: GetChatListParamsDto
+    // @Query("limit") limit: number,
+    // @Query("offset") offset: number,
+    // @Query("isActive") isActive: boolean,
   ) {
     const user = req.user as RequestUser;
     const supportRequests = await this.supportRequestService.findSupportRequests({
       user: user.id,
-      limit,
-      offset,
-      isActive,
+      limit: query.limit,
+      offset: query.offset,
+      isActive: query.isActive,
     });
     const supportRequestsForResponse = await Promise.all(supportRequests.map(async (supportRequest) => {
       return {

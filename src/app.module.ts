@@ -12,7 +12,7 @@ import { SupportChatModule } from './supportChat/supportChat.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     EventEmitterModule.forRoot(),
     UsersModule,
     LibrariesModule,

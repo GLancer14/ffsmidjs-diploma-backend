@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { GetChatListParams, ISupportRequestService } from './types/supportChat';
 import { ID } from 'src/types/commonTypes';
-import { SendMessageDto } from './types/dto/supportChat';
+import { GetChatListParamsDto, SendMessageDto } from './types/dto/supportChat';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Message, SupportRequest } from 'src/generated/prisma/client';
@@ -34,14 +34,15 @@ export class SupportRequestService implements ISupportRequestService {
     });
   }
 
-  findSupportRequests(params: GetChatListParams) {
+  findSupportRequests(params: GetChatListParamsDto & { user?: number }) {
     const user = params.user && +params.user;
+
     return this.prisma.supportRequest.findMany({
-      skip: +params.offset || undefined,
-      take: +params.limit || undefined,
+      skip: params.offset,
+      take: params.limit,
       where: {
         user: user,
-        isActive: Boolean(params.isActive),
+        isActive: params.isActive,
       },
     });
   }

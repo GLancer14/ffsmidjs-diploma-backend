@@ -1,14 +1,5 @@
-import { PrismaPromise } from "src/generated/prisma/internal/prismaNamespace";
 import { ID } from "src/types/commonTypes";
 import { User } from 'src/generated/prisma/client';
-
-// export interface User {
-//   email: string;
-//   passwordHash: string;
-//   name: string;
-//   contactPhone: string;
-//   role: string;
-// }
 
 export interface SearchUserParams {
   limit: number;

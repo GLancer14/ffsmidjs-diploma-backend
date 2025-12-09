@@ -10,18 +10,25 @@ import {
   Query,
   UploadedFile,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
+  UsePipes
 } from '@nestjs/common';
 import { LibrariesService } from './libraries.service';
-// import { Book } from './types/libraries';
 import { type ID } from 'src/types/commonTypes';
-import { type BookDto, type LibraryDto } from './types/dto/libraries';
+import { type FindBookDto, type BookDto, type LibraryDto } from './types/dto/libraries';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Book } from 'src/generated/prisma/client';
 import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { Roles } from 'src/roles/roles.decorator';
 import multerOptions from 'src/config/multerOptions';
+import { LibrariesValidationPipe } from 'src/validation/libraries.pipe';
+import {
+  createBookValidationSchema,
+  createLibraryValidationSchema,
+  getBooksValidationSchema,
+} from 'src/validation/schemas/libraries.joiSchema';
+import { idValidationSchema } from 'src/validation/schemas/common.joiSchema';
 
 @Controller("api")
 export class LibrariesController {
@@ -29,25 +36,25 @@ export class LibrariesController {
 
   @Get("common/books")
   getBooks(
-    @Query("library") library: number,
-    @Query("author") author: string,
-    @Query("title") title: string,
-    @Query("availableOnly") availableOnly: boolean,
+    @Query(new LibrariesValidationPipe(getBooksValidationSchema)) query: FindBookDto
   ): Promise<Book[]> {
     return this.librariesService.findAllBooks({
-      libraryId: library,
-      author,
-      title,
-      isAvailable: availableOnly,
+      libraryId: query.library,
+      author: query.author,
+      title: query.title,
+      isAvailable: query.availableOnly,
     });
   }
 
   @Get("common/books/:id")
-  getBook(@Param("id") id: ID) {
-    return this.librariesService.findBookById(id);
+  getBook(
+    @Param(new LibrariesValidationPipe(idValidationSchema)) params: { id: ID }
+  ) {
+    return this.librariesService.findBookById(params.id);
   }
 
 
+  @UsePipes(new LibrariesValidationPipe(createLibraryValidationSchema))
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Post("admin/libraries/")
   @Roles("admin")
@@ -60,7 +67,7 @@ export class LibrariesController {
   @Roles("admin")
   @UseInterceptors(FileInterceptor("coverImage", multerOptions))
   createBook(
-    @Body() bookData: BookDto,
+    @Body(new LibrariesValidationPipe(createBookValidationSchema)) bookData: BookDto,
     @UploadedFile(
       new ParseFilePipeBuilder()
         .build({
@@ -78,14 +85,18 @@ export class LibrariesController {
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Delete("admin/books/:id")
   @Roles("admin")
-  deleteBook(@Param("id") id: ID) {
-    return this.librariesService.deleteBook(id);
+  deleteBook(
+    @Param(new LibrariesValidationPipe(idValidationSchema)) params: { id: ID }
+  ) {
+    return this.librariesService.deleteBook(params.id);
   }
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Delete("admin/libraries/:id")
   @Roles("admin")
-  deleteLibrary(@Param("id") id: ID) {
-    return this.librariesService.deleteLibrary(id);
+  deleteLibrary(
+    @Param(new LibrariesValidationPipe(idValidationSchema)) params: { id: ID }
+  ) {
+    return this.librariesService.deleteLibrary(params.id);
   }
 }
