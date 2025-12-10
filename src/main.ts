@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './app.exceptionFilter';
 import { InternalServerErrorException } from '@nestjs/common';
+import { PrismaClientExceptionFilter } from './prisma/prisma.exceptionFilter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -33,7 +34,10 @@ async function bootstrap() {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.useGlobalFilters(new GlobalExceptionFilter())
+  app.useGlobalFilters(
+    new GlobalExceptionFilter(),
+    new PrismaClientExceptionFilter()
+  );
 
   await app.listen(process.env.PORT ?? 3000);
 }
