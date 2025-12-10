@@ -9,7 +9,7 @@ export class LocalAuthGuard extends AuthGuard("local") {
     const req = context.switchToHttp().getRequest();
 
     if (!req.body.email || !req.body.password) {
-      throw new BadRequestException("Поля email и пароль обязательны");
+      throw new BadRequestException("Поля email и пароль обязательны.");
     }
 
     await super.logIn(req);

@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { ROLES_KEY } from "./roles.decorator";
 import { Role } from "src/users/types/users";
@@ -17,6 +17,10 @@ export class RolesGuard implements CanActivate {
     }
 
     const { user } = context.switchToHttp().getRequest();
-    return requiredRole.some(role => role === user?.role);
+    if (!requiredRole.some(role => role === user?.role)) {
+      throw new ForbiddenException("Недостаточно прав для совершения действия");
+    }
+
+    return true;
   }
 }
