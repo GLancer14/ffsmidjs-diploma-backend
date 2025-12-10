@@ -4,10 +4,9 @@ import {
   PipeTransform,
 } from "@nestjs/common";
 import { type ObjectSchema } from "joi";
-import { GetChatListParamsDto } from "src/supportChat/types/dto/supportChat";
 
 @Injectable()
-export class SupportChatValidationPipe implements PipeTransform {
+export class UsersValidationPipe implements PipeTransform {
   constructor(private schema: ObjectSchema) {}
 
   transform(validatingValue: any) {
@@ -15,12 +14,6 @@ export class SupportChatValidationPipe implements PipeTransform {
       switch (key) {
         case "id":
           validatingValue[key] = Number(value);
-          break;
-        case "user":
-          validatingValue[key] = Number(value);
-          break;
-        case "isActive":
-          validatingValue[key] = Boolean(value);
           break;
         case "offset":
           validatingValue[key] = Number(value);

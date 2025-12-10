@@ -12,10 +12,10 @@ export class LibrariesService implements ILibrariesService {
   createBook(data: BookDto & { coverImage?: string }): Promise<Book> {
     return this.prisma.book.create({
       data: {
-        libraryId: Number(data.libraryId),
+        libraryId: data.libraryId,
         title: data.title,
         author: data.author,
-        year: Number(data.year),
+        year: data.year,
         description: data.description,
         coverImage: data.coverImage,
       }
@@ -24,7 +24,7 @@ export class LibrariesService implements ILibrariesService {
 
   deleteBook(id: ID): Promise<Book> {
     return this.prisma.book.delete({
-      where: { id: +id },
+      where: { id },
     });
   }
 
@@ -42,20 +42,20 @@ export class LibrariesService implements ILibrariesService {
 
   deleteLibrary(id: ID): Promise<Library> {
     return this.prisma.library.delete({
-      where: { id: +id },
+      where: { id },
     });
   }
 
   findBookById(id: ID): Promise<Book | null> {
     return this.prisma.book.findUnique({
-      where: { id: +id },
+      where: { id },
     });
   }
 
   findAllBooks(params: Partial<SearchBookParams>): Promise<Book[]> {
     return this.prisma.book.findMany({
       where: {
-        libraryId: Number(params.libraryId) || undefined,
+        libraryId: params.libraryId || undefined,
         author: params.author,
         title: params.title,
         isAvailable: params.isAvailable,

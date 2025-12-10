@@ -34,27 +34,25 @@ export class SupportRequestService implements ISupportRequestService {
     });
   }
 
-  findSupportRequests(params: GetChatListParamsDto & { user?: number }) {
-    const user = params.user && +params.user;
-
+  findSupportRequests(params: GetChatListParamsDto & { user?: number }): Promise<SupportRequest[]> {
     return this.prisma.supportRequest.findMany({
       skip: params.offset,
       take: params.limit,
       where: {
-        user: user,
+        user: params.user,
         isActive: params.isActive,
       },
     });
   }
 
-  async sendMessage(data: SendMessageDto) {
+  async sendMessage(data: SendMessageDto): Promise<Message> {
     const createdMessage = await this.prisma.message.create({
       data: {
         author: data.author,
         sentAt: new Date(),
         text: data.text,
-        supportRequestId: +data.supportRequest,
-      }
+        supportRequestId: data.supportRequest,
+      },
     });
     const authorName = await this.prisma.user.findUnique({
       where: { id: data.author },
@@ -79,10 +77,8 @@ export class SupportRequestService implements ISupportRequestService {
 
   getMessages(supportRequest: ID): Promise<Message[]> {
     return this.prisma.message.findMany({
-      where: { supportRequestId: +supportRequest },
-      orderBy: {
-        sentAt: "asc",
-      }
+      where: { supportRequestId: supportRequest },
+      orderBy: { sentAt: "asc" },
     });
   }
 

@@ -1,14 +1,18 @@
-import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UseGuards, UsePipes } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { type CreateUserDto } from './types/dto/users';
+import type { CreateUserDto } from './types/dto/users';
 import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
+import { UsersValidationPipe } from 'src/validation/users.pipe';
+import { createUserValidationSchema, findUserValidationSchema } from 'src/validation/schemas/users.joiSchema';
+import { type SearchUserParams } from './types/users';
 
 @Controller("api")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UsePipes(new UsersValidationPipe(createUserValidationSchema))
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Post("admin/users/")
   @Roles("admin")
@@ -20,45 +24,39 @@ export class UsersController {
       name: createdUser?.name,
       role: createdUser?.role,
     };
-  }
+  };
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("admin/users/")
   @Roles("admin")
   async getUsersForAdmin(
-    @Req() req,
-    @Query("limit") limit: number,
-    @Query("offset") offset: number,
-    @Query("name") name: string,
-    @Query("email") email: string,
-    @Query("contactPhone") contactPhone: string,
+    @Query(
+      new UsersValidationPipe(findUserValidationSchema)
+    ) query: SearchUserParams
   ) {
-    console.log(req.user)
     return this.usersService.findAll({
-      limit,
-      offset,
-      email,
-      name,
-      contactPhone,
-    })
+      limit: query.limit,
+      offset: query.offset,
+      email: query.email,
+      name: query.name,
+      contactPhone: query.contactPhone,
+    });
   }
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("manager/users/")
   @Roles("manager")
   async getUsersForManager(
-    @Query("limit") limit: number,
-    @Query("offset") offset: number,
-    @Query("name") name: string,
-    @Query("email") email: string,
-    @Query("contactPhone") contactPhone: string,
+    @Query(
+      new UsersValidationPipe(findUserValidationSchema)
+    ) query: SearchUserParams
   ) {
     return this.usersService.findAll({
-      limit,
-      offset,
-      email,
-      name,
-      contactPhone,
-    })
+      limit: query.limit,
+      offset: query.offset,
+      email: query.email,
+      name: query.name,
+      contactPhone: query.contactPhone,
+    });
   }
 }

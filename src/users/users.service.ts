@@ -54,8 +54,8 @@ export class UsersService implements IUserService {
     ].filter(Boolean);
 
     return this.prisma.user.findMany({
-      skip: +params.offset || undefined,
-      take: +params.limit || undefined,
+      skip: params.offset || undefined,
+      take: params.limit || undefined,
       where: andCondition.length !== 0 ? { AND: andCondition } : undefined,
     });
   }

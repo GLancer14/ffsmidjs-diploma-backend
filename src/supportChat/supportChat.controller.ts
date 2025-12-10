@@ -12,8 +12,9 @@ import { RolesGuard } from 'src/roles/roles.guard';
 import { UsersService } from 'src/users/users.service';
 import { ClientIdCheckGuard } from './guards/clientCheck.guard';
 import { SupportChatValidationPipe } from 'src/validation/supportChat.pipe';
-import { sendMessageValidationSchema, supportSearchParamsValidationSchema } from 'src/validation/schemas/supportChat.joiSchema';
+import { markAsReadValidationSchema, sendMessageValidationSchema, supportSearchParamsValidationSchema } from 'src/validation/schemas/supportChat.joiSchema';
 import { type GetChatListParams } from './types/supportChat';
+import { idValidationSchema } from 'src/validation/schemas/common.joiSchema';
 
 @Controller("api")
 export class SupportChatController {
@@ -48,9 +49,6 @@ export class SupportChatController {
     @Query(new SupportChatValidationPipe(
       supportSearchParamsValidationSchema
     )) query: GetChatListParamsDto
-    // @Query("limit") limit: number,
-    // @Query("offset") offset: number,
-    // @Query("isActive") isActive: boolean,
   ) {
     const user = req.user as RequestUser;
     const supportRequests = await this.supportRequestService.findSupportRequests({
@@ -77,14 +75,14 @@ export class SupportChatController {
   @Get("manager/support-requests/")
   @Roles("manager")
   async getRequestsForManager(
-    @Query("limit") limit: number,
-    @Query("offset") offset: number,
-    @Query("isActive") isActive: boolean,
+    @Query(new SupportChatValidationPipe(
+      supportSearchParamsValidationSchema
+    )) query: GetChatListParamsDto
   ) {
     const supportRequests = await this.supportRequestService.findSupportRequests({
-      limit,
-      offset,
-      isActive,
+      limit: query.limit,
+      offset: query.offset,
+      isActive: query.isActive,
     });
     const supportRequestsForResponse = await Promise.all(supportRequests.map(async (supportRequest) => {
       const clientData = await this.usersService.findById(supportRequest.user);
@@ -101,7 +99,7 @@ export class SupportChatController {
           name: clientData?.name,
           email: clientData?.email,
           contactPhone: clientData?.contactPhone,
-        }
+        },
       };
     }));
 
@@ -115,8 +113,10 @@ export class SupportChatController {
   )
   @Get("common/support-requests/:id/messages")
   @Roles("manager", "client")
-  async getAllMessages(@Param("id") id: ID) {
-    return this.supportRequestService.getMessages(id);
+  getAllMessages(@Param(
+    new SupportChatValidationPipe(idValidationSchema)
+  ) params: { id: ID }) {
+    return this.supportRequestService.getMessages(params.id);
   }
 
   @UseGuards(
@@ -128,15 +128,19 @@ export class SupportChatController {
   @Roles("manager", "client")
   async sendMessage(
     @Req() req: Request,
-    @Body("text") text: string,
-    @Param("id") id: ID,
+    @Body(
+      new SupportChatValidationPipe(sendMessageValidationSchema)
+    ) body: { text: string },
+    @Param(
+      new SupportChatValidationPipe(idValidationSchema)
+    ) params: { id: ID },
   ) {
     const user = req.user as RequestUser;
     const authorName = await this.usersService.findById(user.id);
     const sentMessage = await this.supportRequestService.sendMessage({
       author: user.id,
-      supportRequest: id,
-      text,
+      supportRequest: params.id,
+      text: body.text,
     });
 
     return {
@@ -160,14 +164,18 @@ export class SupportChatController {
   @Roles("manager", "client")
   async markAsRead(
     @Req() req: Request,
-    @Body("createdBefore") createdBefore: Date,
-    @Param("id") id: ID,
+    @Body(
+      new SupportChatValidationPipe(markAsReadValidationSchema)
+    ) body: { createdBefore: Date },
+    @Param(
+      new SupportChatValidationPipe(idValidationSchema)
+    ) params: { id: ID },
   ) {
     const user = req.user as RequestUser;
     const messageObject = {
       user: user.id,
-      supportRequest: id,
-      createdBefore,
+      supportRequest: params.id,
+      createdBefore: body.createdBefore,
     };
 
     if (user.role === "client") {

@@ -32,8 +32,8 @@ export class SupportRequestClientService implements ISupportRequestClientService
   markMessageAsRead(params: MarkMessageAsReadDto) {
     return this.prisma.message.updateMany({
       where: {
-        author: { not: +params.user },
-        supportRequestId: +params.supportRequest,
+        author: { not: params.user },
+        supportRequestId: params.supportRequest,
         sentAt: {
           lt: new Date(params.createdBefore),
         },
@@ -41,7 +41,7 @@ export class SupportRequestClientService implements ISupportRequestClientService
       },
       data: {
         readAt: new Date(),
-      }
+      },
     });
   }
 
@@ -50,7 +50,7 @@ export class SupportRequestClientService implements ISupportRequestClientService
       where: {
         supportRequestId: supportRequest,
         readAt: {
-          not: null
+          not: null,
         }
       }
     });

@@ -5,21 +5,6 @@ import { MarkMessageAsReadDto } from './types/dto/supportChat';
 import { Message } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-// const initialMessage: Message = {
-//   author: 0,
-//   sentAt: new Date,
-//   text: "",
-//   readAt: new Date,
-// }
-
-// const initalSupportRequest: SupportRequest = {
-//   id: 0,
-//   user: 0,
-//   createdAt: new Date,
-//   messages: [initialMessage],
-//   isActive: true,
-// }
-
 @Injectable()
 export class SupportRequestEmployeeService implements ISupportRequestEmployeeService {
   constructor(private prisma: PrismaService) {}
@@ -27,8 +12,8 @@ export class SupportRequestEmployeeService implements ISupportRequestEmployeeSer
   markMessageAsRead(params: MarkMessageAsReadDto) {
     return this.prisma.message.updateMany({
       where: {
-        author: { not: +params.user },
-        supportRequestId: +params.supportRequest,
+        author: { not: params.user },
+        supportRequestId: params.supportRequest,
         sentAt: {
           lt: new Date(params.createdBefore),
         },
