@@ -57,20 +57,14 @@ export class SupportRequestService implements ISupportRequestService {
     const authorName = await this.prisma.user.findUnique({
       where: { id: data.author },
     });
+    const supportRequest = await this.prisma.supportRequest.findUnique({
+      where: { id: +data.supportRequest },
+    });
 
     this.eventEmitter.emit("message.created", {
-      supportRequest: data.supportRequest,
-      message: {
-        id: createdMessage.id,
-        createdAt: createdMessage.sentAt,
-        text: createdMessage.text,
-        readAt: createdMessage.readAt,
-        author: {
-          id: createdMessage.author,
-          name: authorName?.name,
-        }
-      }
-    })
+      supportRequest,
+      message: createdMessage,
+    });
     
     return createdMessage;
   }

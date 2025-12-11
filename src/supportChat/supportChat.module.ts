@@ -5,6 +5,7 @@ import { SupportRequestClientService } from './supportRequestClient.service';
 import { SupportRequestEmployeeService } from './supportRequestEmployee.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UsersService } from 'src/users/users.service';
+import { SupportChatGateway } from './supportChat.gateway';
 
 @Module({
   imports: [],
@@ -15,6 +16,7 @@ import { UsersService } from 'src/users/users.service';
     SupportRequestEmployeeService,
     UsersService,
     PrismaService,
+    SupportChatGateway,
   ],
 })
 export class SupportChatModule {}
