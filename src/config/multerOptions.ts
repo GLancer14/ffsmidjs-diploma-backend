@@ -3,10 +3,10 @@ import { existsSync, mkdirSync } from "fs";
 import { diskStorage } from "multer";
 
 const multerOptions = {
-    dest: "../uploads/images",
+    // dest: "../uploads/images",
     storage: diskStorage({
       destination: (req, file, cb) => {
-        const uploadPath = "src/uploads/images";
+        const uploadPath = "uploads/images";
         if (!existsSync(uploadPath)) {
           mkdirSync(uploadPath, { recursive: true });
         }

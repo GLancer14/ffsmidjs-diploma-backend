@@ -6,6 +6,8 @@ import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './app.exceptionFilter';
 import { InternalServerErrorException } from '@nestjs/common';
 import { PrismaClientExceptionFilter } from './prisma/prisma.exceptionFilter';
+import { SessionSocketIoAdapter } from './websocket/sessionSocketAuth.adapter';
+import { SessionSerializer } from './auth/session.serializer';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,30 +16,54 @@ async function bootstrap() {
     throw new InternalServerErrorException("Отсутствует ключ сессии");
   }
 
+  const sessionSerializer = app.get(SessionSerializer);
+
+  passport.serializeUser((user, done) => {
+    sessionSerializer.serializeUser(user, done);
+  })
+
+  passport.deserializeUser((payload, done) => {
+    sessionSerializer.deserializeUser(payload, done);
+  })
+
   app.use(cookieParser());
+  const sessionMiddleware = session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      maxAge: 360000000,
+    }
+  });
+  const passportInitialize = passport.initialize();
+  const passportSession = passport.session();
+  
   // app.enableCors({
   //   origin: "http://localhost:3000",
   //   credentials: true,
   // });
 
-  app.use(
-    session({
-      secret: process.env.SESSION_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        httpOnly: true,
-        maxAge: 360000000,
-      }
-    })
-  );
-  app.use(passport.initialize());
-  app.use(passport.session());
+  app.use(sessionMiddleware);
+  app.use(passportInitialize);
+  app.use(passportSession);
+
+  app.use((req, res, next) => {
+    console.log("http session: ", req.session);
+    console.log("http user: ", req.user);
+    next();
+  });
 
   app.useGlobalFilters(
     new GlobalExceptionFilter(),
     new PrismaClientExceptionFilter()
   );
+  app.useWebSocketAdapter(new SessionSocketIoAdapter(
+    app,
+    sessionMiddleware,
+    passportInitialize,
+    passportSession,
+  ))
 
   await app.listen(process.env.PORT ?? 3000);
 }

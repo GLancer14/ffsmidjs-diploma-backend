@@ -15,7 +15,7 @@ export class LibrariesValidationPipe implements PipeTransform {
         case "id":
           validatingValue[key] = Number(value);
           break;
-        case "library":
+        case "libraryId":
           validatingValue[key] = Number(value);
           break;
         case "year":
