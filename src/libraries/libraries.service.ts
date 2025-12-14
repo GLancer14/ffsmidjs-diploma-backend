@@ -57,10 +57,12 @@ export class LibrariesService implements ILibrariesService {
   findAllBooks(params: Partial<SearchBookParams>): Promise<Book[]> {
     return this.prisma.book.findMany({
       where: {
-        libraryId: params.libraryId || undefined,
-        author: params.author,
-        title: params.title,
-        isAvailable: params.isAvailable,
+        OR: [
+          { libraryId: params.libraryId || undefined },
+          { author: params.author },
+          { title: params.title },
+          { isAvailable: params.isAvailable },
+        ],
       }
     });
   }
