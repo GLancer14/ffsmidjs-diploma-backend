@@ -18,6 +18,8 @@ export class LibrariesService implements ILibrariesService {
         year: data.year,
         description: data.description,
         coverImage: data.coverImage,
+        totalCopies: data.totalCopies,
+        availableCopies: data.availableCopies,
       }
     });
   }

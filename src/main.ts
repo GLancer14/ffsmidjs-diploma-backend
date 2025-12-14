@@ -26,6 +26,11 @@ async function bootstrap() {
     sessionSerializer.deserializeUser(payload, done);
   })
 
+  app.enableCors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+
   app.use(cookieParser());
   const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET,

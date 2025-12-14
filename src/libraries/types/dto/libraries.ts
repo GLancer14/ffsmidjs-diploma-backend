@@ -14,6 +14,7 @@ export interface BookDto {
   year?: number;
   description?: string;
   totalCopies?: number;
+  availableCopies?: number;
 }
 
 export interface LibraryDto {
