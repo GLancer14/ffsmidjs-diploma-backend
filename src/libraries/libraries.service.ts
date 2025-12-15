@@ -61,6 +61,8 @@ export class LibrariesService implements ILibrariesService {
           { libraryId: params.libraryId || undefined },
           { author: params.author },
           { title: params.title },
+        ],
+        AND: [
           { isAvailable: params.isAvailable },
         ],
       }
