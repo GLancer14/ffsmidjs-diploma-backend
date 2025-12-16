@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   Library: 'Library',
   Book: 'Book',
+  BookOnLibrary: 'BookOnLibrary',
   BookRental: 'BookRental',
   SupportRequest: 'SupportRequest',
   Message: 'Message'
@@ -101,18 +102,25 @@ export type LibraryScalarFieldEnum = (typeof LibraryScalarFieldEnum)[keyof typeo
 
 export const BookScalarFieldEnum = {
   id: 'id',
-  libraryId: 'libraryId',
   title: 'title',
   author: 'author',
   year: 'year',
   description: 'description',
-  coverImage: 'coverImage',
-  isAvailable: 'isAvailable',
-  totalCopies: 'totalCopies',
-  availableCopies: 'availableCopies'
+  coverImage: 'coverImage'
 } as const
 
 export type BookScalarFieldEnum = (typeof BookScalarFieldEnum)[keyof typeof BookScalarFieldEnum]
+
+
+export const BookOnLibraryScalarFieldEnum = {
+  bookId: 'bookId',
+  libraryId: 'libraryId',
+  totalCopies: 'totalCopies',
+  availableCopies: 'availableCopies',
+  isAvailable: 'isAvailable'
+} as const
+
+export type BookOnLibraryScalarFieldEnum = (typeof BookOnLibraryScalarFieldEnum)[keyof typeof BookOnLibraryScalarFieldEnum]
 
 
 export const BookRentalScalarFieldEnum = {

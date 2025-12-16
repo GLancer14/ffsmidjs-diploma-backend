@@ -224,6 +224,7 @@ export type LibraryWhereInput = {
   description?: Prisma.StringNullableFilter<"Library"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Library"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Library"> | Date | string
+  book?: Prisma.BookOnLibraryListRelationFilter
 }
 
 export type LibraryOrderByWithRelationInput = {
@@ -233,6 +234,7 @@ export type LibraryOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  book?: Prisma.BookOnLibraryOrderByRelationAggregateInput
 }
 
 export type LibraryWhereUniqueInput = Prisma.AtLeast<{
@@ -245,6 +247,7 @@ export type LibraryWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"Library"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Library"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Library"> | Date | string
+  book?: Prisma.BookOnLibraryListRelationFilter
 }, "id">
 
 export type LibraryOrderByWithAggregationInput = {
@@ -279,6 +282,7 @@ export type LibraryCreateInput = {
   description?: string | null
   createdAt: Date | string
   updatedAt: Date | string
+  book?: Prisma.BookOnLibraryCreateNestedManyWithoutLibraryInput
 }
 
 export type LibraryUncheckedCreateInput = {
@@ -288,6 +292,7 @@ export type LibraryUncheckedCreateInput = {
   description?: string | null
   createdAt: Date | string
   updatedAt: Date | string
+  book?: Prisma.BookOnLibraryUncheckedCreateNestedManyWithoutLibraryInput
 }
 
 export type LibraryUpdateInput = {
@@ -296,6 +301,7 @@ export type LibraryUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  book?: Prisma.BookOnLibraryUpdateManyWithoutLibraryNestedInput
 }
 
 export type LibraryUncheckedUpdateInput = {
@@ -305,6 +311,7 @@ export type LibraryUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  book?: Prisma.BookOnLibraryUncheckedUpdateManyWithoutLibraryNestedInput
 }
 
 export type LibraryCreateManyInput = {
@@ -368,10 +375,108 @@ export type LibrarySumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
+export type LibraryScalarRelationFilter = {
+  is?: Prisma.LibraryWhereInput
+  isNot?: Prisma.LibraryWhereInput
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type LibraryCreateNestedOneWithoutBookInput = {
+  create?: Prisma.XOR<Prisma.LibraryCreateWithoutBookInput, Prisma.LibraryUncheckedCreateWithoutBookInput>
+  connectOrCreate?: Prisma.LibraryCreateOrConnectWithoutBookInput
+  connect?: Prisma.LibraryWhereUniqueInput
+}
+
+export type LibraryUpdateOneRequiredWithoutBookNestedInput = {
+  create?: Prisma.XOR<Prisma.LibraryCreateWithoutBookInput, Prisma.LibraryUncheckedCreateWithoutBookInput>
+  connectOrCreate?: Prisma.LibraryCreateOrConnectWithoutBookInput
+  upsert?: Prisma.LibraryUpsertWithoutBookInput
+  connect?: Prisma.LibraryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LibraryUpdateToOneWithWhereWithoutBookInput, Prisma.LibraryUpdateWithoutBookInput>, Prisma.LibraryUncheckedUpdateWithoutBookInput>
+}
+
+export type LibraryCreateWithoutBookInput = {
+  name: string
+  address: string
+  description?: string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+}
+
+export type LibraryUncheckedCreateWithoutBookInput = {
+  id?: number
+  name: string
+  address: string
+  description?: string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+}
+
+export type LibraryCreateOrConnectWithoutBookInput = {
+  where: Prisma.LibraryWhereUniqueInput
+  create: Prisma.XOR<Prisma.LibraryCreateWithoutBookInput, Prisma.LibraryUncheckedCreateWithoutBookInput>
+}
+
+export type LibraryUpsertWithoutBookInput = {
+  update: Prisma.XOR<Prisma.LibraryUpdateWithoutBookInput, Prisma.LibraryUncheckedUpdateWithoutBookInput>
+  create: Prisma.XOR<Prisma.LibraryCreateWithoutBookInput, Prisma.LibraryUncheckedCreateWithoutBookInput>
+  where?: Prisma.LibraryWhereInput
+}
+
+export type LibraryUpdateToOneWithWhereWithoutBookInput = {
+  where?: Prisma.LibraryWhereInput
+  data: Prisma.XOR<Prisma.LibraryUpdateWithoutBookInput, Prisma.LibraryUncheckedUpdateWithoutBookInput>
+}
+
+export type LibraryUpdateWithoutBookInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LibraryUncheckedUpdateWithoutBookInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type LibraryCountOutputType
+ */
+
+export type LibraryCountOutputType = {
+  book: number
+}
+
+export type LibraryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  book?: boolean | LibraryCountOutputTypeCountBookArgs
+}
+
+/**
+ * LibraryCountOutputType without action
+ */
+export type LibraryCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LibraryCountOutputType
+   */
+  select?: Prisma.LibraryCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * LibraryCountOutputType without action
+ */
+export type LibraryCountOutputTypeCountBookArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BookOnLibraryWhereInput
+}
 
 
 export type LibrarySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -381,6 +486,8 @@ export type LibrarySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   description?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  book?: boolean | Prisma.Library$bookArgs<ExtArgs>
+  _count?: boolean | Prisma.LibraryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["library"]>
 
 export type LibrarySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -411,10 +518,18 @@ export type LibrarySelectScalar = {
 }
 
 export type LibraryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["library"]>
+export type LibraryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  book?: boolean | Prisma.Library$bookArgs<ExtArgs>
+  _count?: boolean | Prisma.LibraryCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type LibraryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type LibraryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $LibraryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Library"
-  objects: {}
+  objects: {
+    book: Prisma.$BookOnLibraryPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     name: string
@@ -816,6 +931,7 @@ readonly fields: LibraryFieldRefs;
  */
 export interface Prisma__LibraryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  book<T extends Prisma.Library$bookArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Library$bookArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookOnLibraryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -868,6 +984,10 @@ export type LibraryFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   omit?: Prisma.LibraryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryInclude<ExtArgs> | null
+  /**
    * Filter, which Library to fetch.
    */
   where: Prisma.LibraryWhereUniqueInput
@@ -886,6 +1006,10 @@ export type LibraryFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.LibraryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryInclude<ExtArgs> | null
+  /**
    * Filter, which Library to fetch.
    */
   where: Prisma.LibraryWhereUniqueInput
@@ -903,6 +1027,10 @@ export type LibraryFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the Library
    */
   omit?: Prisma.LibraryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryInclude<ExtArgs> | null
   /**
    * Filter, which Library to fetch.
    */
@@ -952,6 +1080,10 @@ export type LibraryFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.LibraryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryInclude<ExtArgs> | null
+  /**
    * Filter, which Library to fetch.
    */
   where?: Prisma.LibraryWhereInput
@@ -1000,6 +1132,10 @@ export type LibraryFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.LibraryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryInclude<ExtArgs> | null
+  /**
    * Filter, which Libraries to fetch.
    */
   where?: Prisma.LibraryWhereInput
@@ -1042,6 +1178,10 @@ export type LibraryCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Library
    */
   omit?: Prisma.LibraryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryInclude<ExtArgs> | null
   /**
    * The data needed to create a Library.
    */
@@ -1090,6 +1230,10 @@ export type LibraryUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Library
    */
   omit?: Prisma.LibraryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryInclude<ExtArgs> | null
   /**
    * The data needed to update a Library.
    */
@@ -1157,6 +1301,10 @@ export type LibraryUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.LibraryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryInclude<ExtArgs> | null
+  /**
    * The filter to search for the Library to update in case it exists.
    */
   where: Prisma.LibraryWhereUniqueInput
@@ -1183,6 +1331,10 @@ export type LibraryDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.LibraryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryInclude<ExtArgs> | null
+  /**
    * Filter which Library to delete.
    */
   where: Prisma.LibraryWhereUniqueInput
@@ -1203,6 +1355,30 @@ export type LibraryDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * Library.book
+ */
+export type Library$bookArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BookOnLibrary
+   */
+  select?: Prisma.BookOnLibrarySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BookOnLibrary
+   */
+  omit?: Prisma.BookOnLibraryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BookOnLibraryInclude<ExtArgs> | null
+  where?: Prisma.BookOnLibraryWhereInput
+  orderBy?: Prisma.BookOnLibraryOrderByWithRelationInput | Prisma.BookOnLibraryOrderByWithRelationInput[]
+  cursor?: Prisma.BookOnLibraryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BookOnLibraryScalarFieldEnum | Prisma.BookOnLibraryScalarFieldEnum[]
+}
+
+/**
  * Library without action
  */
 export type LibraryDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1214,4 +1390,8 @@ export type LibraryDefaultArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Library
    */
   omit?: Prisma.LibraryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryInclude<ExtArgs> | null
 }

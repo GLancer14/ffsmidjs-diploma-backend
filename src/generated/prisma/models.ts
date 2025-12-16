@@ -11,6 +11,7 @@
 export type * from './models/User.js'
 export type * from './models/Library.js'
 export type * from './models/Book.js'
+export type * from './models/BookOnLibrary.js'
 export type * from './models/BookRental.js'
 export type * from './models/SupportRequest.js'
 export type * from './models/Message.js'

@@ -12,19 +12,32 @@ export class LibrariesService implements ILibrariesService {
   createBook(data: BookDto & { coverImage?: string }): Promise<Book> {
     return this.prisma.book.create({
       data: {
-        libraryId: data.libraryId,
         title: data.title,
         author: data.author,
         year: data.year,
         description: data.description,
         coverImage: data.coverImage,
-        totalCopies: data.totalCopies,
-        availableCopies: data.availableCopies,
+        library: {
+          create: {
+            totalCopies: data.totalCopies,
+            availableCopies: data.availableCopies,
+            isAvailable: true,
+            library: {
+              connect: {
+                id: data.libraryId
+              }
+            }
+          }
+        }
       }
     });
   }
 
-  deleteBook(id: ID): Promise<Book> {
+  async deleteBook(id: ID): Promise<Book> {
+    await this.prisma.bookOnLibrary.deleteMany({
+      where: { bookId: id },
+    });
+
     return this.prisma.book.delete({
       where: { id },
     });
@@ -57,15 +70,49 @@ export class LibrariesService implements ILibrariesService {
   findAllBooks(params: Partial<SearchBookParams>): Promise<Book[]> {
     return this.prisma.book.findMany({
       where: {
-        OR: [
-          { libraryId: params.libraryId || undefined },
-          { author: params.author },
-          { title: params.title },
-        ],
         AND: [
-          { isAvailable: params.isAvailable },
+          {
+            OR: [
+              params.author ? { author: params.author } : {},
+              params.title ? { title: params.title } : {},
+              params.libraryId ? { 
+                library: {
+                some: {
+                  libraryId: params.libraryId,
+                  isAvailable: params.isAvailable
+                }
+              } } : {}
+            ].filter(cond => Object.keys(cond).length > 0),
+          },
+          { library: {
+            some: {
+              isAvailable: params.isAvailable,
+            }
+          } }
         ],
+      },
+      include: {
+        library: {
+          where: {
+            isAvailable: params.isAvailable
+          },
+          include: {
+            library: true
+          }
+        }
       }
+      // where: {
+      //   OR: [
+      //     { library: {
+            
+      //     }params.libraryId || undefined },
+      //     { author: params.author },
+      //     { title: params.title },
+      //   ],
+      //   AND: [
+      //     { isAvailable: params.isAvailable },
+      //   ],
+      // }
     });
   }
 }

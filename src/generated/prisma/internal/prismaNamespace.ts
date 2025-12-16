@@ -387,6 +387,7 @@ export const ModelName = {
   User: 'User',
   Library: 'Library',
   Book: 'Book',
+  BookOnLibrary: 'BookOnLibrary',
   BookRental: 'BookRental',
   SupportRequest: 'SupportRequest',
   Message: 'Message'
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "library" | "book" | "bookRental" | "supportRequest" | "message"
+    modelProps: "user" | "library" | "book" | "bookOnLibrary" | "bookRental" | "supportRequest" | "message"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -628,6 +629,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.BookCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.BookCountAggregateOutputType> | number
+        }
+      }
+    }
+    BookOnLibrary: {
+      payload: Prisma.$BookOnLibraryPayload<ExtArgs>
+      fields: Prisma.BookOnLibraryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BookOnLibraryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookOnLibraryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BookOnLibraryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookOnLibraryPayload>
+        }
+        findFirst: {
+          args: Prisma.BookOnLibraryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookOnLibraryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BookOnLibraryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookOnLibraryPayload>
+        }
+        findMany: {
+          args: Prisma.BookOnLibraryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookOnLibraryPayload>[]
+        }
+        create: {
+          args: Prisma.BookOnLibraryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookOnLibraryPayload>
+        }
+        createMany: {
+          args: Prisma.BookOnLibraryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BookOnLibraryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookOnLibraryPayload>[]
+        }
+        delete: {
+          args: Prisma.BookOnLibraryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookOnLibraryPayload>
+        }
+        update: {
+          args: Prisma.BookOnLibraryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookOnLibraryPayload>
+        }
+        deleteMany: {
+          args: Prisma.BookOnLibraryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BookOnLibraryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BookOnLibraryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookOnLibraryPayload>[]
+        }
+        upsert: {
+          args: Prisma.BookOnLibraryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookOnLibraryPayload>
+        }
+        aggregate: {
+          args: Prisma.BookOnLibraryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBookOnLibrary>
+        }
+        groupBy: {
+          args: Prisma.BookOnLibraryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BookOnLibraryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BookOnLibraryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BookOnLibraryCountAggregateOutputType> | number
         }
       }
     }
@@ -918,18 +993,25 @@ export type LibraryScalarFieldEnum = (typeof LibraryScalarFieldEnum)[keyof typeo
 
 export const BookScalarFieldEnum = {
   id: 'id',
-  libraryId: 'libraryId',
   title: 'title',
   author: 'author',
   year: 'year',
   description: 'description',
-  coverImage: 'coverImage',
-  isAvailable: 'isAvailable',
-  totalCopies: 'totalCopies',
-  availableCopies: 'availableCopies'
+  coverImage: 'coverImage'
 } as const
 
 export type BookScalarFieldEnum = (typeof BookScalarFieldEnum)[keyof typeof BookScalarFieldEnum]
+
+
+export const BookOnLibraryScalarFieldEnum = {
+  bookId: 'bookId',
+  libraryId: 'libraryId',
+  totalCopies: 'totalCopies',
+  availableCopies: 'availableCopies',
+  isAvailable: 'isAvailable'
+} as const
+
+export type BookOnLibraryScalarFieldEnum = (typeof BookOnLibraryScalarFieldEnum)[keyof typeof BookOnLibraryScalarFieldEnum]
 
 
 export const BookRentalScalarFieldEnum = {
@@ -1157,6 +1239,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   library?: Prisma.LibraryOmit
   book?: Prisma.BookOmit
+  bookOnLibrary?: Prisma.BookOnLibraryOmit
   bookRental?: Prisma.BookRentalOmit
   supportRequest?: Prisma.SupportRequestOmit
   message?: Prisma.MessageOmit

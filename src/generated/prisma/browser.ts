@@ -33,6 +33,11 @@ export type Library = Prisma.LibraryModel
  */
 export type Book = Prisma.BookModel
 /**
+ * Model BookOnLibrary
+ * 
+ */
+export type BookOnLibrary = Prisma.BookOnLibraryModel
+/**
  * Model BookRental
  * 
  */
