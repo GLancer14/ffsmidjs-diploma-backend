@@ -67,6 +67,12 @@ export class LibrariesService implements ILibrariesService {
     });
   }
 
+  findLibraryById(id: ID): Promise<Library | null> {
+    return this.prisma.library.findUnique({
+      where: { id },
+    });
+  }
+
   findAllBooks(params: Partial<SearchBookParams>): Promise<Book[]> {
     if (!params.author && !params.title && !params.libraryId) {
       return Promise.resolve([]);

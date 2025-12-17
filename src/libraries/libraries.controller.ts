@@ -53,6 +53,12 @@ export class LibrariesController {
     return this.librariesService.findBookById(params.id);
   }
 
+  @Get("common/libraries/:id")
+  getLibrary(
+    @Param(new LibrariesValidationPipe(idValidationSchema)) params: { id: ID }
+  ) {
+    return this.librariesService.findLibraryById(params.id);
+  }
 
   @UsePipes(new LibrariesValidationPipe(createLibraryValidationSchema))
   @UseGuards(AuthenticatedGuard, RolesGuard)

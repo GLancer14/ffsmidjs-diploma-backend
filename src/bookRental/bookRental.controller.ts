@@ -6,10 +6,11 @@ import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { Roles } from 'src/roles/roles.decorator';
 import { BookRentalValidationPipe } from 'src/validation/bookRental.pipe';
-import { findRentValidationSchema, rentBookValidationSchema } from 'src/validation/schemas/bookRental.joiSchema';
+import { rentBookValidationSchema } from 'src/validation/schemas/bookRental.joiSchema';
 import { type Request } from 'express';
 import { RequestUser } from 'src/users/types/dto/users';
 import { ID } from 'src/types/commonTypes';
+import { idValidationSchema } from 'src/validation/schemas/common.joiSchema';
 // import { BookRental } from './types/bookRental';
 
 @Controller("api")
@@ -45,7 +46,7 @@ export class BookRentalController {
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Roles("client")
   findRent(
-    @Param(new BookRentalValidationPipe(findRentValidationSchema)) params: { id: ID },
+    @Param(new BookRentalValidationPipe(idValidationSchema)) params: { id: ID },
     @Req() req: Request
   ): Promise<BookRental | null> {
     return this.bookRentalService.findById(params.id);
