@@ -68,6 +68,10 @@ export class LibrariesService implements ILibrariesService {
   }
 
   findAllBooks(params: Partial<SearchBookParams>): Promise<Book[]> {
+    if (!params.author && !params.title && !params.libraryId) {
+      return Promise.resolve([]);
+    }
+
     return this.prisma.book.findMany({
       where: {
         AND: [

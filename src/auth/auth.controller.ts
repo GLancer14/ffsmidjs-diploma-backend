@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Post, Req, UseGuards, UsePipes } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Req, UseGuards, UsePipes } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import type { RegisterUserDto, RequestUser } from 'src/users/types/dto/users';
 import { AuthenticatedGuard } from './guards/local.authenticated.guard';
@@ -19,6 +19,7 @@ export class AuthController {
       email: user.email,
       name: user.name,
       contactPhone: user.contactPhone,
+      role: user.role,
     };
   }
 
@@ -36,5 +37,17 @@ export class AuthController {
   @Post("auth/register")
   register(@Body() userData: RegisterUserDto) {
     return this.authService.register(userData);
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Get("auth/me")
+  loggedUser(@Req() req: Request) {
+    const user = req.user as RequestUser;
+    return {
+      email: user.email,
+      name: user.name,
+      contactPhone: user.contactPhone,
+      role: user.role,
+    };
   }
 }

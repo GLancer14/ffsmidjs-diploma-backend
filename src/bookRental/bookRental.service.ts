@@ -32,6 +32,34 @@ export class BookRentalService implements IBookRentalService {
       }
     });
 
+    const updatedBook = await this.prisma.bookOnLibrary.update({
+      data: {
+        availableCopies: {
+          decrement: 1
+        }
+      },
+      where: {
+        bookId_libraryId: {
+          bookId: data.bookId,
+          libraryId: data.libraryId,
+        },
+      },
+    });
+
+    if (updatedBook.availableCopies <= 0) {
+       await this.prisma.bookOnLibrary.update({
+        data: {
+          isAvailable: false, 
+        },
+        where: {
+          bookId_libraryId: {
+            bookId: data.bookId,
+            libraryId: data.libraryId,
+          },
+        },
+      });
+    }
+
     return bookRentRecord;
   }
 
