@@ -9,12 +9,20 @@ import { type ObjectSchema } from "joi";
 export class BookRentalValidationPipe implements PipeTransform {
   constructor(private schema: ObjectSchema) {}
 
-  transform(value: any) {
-    const { error } = this.schema.validate(value);
+  transform(validatingValue: any) {
+    for (let [key, value] of Object.entries(validatingValue)) {
+      switch (key) {
+        case "id":
+          validatingValue[key] = Number(value);
+          break;
+      }
+    }
+
+    const { error } = this.schema.validate(validatingValue);
     if (error) {
       throw new BadRequestException(`Validation failed - ${error.message}`);
     }
 
-    return value;
+    return validatingValue;
   }
 }

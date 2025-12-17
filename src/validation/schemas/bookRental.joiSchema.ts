@@ -6,3 +6,7 @@ export const rentBookValidationSchema = Joi.object().keys({
   dateStart: Joi.string().min(4).required(),
   dateEnd: Joi.string().min(4).required(),
 });
+
+export const findRentValidationSchema = Joi.object().keys({
+  id: Joi.number().required(),
+});

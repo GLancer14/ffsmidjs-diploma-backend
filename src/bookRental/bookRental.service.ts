@@ -67,11 +67,15 @@ export class BookRentalService implements IBookRentalService {
   //   return Promise.resolve(initialBookRental);
   // }
 
-  // findById(id: ID) {
-  //   return Promise.resolve(initialBookRental);
-  // }
+  findById(id: ID) {
+    return this.prisma.bookRental.findUnique({
+      where: { id },
+    });
+  }
 
-  // findAll(params: SearchBookRentalParams) {
-  //   return Promise.resolve([initialBookRental]);
-  // }
+  findAll(userId: ID) {
+    return this.prisma.bookRental.findMany({
+      where: { userId },
+    });
+  }
 }
