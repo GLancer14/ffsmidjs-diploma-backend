@@ -4,7 +4,7 @@ import { IUserService, SearchUserParams } from './types/users';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ID } from 'src/types/commonTypes';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
-import { RegisterUserDto } from './types/dto/users';
+import { CreateUserDto, RegisterUserDto, UpdateSelfDto } from './types/dto/users';
 import { User } from 'src/generated/prisma/client';
 
 @Injectable()
@@ -43,6 +43,28 @@ export class UsersService implements IUserService {
   findByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { email }
+    });
+  }
+
+  async updateSelf(params: UpdateSelfDto): Promise<User[] | null> {
+    let passwordHash: string | null = null;
+
+    if (params.password) {
+      passwordHash = await bcrypt.hash(params.password, 10);
+    }
+
+    const dataForUpdate = {
+      email: params.email || undefined,
+      name: params.name || undefined,
+      contactPhone: params.contactPhone || undefined,
+      passwordHash: passwordHash || undefined,
+    };
+    
+    return this.prisma.user.updateManyAndReturn({
+      where: {
+        id: params.id,
+      },
+      data: dataForUpdate,
     });
   }
 

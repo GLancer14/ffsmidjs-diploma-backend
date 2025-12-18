@@ -1,12 +1,14 @@
-import { Body, Controller, Get, Post, Query, Req, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Query, Req, UseGuards, UsePipes } from '@nestjs/common';
 import { UsersService } from './users.service';
-import type { CreateUserDto } from './types/dto/users';
+import type { CreateUserDto, RequestUser } from './types/dto/users';
 import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
 import { UsersValidationPipe } from 'src/validation/users.pipe';
-import { createUserValidationSchema, findUserValidationSchema } from 'src/validation/schemas/users.joiSchema';
+import { createUserValidationSchema, findUserValidationSchema, updateUserValidationSchema } from 'src/validation/schemas/users.joiSchema';
 import { type SearchUserParams } from './types/users';
+import { ClientIdCheckGuard } from 'src/supportChat/guards/clientCheck.guard';
+import type { Request } from 'express';
 
 @Controller("api")
 export class UsersController {
@@ -24,6 +26,31 @@ export class UsersController {
       name: createdUser?.name,
       role: createdUser?.role,
     };
+  };
+
+  @UsePipes(new UsersValidationPipe(updateUserValidationSchema))
+  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @Put("self/users")
+  async updateSelf(
+    @Req() req: Request,
+    @Body() user: Partial<CreateUserDto>
+  ) {
+    const userFromSession = req.user as RequestUser;
+    const updatedUser = await this.usersService.updateSelf({
+      ...user,
+      id: userFromSession.id,
+    });
+    console.log(updatedUser)
+
+    if (updatedUser) {
+      return {
+        id: updatedUser[0].id,
+        email: updatedUser[0].email,
+        name: updatedUser[0].name,
+        contactPhone: updatedUser[0].contactPhone,
+        role: updatedUser[0].role,
+      };
+    }
   };
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
