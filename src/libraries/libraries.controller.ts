@@ -26,9 +26,11 @@ import { LibrariesValidationPipe } from 'src/validation/libraries.pipe';
 import {
   createBookValidationSchema,
   createLibraryValidationSchema,
+  findLibrariesValidationSchema,
   getBooksValidationSchema,
 } from 'src/validation/schemas/libraries.joiSchema';
 import { idValidationSchema } from 'src/validation/schemas/common.joiSchema';
+import { type SearchLibraryParams } from './types/libraries';
 
 @Controller("api")
 export class LibrariesController {
@@ -58,6 +60,18 @@ export class LibrariesController {
     @Param(new LibrariesValidationPipe(idValidationSchema)) params: { id: ID }
   ) {
     return this.librariesService.findLibraryById(params.id);
+  }
+
+  @Get("common/libraries/")
+  getLibraries(
+    @Query(new LibrariesValidationPipe(findLibrariesValidationSchema)) query: SearchLibraryParams
+  ) {
+    return this.librariesService.findAllLibraries({
+      limit: query.limit,
+      offset: query.offset,
+      name: query.name,
+      address: query.address,
+    });
   }
 
   @UsePipes(new LibrariesValidationPipe(createLibraryValidationSchema))

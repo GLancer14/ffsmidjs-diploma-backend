@@ -33,6 +33,12 @@ export class LibrariesValidationPipe implements PipeTransform {
         case "availableCopies":
           validatingValue[key] = Number(value);
           break;
+        case "offset":
+          validatingValue[key] = Number(value);
+          break;
+        case "limit":
+          validatingValue[key] = Number(value);
+          break;
         default:
           validatingValue[key] = value;
           break;

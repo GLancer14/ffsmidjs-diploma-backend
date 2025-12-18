@@ -22,3 +22,10 @@ export const createBookValidationSchema = Joi.object().keys({
   totalCopies: Joi.number().optional(),
   availableCopies: Joi.number().optional(),
 });
+
+export const findLibrariesValidationSchema = Joi.object().keys({
+  limit: Joi.number().optional(),
+  offset: Joi.number().optional(),
+  name: Joi.string().optional().empty(""),
+  address: Joi.string().min(4).optional().empty(""),
+});

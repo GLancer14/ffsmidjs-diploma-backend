@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ILibrariesService, SearchBookParams } from './types/libraries';
+import { ILibrariesService, SearchBookParams, SearchLibraryParams } from './types/libraries';
 import { ID } from 'src/types/commonTypes';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BookDto, LibraryDto } from './types/dto/libraries';
@@ -70,6 +70,19 @@ export class LibrariesService implements ILibrariesService {
   findLibraryById(id: ID): Promise<Library | null> {
     return this.prisma.library.findUnique({
       where: { id },
+    });
+  }
+
+  findAllLibraries(params: SearchLibraryParams): Promise<Library[]> {
+    const andCondition = [
+      params.name ? { name: { contains: params.name } } : { name: undefined },
+      params.address ? { contactPhone: { contains: params.address } } : { contactPhone: undefined },
+    ].filter(Boolean);
+
+    return this.prisma.library.findMany({
+      skip: params.offset,
+      take: params.limit,
+      where: andCondition.length !== 0 ? { AND: andCondition } : undefined,
     });
   }
 

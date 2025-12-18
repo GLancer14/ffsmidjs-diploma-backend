@@ -8,6 +8,13 @@ export interface SearchBookParams {
   isAvailable: boolean;
 }
 
+export interface SearchLibraryParams {
+  limit: number;
+  offset: number;
+  name: string;
+  address: string;
+}
+
 export interface ILibrariesService {
   createBook(data: Partial<Book>): Promise<Book>;
   deleteBook(id: ID): Promise<Book>
