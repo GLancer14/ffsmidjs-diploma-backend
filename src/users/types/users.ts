@@ -4,9 +4,10 @@ import { User } from 'src/generated/prisma/client';
 export interface SearchUserParams {
   limit: number;
   offset: number;
-  email: string;
-  name: string;
-  contactPhone: string;
+  searchString: string;
+  // email: string;
+  // name: string;
+  // contactPhone: string;
 }
 
 export interface IUserService {

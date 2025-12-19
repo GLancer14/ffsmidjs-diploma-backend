@@ -40,11 +40,9 @@ export class UsersController {
       ...user,
       id: userFromSession.id,
     });
-    console.log(updatedUser)
 
     if (updatedUser) {
       return {
-        id: updatedUser[0].id,
         email: updatedUser[0].email,
         name: updatedUser[0].name,
         contactPhone: updatedUser[0].contactPhone,
@@ -61,29 +59,37 @@ export class UsersController {
       new UsersValidationPipe(findUserValidationSchema)
     ) query: SearchUserParams
   ) {
-    return this.usersService.findAll({
+    const users = await this.usersService.findAll({
       limit: query.limit,
       offset: query.offset,
-      email: query.email,
-      name: query.name,
-      contactPhone: query.contactPhone,
+      searchString: query.searchString,
+      // email: query.email,
+      // name: query.name,
+      // contactPhone: query.contactPhone,
+    })
+
+    const usersWithoutPasswords = users.map(user => {
+      const { passwordHash, ...filteredUser } = user;
+      return filteredUser;
     });
+
+    return usersWithoutPasswords;
   }
 
-  @UseGuards(AuthenticatedGuard, RolesGuard)
-  @Get("manager/users/")
-  @Roles("manager")
-  async getUsersForManager(
-    @Query(
-      new UsersValidationPipe(findUserValidationSchema)
-    ) query: SearchUserParams
-  ) {
-    return this.usersService.findAll({
-      limit: query.limit,
-      offset: query.offset,
-      email: query.email,
-      name: query.name,
-      contactPhone: query.contactPhone,
-    });
-  }
+  // @UseGuards(AuthenticatedGuard, RolesGuard)
+  // @Get("manager/users/")
+  // @Roles("manager")
+  // async getUsersForManager(
+  //   @Query(
+  //     new UsersValidationPipe(findUserValidationSchema)
+  //   ) query: SearchUserParams
+  // ) {
+  //   return this.usersService.findAll({
+  //     limit: query.limit,
+  //     offset: query.offset,
+  //     email: query.email,
+  //     name: query.name,
+  //     contactPhone: query.contactPhone,
+  //   });
+  // }
 }

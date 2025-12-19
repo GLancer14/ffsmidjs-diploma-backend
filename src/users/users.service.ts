@@ -69,16 +69,26 @@ export class UsersService implements IUserService {
   }
 
   findAll(params: SearchUserParams): Promise<User[]> {
-    const andCondition = [
-      params.email ? { email: { contains: params.email } } : { email: undefined },
-      params.name ? { name: { contains: params.name } } : { name: undefined },
-      params.contactPhone ? { contactPhone: { contains: params.contactPhone } } : { contactPhone: undefined },
-    ].filter(Boolean);
+    let orCondition;
+    if (params) {
+      orCondition = [
+        { email: { contains: params.searchString } },
+        { name: { contains: params.searchString } },
+        { contactPhone: { contains: params.searchString } },
+      ];
+    }
+    
+    // const andCondition = [
+    //   params.email ? { email: { contains: params.email } } : { email: undefined },
+    //   params.name ? { name: { contains: params.name } } : { name: undefined },
+    //   params.contactPhone ? { contactPhone: { contains: params.contactPhone } } : { contactPhone: undefined },
+    // ].filter(Boolean);
 
     return this.prisma.user.findMany({
       skip: params.offset || undefined,
       take: params.limit || undefined,
-      where: andCondition.length !== 0 ? { AND: andCondition } : undefined,
+      // where: andCondition.length !== 0 ? { AND: andCondition } : undefined,
+      where: orCondition.length !== 0 ? { OR: orCondition } : undefined,
     });
   }
 }

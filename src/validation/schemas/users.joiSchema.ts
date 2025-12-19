@@ -19,7 +19,8 @@ export const updateUserValidationSchema = Joi.object().keys({
 export const findUserValidationSchema = Joi.object().keys({
   limit: Joi.number().optional(),
   offset: Joi.number().optional(),
-  email: Joi.string().optional().empty(""),
-  name: Joi.string().optional().empty(""),
-  contactPhone: Joi.string().optional().empty(""),
+  searchString: Joi.string().optional().empty(""),
+  // email: Joi.string().optional().empty(""),
+  // name: Joi.string().optional().empty(""),
+  // contactPhone: Joi.string().optional().empty(""),
 });
