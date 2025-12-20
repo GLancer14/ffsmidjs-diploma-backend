@@ -24,3 +24,10 @@ export const findUserValidationSchema = Joi.object().keys({
   // name: Joi.string().optional().empty(""),
   // contactPhone: Joi.string().optional().empty(""),
 });
+
+export const getUsersCountValidationSchema = Joi.object().keys({
+  searchString: Joi.string().optional().empty(""),
+  // email: Joi.string().optional().empty(""),
+  // name: Joi.string().optional().empty(""),
+  // contactPhone: Joi.string().optional().empty(""),
+});

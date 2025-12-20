@@ -15,6 +15,9 @@ export class BookRentalValidationPipe implements PipeTransform {
         case "id":
           validatingValue[key] = Number(value);
           break;
+        case "userId":
+          validatingValue[key] = Number(value);
+          break;
       }
     }
 

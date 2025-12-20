@@ -5,7 +5,7 @@ import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
 import { UsersValidationPipe } from 'src/validation/users.pipe';
-import { createUserValidationSchema, findUserValidationSchema, updateUserValidationSchema } from 'src/validation/schemas/users.joiSchema';
+import { createUserValidationSchema, findUserValidationSchema, getUsersCountValidationSchema, updateUserValidationSchema } from 'src/validation/schemas/users.joiSchema';
 import { type SearchUserParams } from './types/users';
 import { ClientIdCheckGuard } from 'src/supportChat/guards/clientCheck.guard';
 import type { Request } from 'express';
@@ -74,6 +74,15 @@ export class UsersController {
     });
 
     return usersWithoutPasswords;
+  }
+
+  @Get("common/users/")
+  getUsersCount(
+    @Query(
+      new UsersValidationPipe(getUsersCountValidationSchema)
+    ) query: { searchString: string }
+  ) {
+    return this.usersService.getUsersCount(query);
   }
 
   // @UseGuards(AuthenticatedGuard, RolesGuard)

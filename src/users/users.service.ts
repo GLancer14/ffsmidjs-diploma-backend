@@ -91,4 +91,19 @@ export class UsersService implements IUserService {
       where: orCondition.length !== 0 ? { OR: orCondition } : undefined,
     });
   }
+
+  getUsersCount(params: { searchString: string }): Promise<number> {
+    let orCondition;
+    if (params) {
+      orCondition = [
+        { email: { contains: params.searchString } },
+        { name: { contains: params.searchString } },
+        { contactPhone: { contains: params.searchString } },
+      ];
+    }
+
+    return this.prisma.user.count({
+      where: orCondition.length !== 0 ? { OR: orCondition } : undefined,
+    });
+  }
 }

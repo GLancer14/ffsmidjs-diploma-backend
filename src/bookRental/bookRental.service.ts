@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IBookRentalService } from './types/bookRental';
 import { ID } from 'src/types/commonTypes';
-import { BookRentalDto } from './types/dto/bookRental';
+import { BookRentalDto, BookRentalResponseDto } from './types/dto/bookRental';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BookRental } from 'src/generated/prisma/client';
 
@@ -73,9 +73,60 @@ export class BookRentalService implements IBookRentalService {
     });
   }
 
-  findAll(userId: ID) {
-    return this.prisma.bookRental.findMany({
+  // findActiveRentsCountByUser(userId: ID) {
+  //   return this.prisma.bookRental.count({
+  //     where: {
+  //       userId,
+  //       status: "active",
+  //     },
+  //   });
+  // }
+
+  async findAll(userId: ID): Promise<BookRentalResponseDto[]> {
+    const userRents = await this.prisma.bookRental.findMany({
       where: { userId },
     });
+
+    const rentsWithBookData = await Promise.all(userRents.map(async (rentData) => {
+      const rentedBookData = await this.prisma.book.findUnique({
+        where: {
+          id: rentData.bookId
+        },
+        include: {
+          library: {
+            where: {
+              libraryId: rentData.libraryId
+            },
+            include: {
+              library: {
+                select: {
+                  name: true,
+                  address: true,
+                }
+              }
+            }
+          }
+        },
+      });
+
+
+      return {
+        id: rentData.id,
+        userId: rentData.userId,
+        library: {
+          name: rentedBookData?.library[0].library.name,
+          address: rentedBookData?.library[0].library.address,
+        },
+        book: {
+          title: rentedBookData?.title,
+          author: rentedBookData?.author,
+        },
+        dateStart: rentData.dateStart,
+        dateEnd: rentData.dateEnd,
+        status: rentData.status,
+      };
+    }));
+
+    return rentsWithBookData;
   }
 }
