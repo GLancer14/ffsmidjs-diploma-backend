@@ -1,14 +1,22 @@
-import { Body, Controller, Get, Post, Put, Query, Req, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Req, UseGuards, UsePipes } from '@nestjs/common';
 import { UsersService } from './users.service';
-import type { CreateUserDto, RequestUser } from './types/dto/users';
+import type { CreateUserDto, RequestUser, UpdateUserDto } from './types/dto/users';
 import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
 import { UsersValidationPipe } from 'src/validation/users.pipe';
-import { createUserValidationSchema, findUserValidationSchema, getUsersCountValidationSchema, updateUserValidationSchema } from 'src/validation/schemas/users.joiSchema';
+import {
+  createUserValidationSchema,
+  findUserValidationSchema,
+  getUsersCountValidationSchema,
+  updateAnotherUserValidationSchema,
+  updateUserValidationSchema,
+} from 'src/validation/schemas/users.joiSchema';
 import { type SearchUserParams } from './types/users';
 import { ClientIdCheckGuard } from 'src/supportChat/guards/clientCheck.guard';
 import type { Request } from 'express';
+import { idValidationSchema } from 'src/validation/schemas/common.joiSchema';
+import { ID } from 'src/types/commonTypes';
 
 @Controller("api")
 export class UsersController {
@@ -29,17 +37,36 @@ export class UsersController {
   };
 
   @UsePipes(new UsersValidationPipe(updateUserValidationSchema))
-  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @UseGuards(AuthenticatedGuard)
   @Put("self/users")
   async updateSelf(
     @Req() req: Request,
     @Body() user: Partial<CreateUserDto>
   ) {
     const userFromSession = req.user as RequestUser;
-    const updatedUser = await this.usersService.updateSelf({
+    const updatedUser = await this.usersService.updateUser({
       ...user,
       id: userFromSession.id,
     });
+
+    if (updatedUser) {
+      return {
+        email: updatedUser[0].email,
+        name: updatedUser[0].name,
+        contactPhone: updatedUser[0].contactPhone,
+        role: updatedUser[0].role,
+      };
+    }
+  };
+
+  @UsePipes(new UsersValidationPipe(updateAnotherUserValidationSchema))
+  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @Roles("admin")
+  @Put("admin/users")
+  async updateUser(
+    @Body() user: Partial<UpdateUserDto>
+  ) {
+    const updatedUser = await this.usersService.updateUser(user);
 
     if (updatedUser) {
       return {
@@ -76,7 +103,18 @@ export class UsersController {
     return usersWithoutPasswords;
   }
 
-  @Get("common/users/")
+  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @Get("common/users/:id")
+  @Roles("admin", "manager")
+  async getUserById(
+    @Param(
+      new UsersValidationPipe(idValidationSchema)
+    ) params: { id: ID }
+  ) {
+    return this.usersService.findById(params.id);
+  }
+
+  @Get("common/users-count")
   getUsersCount(
     @Query(
       new UsersValidationPipe(getUsersCountValidationSchema)

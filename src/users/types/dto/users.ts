@@ -28,4 +28,4 @@ export interface RequestUser {
 }
 
 export type CreateUserDto = RegisterUserDto & { role: Role };
-export type UpdateSelfDto = Partial<RegisterUserDto> & { id: ID };
+export type UpdateUserDto = Partial<RegisterUserDto> & { id: ID };

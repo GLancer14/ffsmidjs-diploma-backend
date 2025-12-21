@@ -4,7 +4,7 @@ import { IUserService, SearchUserParams } from './types/users';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ID } from 'src/types/commonTypes';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
-import { CreateUserDto, RegisterUserDto, UpdateSelfDto } from './types/dto/users';
+import { CreateUserDto, RegisterUserDto, UpdateUserDto } from './types/dto/users';
 import { User } from 'src/generated/prisma/client';
 
 @Injectable()
@@ -35,6 +35,8 @@ export class UsersService implements IUserService {
   }
 
   findById(id: ID): Promise<User | null> {
+
+    console.log(id)
     return this.prisma.user.findUnique({
       where: { id }
     });
@@ -46,7 +48,7 @@ export class UsersService implements IUserService {
     });
   }
 
-  async updateSelf(params: UpdateSelfDto): Promise<User[] | null> {
+  async updateUser(params: Partial<UpdateUserDto>): Promise<User[] | null> {
     let passwordHash: string | null = null;
 
     if (params.password) {
