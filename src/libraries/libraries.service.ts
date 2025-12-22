@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ILibrariesService, SearchBookParams, SearchLibraryParams } from './types/libraries';
 import { ID } from 'src/types/commonTypes';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { BookDto, LibraryDto } from './types/dto/libraries';
+import { BookDto, LibraryDto, UpdateLibraryDto } from './types/dto/libraries';
 import { Book, Library } from 'src/generated/prisma/client';
 
 @Injectable()
@@ -55,6 +55,19 @@ export class LibrariesService implements ILibrariesService {
     });
   }
 
+  updateLibrary(data: UpdateLibraryDto): Promise<Library> {
+    return this.prisma.library.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        name: data.name || undefined,
+        address: data.address || undefined,
+        description: data.description || undefined,
+      }
+    });
+  }
+
   deleteLibrary(id: ID): Promise<Library> {
     return this.prisma.library.delete({
       where: { id },
@@ -83,8 +96,8 @@ export class LibrariesService implements ILibrariesService {
                 year: true,
                 description: true,
               },
-            }
-          }
+            },
+          },
         },
       },
     }).then(library => {

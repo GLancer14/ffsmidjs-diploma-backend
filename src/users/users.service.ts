@@ -48,7 +48,7 @@ export class UsersService implements IUserService {
     });
   }
 
-  async updateUser(params: Partial<UpdateUserDto>): Promise<User[] | null> {
+  async updateUser(params: Partial<UpdateUserDto>): Promise<User | null> {
     let passwordHash: string | null = null;
 
     if (params.password) {
@@ -62,7 +62,7 @@ export class UsersService implements IUserService {
       passwordHash: passwordHash || undefined,
     };
     
-    return this.prisma.user.updateManyAndReturn({
+    return this.prisma.user.update({
       where: {
         id: params.id,
       },

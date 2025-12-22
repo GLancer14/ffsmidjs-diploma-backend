@@ -51,10 +51,10 @@ export class UsersController {
 
     if (updatedUser) {
       return {
-        email: updatedUser[0].email,
-        name: updatedUser[0].name,
-        contactPhone: updatedUser[0].contactPhone,
-        role: updatedUser[0].role,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        contactPhone: updatedUser.contactPhone,
+        role: updatedUser.role,
       };
     }
   };
@@ -70,10 +70,10 @@ export class UsersController {
 
     if (updatedUser) {
       return {
-        email: updatedUser[0].email,
-        name: updatedUser[0].name,
-        contactPhone: updatedUser[0].contactPhone,
-        role: updatedUser[0].role,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        contactPhone: updatedUser.contactPhone,
+        role: updatedUser.role,
       };
     }
   };

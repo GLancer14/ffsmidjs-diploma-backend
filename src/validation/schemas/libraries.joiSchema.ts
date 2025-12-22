@@ -13,6 +13,13 @@ export const createLibraryValidationSchema = Joi.object().keys({
   description: Joi.string().min(4).optional().empty(""),
 });
 
+export const updateLibraryValidationSchema = Joi.object().keys({
+  id: Joi.number().required(),
+  name: Joi.string().optional().empty(""),
+  address: Joi.string().optional().empty(""),
+  description: Joi.string().min(4).optional().empty(""),
+});
+
 export const createBookValidationSchema = Joi.object().keys({
   libraryId: Joi.number().required(),
   title: Joi.string().min(4).required(),

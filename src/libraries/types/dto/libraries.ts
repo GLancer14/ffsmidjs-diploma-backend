@@ -22,3 +22,10 @@ export interface LibraryDto {
   address: string;
   description?: string;
 }
+
+export interface UpdateLibraryDto {
+  id: number;
+  name?: string;
+  address?: string;
+  description?: string;
+}

@@ -7,6 +7,7 @@ import {
   Param,
   ParseFilePipeBuilder,
   Post,
+  Put,
   Query,
   UploadedFile,
   UseGuards,
@@ -15,7 +16,7 @@ import {
 } from '@nestjs/common';
 import { LibrariesService } from './libraries.service';
 import { type ID } from 'src/types/commonTypes';
-import { type FindBookDto, type BookDto, type LibraryDto } from './types/dto/libraries';
+import type { FindBookDto, BookDto, LibraryDto, UpdateLibraryDto } from './types/dto/libraries';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Book } from 'src/generated/prisma/client';
 import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
@@ -28,6 +29,7 @@ import {
   createLibraryValidationSchema,
   findLibrariesValidationSchema,
   getBooksValidationSchema,
+  updateLibraryValidationSchema,
 } from 'src/validation/schemas/libraries.joiSchema';
 import { idValidationSchema } from 'src/validation/schemas/common.joiSchema';
 import { type SearchLibraryParams } from './types/libraries';
@@ -86,6 +88,14 @@ export class LibrariesController {
   @Roles("admin")
   createLibrary(@Body() library: LibraryDto) {
     return this.librariesService.createLibrary(library);
+  }
+
+  @UsePipes(new LibrariesValidationPipe(updateLibraryValidationSchema))
+  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @Put("admin/libraries/")
+  @Roles("admin")
+  updateLibrary(@Body() library: UpdateLibraryDto) {
+    return this.librariesService.updateLibrary(library);
   }
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
