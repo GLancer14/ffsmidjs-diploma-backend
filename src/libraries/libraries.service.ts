@@ -70,6 +70,35 @@ export class LibrariesService implements ILibrariesService {
   findLibraryById(id: ID): Promise<Library | null> {
     return this.prisma.library.findUnique({
       where: { id },
+      include: {
+        book: {
+          select: {
+            totalCopies: true,
+            availableCopies: true,
+            book: {
+              select: {
+                id: true,
+                title: true,
+                author: true,
+                year: true,
+                description: true,
+              },
+            }
+          }
+        },
+      },
+    }).then(library => {
+      if (library) {
+        const libraryWithCopiesCount = {
+          ...library,
+          totalCopies: library.book.reduce((acc, item) => acc + item.totalCopies, 0),
+          availableCopies: library.book.reduce((acc, item) => acc + item.availableCopies, 0)
+        };
+        // const {book, ...libraryWithoutBook} = libraryWithCopiesCount;
+        return libraryWithCopiesCount;
+      } else {
+        return null;
+      }
     });
   }
 
@@ -91,6 +120,24 @@ export class LibrariesService implements ILibrariesService {
       take: params.limit || undefined,
       // where: andCondition.length !== 0 ? { AND: andCondition } : undefined,
       where: orCondition.length !== 0 ? { OR: orCondition } : undefined,
+      include: {
+        book: {
+          select: {
+            totalCopies: true,
+            availableCopies: true
+          }
+        },
+      }
+    }).then(libraries => {
+      return libraries.map(library => {
+        const libraryWithCopiesCount = {
+          ...library,
+          totalCopies: library.book.reduce((acc, item) => acc + item.totalCopies, 0),
+          availableCopies: library.book.reduce((acc, item) => acc + item.availableCopies, 0)
+        };
+        const {book, ...libraryWithoutBook} = libraryWithCopiesCount;
+        return libraryWithoutBook;
+      })
     });
   }
 
@@ -112,11 +159,12 @@ export class LibrariesService implements ILibrariesService {
               params.title ? { title: params.title } : {},
               params.libraryId ? { 
                 library: {
-                some: {
-                  libraryId: params.libraryId,
-                  isAvailable: params.isAvailable
+                  some: {
+                    libraryId: params.libraryId,
+                    isAvailable: params.isAvailable
+                  }
                 }
-              } } : {}
+              } : {}
             ].filter(cond => Object.keys(cond).length > 0),
           },
           { library: {
