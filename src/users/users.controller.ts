@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, Req, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards, UsePipes } from '@nestjs/common';
 import { UsersService } from './users.service';
 import type { CreateUserDto, RequestUser, UpdateUserDto } from './types/dto/users';
 import { Roles } from 'src/roles/roles.decorator';
@@ -16,7 +16,7 @@ import { type SearchUserParams } from './types/users';
 import { ClientIdCheckGuard } from 'src/supportChat/guards/clientCheck.guard';
 import type { Request } from 'express';
 import { idValidationSchema } from 'src/validation/schemas/common.joiSchema';
-import { ID } from 'src/types/commonTypes';
+import { type ID } from 'src/types/commonTypes';
 
 @Controller("api")
 export class UsersController {
@@ -76,6 +76,16 @@ export class UsersController {
         role: updatedUser[0].role,
       };
     }
+  };
+
+  @UsePipes(new UsersValidationPipe(idValidationSchema))
+  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @Roles("admin")
+  @Delete("admin/users")
+  async deleteUser(
+    @Body() user: { id: ID }
+  ) {
+    return this.usersService.deleteUser(user.id);
   };
 
   @UseGuards(AuthenticatedGuard, RolesGuard)

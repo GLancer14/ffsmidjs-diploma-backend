@@ -70,6 +70,24 @@ export class UsersService implements IUserService {
     });
   }
 
+  async deleteUser(userId: ID): Promise<User | null> {
+    const deletedUser = await this.prisma.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (deletedUser) {
+      await this.prisma.bookRental.deleteMany({
+        where: {
+          userId: deletedUser.id,
+        },
+      })
+    }
+    
+    return deletedUser;
+  }
+
   findAll(params: SearchUserParams): Promise<User[]> {
     let orCondition;
     if (params) {
