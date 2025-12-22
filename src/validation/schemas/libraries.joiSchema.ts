@@ -26,6 +26,7 @@ export const createBookValidationSchema = Joi.object().keys({
 export const findLibrariesValidationSchema = Joi.object().keys({
   limit: Joi.number().optional(),
   offset: Joi.number().optional(),
-  name: Joi.string().optional().empty(""),
-  address: Joi.string().min(4).optional().empty(""),
+  searchString: Joi.string().optional().empty(""),
+  // name: Joi.string().optional().empty(""),
+  // address: Joi.string().min(4).optional().empty(""),
 });

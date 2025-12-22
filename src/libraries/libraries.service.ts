@@ -74,15 +74,23 @@ export class LibrariesService implements ILibrariesService {
   }
 
   findAllLibraries(params: SearchLibraryParams): Promise<Library[]> {
-    const andCondition = [
-      params.name ? { name: { contains: params.name } } : { name: undefined },
-      params.address ? { contactPhone: { contains: params.address } } : { contactPhone: undefined },
-    ].filter(Boolean);
+    let orCondition;
+    if (params) {
+      orCondition = [
+        { name: { contains: params.searchString } },
+        { address: { contains: params.searchString } },
+      ];
+    }
+    // const andCondition = [
+    //   params.name ? { name: { contains: params.name } } : { name: undefined },
+    //   params.address ? { contactPhone: { contains: params.address } } : { contactPhone: undefined },
+    // ].filter(Boolean);
 
     return this.prisma.library.findMany({
-      skip: params.offset,
-      take: params.limit,
-      where: andCondition.length !== 0 ? { AND: andCondition } : undefined,
+      skip: params.offset || undefined,
+      take: params.limit || undefined,
+      // where: andCondition.length !== 0 ? { AND: andCondition } : undefined,
+      where: orCondition.length !== 0 ? { OR: orCondition } : undefined,
     });
   }
 

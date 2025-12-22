@@ -69,8 +69,9 @@ export class LibrariesController {
     return this.librariesService.findAllLibraries({
       limit: query.limit,
       offset: query.offset,
-      name: query.name,
-      address: query.address,
+      searchString: query.searchString,
+      // name: query.name,
+      // address: query.address,
     });
   }
 

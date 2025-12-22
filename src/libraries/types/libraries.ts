@@ -11,8 +11,9 @@ export interface SearchBookParams {
 export interface SearchLibraryParams {
   limit: number;
   offset: number;
-  name: string;
-  address: string;
+  searchString: string;
+  // name: string;
+  // address: string;
 }
 
 export interface ILibrariesService {
