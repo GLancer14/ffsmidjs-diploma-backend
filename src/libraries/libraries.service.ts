@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ILibrariesService, SearchBookParams, SearchLibraryParams } from './types/libraries';
 import { ID } from 'src/types/commonTypes';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { BookDto, LibraryDto, UpdateLibraryDto } from './types/dto/libraries';
+import { BookDto, LibraryDto, UpdateBookDto, UpdateLibraryDto } from './types/dto/libraries';
 import { Book, Library } from 'src/generated/prisma/client';
 
 @Injectable()
@@ -25,6 +25,41 @@ export class LibrariesService implements ILibrariesService {
             library: {
               connect: {
                 id: data.libraryId
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  updateBook(data: UpdateBookDto & { coverImage?: string }): Promise<Book> {
+    return this.prisma.book.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        title: data.title || undefined,
+        author: data.author || undefined,
+        year: data.year || undefined,
+        description: data.description || undefined,
+        coverImage: data.coverImage || undefined,
+        library: {
+          update: {
+            where: {
+              bookId_libraryId: {
+                bookId: data.id,
+                libraryId: data.libraryId,
+              },
+            },
+            data: {
+              totalCopies: data.totalCopies || undefined,
+              availableCopies: data.availableCopies || undefined,
+              isAvailable: true,
+              library: {
+                connect: {
+                  id: data.libraryId
+                }
               }
             }
           }
@@ -105,6 +140,7 @@ export class LibrariesService implements ILibrariesService {
                 author: true,
                 year: true,
                 description: true,
+                coverImage: true,
               },
             },
           },

@@ -30,6 +30,17 @@ export const createBookValidationSchema = Joi.object().keys({
   availableCopies: Joi.number().optional(),
 });
 
+export const updateBookValidationSchema = Joi.object().keys({
+  id: Joi.number().required(),
+  libraryId: Joi.number().required(),
+  title: Joi.string().min(4).optional().empty(""),
+  author: Joi.string().min(4).optional().empty(""),
+  year: Joi.number().optional(),
+  description: Joi.string().optional().empty(""),
+  totalCopies: Joi.number().optional(),
+  availableCopies: Joi.number().optional(),
+});
+
 export const findLibrariesValidationSchema = Joi.object().keys({
   limit: Joi.number().optional(),
   offset: Joi.number().optional(),

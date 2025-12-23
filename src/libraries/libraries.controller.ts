@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common';
 import { LibrariesService } from './libraries.service';
 import { type ID } from 'src/types/commonTypes';
-import type { FindBookDto, BookDto, LibraryDto, UpdateLibraryDto } from './types/dto/libraries';
+import type { FindBookDto, BookDto, LibraryDto, UpdateLibraryDto, UpdateBookDto } from './types/dto/libraries';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Book } from 'src/generated/prisma/client';
 import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
@@ -29,6 +29,7 @@ import {
   createLibraryValidationSchema,
   findLibrariesValidationSchema,
   getBooksValidationSchema,
+  updateBookValidationSchema,
   updateLibraryValidationSchema,
 } from 'src/validation/schemas/libraries.joiSchema';
 import { idValidationSchema } from 'src/validation/schemas/common.joiSchema';
@@ -100,7 +101,7 @@ export class LibrariesController {
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Post("admin/books/")
-  @Roles("admin")
+  @Roles("admin", "manager")
   @UseInterceptors(FileInterceptor("coverImage", multerOptions))
   createBook(
     @Body(new LibrariesValidationPipe(createBookValidationSchema)) bookData: BookDto,
@@ -113,6 +114,26 @@ export class LibrariesController {
     ) file: Express.Multer.File
   ) {
     return this.librariesService.createBook({
+      ...bookData,
+      coverImage: file?.filename,
+    });
+  }
+
+  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @Put("admin/books/")
+  @Roles("admin", "manager")
+  @UseInterceptors(FileInterceptor("coverImage", multerOptions))
+  updateBook(
+    @Body(new LibrariesValidationPipe(updateBookValidationSchema)) bookData: UpdateBookDto,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .build({
+          fileIsRequired: false,
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+        })
+    ) file: Express.Multer.File
+  ) {
+    return this.librariesService.updateBook({
       ...bookData,
       coverImage: file?.filename,
     });

@@ -29,3 +29,14 @@ export interface UpdateLibraryDto {
   address?: string;
   description?: string;
 }
+
+export interface UpdateBookDto {
+  id: ID;
+  libraryId: ID;
+  title?: string;
+  author?: string;
+  year?: number;
+  description?: string;
+  totalCopies?: number;
+  availableCopies?: number;
+}
