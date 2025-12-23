@@ -141,7 +141,7 @@ export class LibrariesController {
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Delete("admin/books/:id")
-  @Roles("admin")
+  @Roles("admin", "manager")
   deleteBook(
     @Param(new LibrariesValidationPipe(idValidationSchema)) params: { id: ID }
   ) {

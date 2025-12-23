@@ -4,6 +4,8 @@ import { ID } from 'src/types/commonTypes';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BookDto, LibraryDto, UpdateBookDto, UpdateLibraryDto } from './types/dto/libraries';
 import { Book, Library } from 'src/generated/prisma/client';
+import path from 'node:path';
+import * as fs from "fs/promises";
 
 @Injectable()
 export class LibrariesService implements ILibrariesService {
@@ -73,9 +75,16 @@ export class LibrariesService implements ILibrariesService {
       where: { bookId: id },
     });
 
-    return this.prisma.book.delete({
+    const deletedBook = await this.prisma.book.delete({
       where: { id },
     });
+
+    if (deletedBook.coverImage) {
+      const filePath = path.join(__dirname, "../../../uploads/images", deletedBook.coverImage);
+      await fs.rm(filePath);
+    }
+
+    return deletedBook;
   }
 
   createLibrary(data: LibraryDto): Promise<Library> {
