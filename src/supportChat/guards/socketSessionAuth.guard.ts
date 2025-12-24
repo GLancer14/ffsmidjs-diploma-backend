@@ -7,17 +7,17 @@ export class SocketSessionAuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const client: Socket = context.switchToWs().getClient();
     
-    const session = (client.request as any).session;
+    const req = (client.request as any);
     
-    console.log(session, " . . . ", client.data.user)
+    console.log(req.session, " . . . ", client.data.user)
 
-    if (!session || !session.user) {
+    if (!req.user) {
       throw new WsException('Unauthorized: No valid session found');
     }
     
-    client.data.user = session.user;
+    client.data.user = req.user;
     
-    console.log("WS guard works")
+    console.log("WS guard works", req.user)
 
     return true;
   }

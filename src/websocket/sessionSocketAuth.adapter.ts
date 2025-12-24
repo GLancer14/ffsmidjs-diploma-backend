@@ -24,8 +24,8 @@ export class SessionSocketIoAdapter extends IoAdapter {
 
   create(port: number, options?: ServerOptions): any {
     const io = super.create(port, options);
-    
-    const wrap = (middleware: any) => (socket: Socket, next: any) => {
+
+    const wrap = (middleware: any) => {
 
       return (socket: Socket, next: (err?: Error) => void) => {
         const req = socket.request as any;
@@ -48,6 +48,7 @@ export class SessionSocketIoAdapter extends IoAdapter {
         socket.data.user = req.user;
       }
 
+      console.log("socket data: ")
       console.log(socket.data.user)
       next();
     });

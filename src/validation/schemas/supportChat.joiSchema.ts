@@ -5,6 +5,7 @@ export const sendMessageValidationSchema = Joi.object().keys({
 });
 
 export const supportSearchParamsValidationSchema = Joi.object().keys({
+  user: Joi.number().optional(),
   limit: Joi.number().optional(),
   offset: Joi.number().optional(),
   isActive: Joi.boolean().optional(),

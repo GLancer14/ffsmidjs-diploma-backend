@@ -34,7 +34,7 @@ export class SupportRequestService implements ISupportRequestService {
     });
   }
 
-  findSupportRequests(params: GetChatListParamsDto & { user?: number }): Promise<SupportRequest[]> {
+  findSupportRequests(params: GetChatListParamsDto): Promise<SupportRequest[]> {
     return this.prisma.supportRequest.findMany({
       skip: params.offset,
       take: params.limit,

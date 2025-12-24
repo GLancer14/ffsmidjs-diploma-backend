@@ -73,13 +73,14 @@ export class SupportChatController {
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("manager/support-requests/")
-  @Roles("manager")
+  @Roles("admin", "manager")
   async getRequestsForManager(
     @Query(new SupportChatValidationPipe(
       supportSearchParamsValidationSchema
     )) query: GetChatListParamsDto
   ) {
     const supportRequests = await this.supportRequestService.findSupportRequests({
+      user: query.user,
       limit: query.limit,
       offset: query.offset,
       isActive: query.isActive,

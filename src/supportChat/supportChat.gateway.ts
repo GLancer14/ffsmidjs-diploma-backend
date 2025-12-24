@@ -1,4 +1,4 @@
-import { ConsoleLogger, Inject } from "@nestjs/common";
+import { ConsoleLogger, Inject, UseGuards } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { SupportRequestService } from "./supportRequest.service";
 import { Roles } from "src/roles/roles.decorator";
@@ -6,6 +6,7 @@ import { type ID } from "src/types/commonTypes";
 import { EventEmitter2, OnEvent } from "@nestjs/event-emitter";
 import { Server, Socket } from "socket.io";
 import { Message, SupportRequest } from "src/generated/prisma/client";
+import { SocketSessionAuthGuard } from "./guards/socketSessionAuth.guard";
 
 @WebSocketGateway()
 export class SupportChatGateway {
@@ -46,6 +47,7 @@ export class SupportChatGateway {
     return this.server.sockets.sockets.get(socketId);
   }
 
+  @UseGuards(SocketSessionAuthGuard)
   @SubscribeMessage("subscribeToChat")
   // @Roles("manager", "client")
   async subcribeToChatNotifications(
