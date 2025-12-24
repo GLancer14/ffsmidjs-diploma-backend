@@ -1,7 +1,7 @@
 #My ignoring files
 /**/uploads
-/**/sessionSocket*
-/**/socketSessionAuth*
+# /**/sessionSocket*
+# /**/socketSessionAuth*
 
 # compiled output
 /dist
