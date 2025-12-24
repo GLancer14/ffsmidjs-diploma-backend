@@ -21,6 +21,10 @@ export class SupportChatGateway {
     });
   }
 
+  async handleConnection(socket: Socket) {
+    socket.emit("connected", `Socket connected id: ${socket.id}`);
+  }
+
   private handleNewMessage(supportRequest: SupportRequest, message: Message) {
     const chatId = +supportRequest.id
     const subscribers = this.chatSubscribers.get(chatId);

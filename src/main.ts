@@ -43,19 +43,14 @@ async function bootstrap() {
   });
   const passportInitialize = passport.initialize();
   const passportSession = passport.session();
-  
-  // app.enableCors({
-  //   origin: "http://localhost:3000",
-  //   credentials: true,
-  // });
 
   app.use(sessionMiddleware);
   app.use(passportInitialize);
   app.use(passportSession);
 
   app.use((req, res, next) => {
-    console.log("http session: ", req.session);
-    console.log("http user: ", req.user);
+    // console.log("http session: ", req.session);
+    // console.log("http user: ", req.user);
     next();
   });
 
@@ -68,7 +63,7 @@ async function bootstrap() {
     sessionMiddleware,
     passportInitialize,
     passportSession,
-  ))
+  ));
 
   await app.listen(process.env.PORT ?? 3000);
 }
