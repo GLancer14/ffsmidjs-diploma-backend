@@ -8,7 +8,7 @@ import { Server, Socket } from "socket.io";
 import { Message, SupportRequest } from "src/generated/prisma/client";
 import { SocketSessionAuthGuard } from "./guards/socketSessionAuth.guard";
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: { origin: ["http://localhost:5173"] } })
 export class SupportChatGateway {
   @WebSocketServer() server: Server;
   private userChatRooms = new Map<number, Set<number>>();
@@ -34,6 +34,7 @@ export class SupportChatGateway {
       subscribers.forEach(socketId => {
         const socket = this.getSocketById(socketId);
         if (socket) {
+          console.log(message)
           socket.emit("newMessage", {
             chatId,
             message,
@@ -47,7 +48,7 @@ export class SupportChatGateway {
     return this.server.sockets.sockets.get(socketId);
   }
 
-  @UseGuards(SocketSessionAuthGuard)
+  // @UseGuards(SocketSessionAuthGuard)
   @SubscribeMessage("subscribeToChat")
   // @Roles("manager", "client")
   async subcribeToChatNotifications(
@@ -69,6 +70,8 @@ export class SupportChatGateway {
       this.chatSubscribers.set(chatId, new Set());
     }
     this.chatSubscribers.get(chatId)?.add(client.id);
+
+    console.log("user subscribed to chat", chatId)
   }
 
   @SubscribeMessage("unsubscribeToChat")

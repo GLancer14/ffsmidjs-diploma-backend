@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 export const sendMessageValidationSchema = Joi.object().keys({
-  text: Joi.string().min(10).max(255).required(),
+  text: Joi.string().required(),
 });
 
 export const supportSearchParamsValidationSchema = Joi.object().keys({

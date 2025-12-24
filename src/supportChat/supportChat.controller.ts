@@ -25,9 +25,10 @@ export class SupportChatController {
     private readonly usersService: UsersService,
   ) {}
 
-  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @UseGuards(AuthenticatedGuard)
+  // @UseGuards(AuthenticatedGuard, RolesGuard)
   @Post("client/support-requests/")
-  @Roles("client")
+  // @Roles("client")
   createRequest(
     @Req() req: Request,
     @Body(new SupportChatValidationPipe(
@@ -52,7 +53,7 @@ export class SupportChatController {
   ) {
     const user = req.user as RequestUser;
     const supportRequests = await this.supportRequestService.findSupportRequests({
-      user: user.id,
+      currentUser: user.id,
       limit: query.limit,
       offset: query.offset,
       isActive: query.isActive,
@@ -75,36 +76,41 @@ export class SupportChatController {
   @Get("manager/support-requests/")
   @Roles("admin", "manager")
   async getRequestsForManager(
+    @Req() req: Request,
     @Query(new SupportChatValidationPipe(
       supportSearchParamsValidationSchema
     )) query: GetChatListParamsDto
   ) {
-    const supportRequests = await this.supportRequestService.findSupportRequests({
+    const currentUser = req.user as RequestUser;
+    const supportRequests = (await this.supportRequestService.findSupportRequests({
+      currentUser: currentUser.id,
       user: query.user,
       limit: query.limit,
       offset: query.offset,
-      isActive: query.isActive,
-    });
-    const supportRequestsForResponse = await Promise.all(supportRequests.map(async (supportRequest) => {
-      const clientData = await this.usersService.findById(supportRequest.user);
+      // isActive: query.isActive,
+    }))[0];
 
-      return {
-        id: supportRequest.id,
-        createdAt: supportRequest.createdAt,
-        isActive: supportRequest.isActive,
-        hasNewMessages: Boolean(
-          (await this.supportRequestClientService.getUnreadCount(supportRequest.id)).length
-        ),
-        client: {
-          id: clientData?.id,
-          name: clientData?.name,
-          email: clientData?.email,
-          contactPhone: clientData?.contactPhone,
-        },
-      };
-    }));
+    // const supportRequestsForResponse = await Promise.all(supportRequests.map(async (supportRequest) => {
+    //   const clientData = await this.usersService.findById(supportRequest.user);
 
-    return supportRequestsForResponse;
+    //   return {
+    //     id: supportRequest.id,
+    //     createdAt: supportRequest.createdAt,
+    //     isActive: supportRequest.isActive,
+    //     hasNewMessages: Boolean(
+    //       (await this.supportRequestEmployeeService.getUnreadCount(supportRequest.id)).length
+    //     ),
+    //     messages: supportRequest.messages,
+    //     client: {
+    //       id: clientData?.id,
+    //       name: clientData?.name,
+    //       email: clientData?.email,
+    //       contactPhone: clientData?.contactPhone,
+    //     },
+    //   };
+    // }));
+
+    return supportRequests;
   }
 
   @UseGuards(
@@ -126,7 +132,7 @@ export class SupportChatController {
     ClientIdCheckGuard
   )
   @Post("common/support-requests/:id/messages")
-  @Roles("manager", "client")
+  @Roles("admin", "manager", "client")
   async sendMessage(
     @Req() req: Request,
     @Body(

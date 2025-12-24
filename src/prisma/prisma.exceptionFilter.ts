@@ -10,6 +10,8 @@ import { Prisma } from "src/generated/prisma/client";
 @Catch(Prisma.PrismaClientKnownRequestError)
 export class PrismaClientExceptionFilter implements ExceptionFilter {
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
+    console.log(exception)
+    
     switch (exception.code) {
       case 'P2002':
         throw new BadRequestException("Пользователь с таким значением уникального поля уже существует.");

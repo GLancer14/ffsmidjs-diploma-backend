@@ -90,7 +90,7 @@ export class UsersController {
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("admin/users/")
-  @Roles("admin")
+  @Roles("admin", "manager")
   async getUsersForAdmin(
     @Query(
       new UsersValidationPipe(findUserValidationSchema)

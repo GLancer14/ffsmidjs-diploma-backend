@@ -30,7 +30,7 @@ export class SupportRequestEmployeeService implements ISupportRequestEmployeeSer
       where: {
         supportRequestId: supportRequest,
         readAt: {
-          not: null
+          equals: null
         }
       }
     });

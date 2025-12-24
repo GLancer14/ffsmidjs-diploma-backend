@@ -50,7 +50,7 @@ export class SupportRequestClientService implements ISupportRequestClientService
       where: {
         supportRequestId: supportRequest,
         readAt: {
-          not: null,
+          equals: null,
         }
       }
     });

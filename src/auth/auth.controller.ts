@@ -16,6 +16,7 @@ export class AuthController {
   login(@Req() req: Request) {
     const user = req.user as RequestUser;
     return {
+      id: user.id,
       email: user.email,
       name: user.name,
       contactPhone: user.contactPhone,
@@ -44,6 +45,7 @@ export class AuthController {
   loggedUser(@Req() req: Request) {
     const user = req.user as RequestUser;
     return {
+      id: user.id,
       email: user.email,
       name: user.name,
       contactPhone: user.contactPhone,
