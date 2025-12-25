@@ -390,7 +390,8 @@ export const ModelName = {
   BookOnLibrary: 'BookOnLibrary',
   BookRental: 'BookRental',
   SupportRequest: 'SupportRequest',
-  Message: 'Message'
+  Message: 'Message',
+  MessageOnUser: 'MessageOnUser'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "library" | "book" | "bookOnLibrary" | "bookRental" | "supportRequest" | "message"
+    modelProps: "user" | "library" | "book" | "bookOnLibrary" | "bookRental" | "supportRequest" | "message" | "messageOnUser"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -928,6 +929,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MessageOnUser: {
+      payload: Prisma.$MessageOnUserPayload<ExtArgs>
+      fields: Prisma.MessageOnUserFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MessageOnUserFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageOnUserPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MessageOnUserFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageOnUserPayload>
+        }
+        findFirst: {
+          args: Prisma.MessageOnUserFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageOnUserPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MessageOnUserFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageOnUserPayload>
+        }
+        findMany: {
+          args: Prisma.MessageOnUserFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageOnUserPayload>[]
+        }
+        create: {
+          args: Prisma.MessageOnUserCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageOnUserPayload>
+        }
+        createMany: {
+          args: Prisma.MessageOnUserCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MessageOnUserCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageOnUserPayload>[]
+        }
+        delete: {
+          args: Prisma.MessageOnUserDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageOnUserPayload>
+        }
+        update: {
+          args: Prisma.MessageOnUserUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageOnUserPayload>
+        }
+        deleteMany: {
+          args: Prisma.MessageOnUserDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MessageOnUserUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MessageOnUserUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageOnUserPayload>[]
+        }
+        upsert: {
+          args: Prisma.MessageOnUserUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageOnUserPayload>
+        }
+        aggregate: {
+          args: Prisma.MessageOnUserAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMessageOnUser>
+        }
+        groupBy: {
+          args: Prisma.MessageOnUserGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MessageOnUserGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MessageOnUserCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MessageOnUserCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1021,7 +1096,9 @@ export const BookRentalScalarFieldEnum = {
   bookId: 'bookId',
   dateStart: 'dateStart',
   dateEnd: 'dateEnd',
-  status: 'status'
+  status: 'status',
+  bookOnLibraryBookId: 'bookOnLibraryBookId',
+  bookOnLibraryLibraryId: 'bookOnLibraryLibraryId'
 } as const
 
 export type BookRentalScalarFieldEnum = (typeof BookRentalScalarFieldEnum)[keyof typeof BookRentalScalarFieldEnum]
@@ -1030,8 +1107,7 @@ export type BookRentalScalarFieldEnum = (typeof BookRentalScalarFieldEnum)[keyof
 export const SupportRequestScalarFieldEnum = {
   id: 'id',
   user: 'user',
-  createdAt: 'createdAt',
-  isActive: 'isActive'
+  createdAt: 'createdAt'
 } as const
 
 export type SupportRequestScalarFieldEnum = (typeof SupportRequestScalarFieldEnum)[keyof typeof SupportRequestScalarFieldEnum]
@@ -1047,6 +1123,14 @@ export const MessageScalarFieldEnum = {
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const MessageOnUserScalarFieldEnum = {
+  authorId: 'authorId',
+  messageId: 'messageId'
+} as const
+
+export type MessageOnUserScalarFieldEnum = (typeof MessageOnUserScalarFieldEnum)[keyof typeof MessageOnUserScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1243,6 +1327,7 @@ export type GlobalOmitConfig = {
   bookRental?: Prisma.BookRentalOmit
   supportRequest?: Prisma.SupportRequestOmit
   message?: Prisma.MessageOmit
+  messageOnUser?: Prisma.MessageOnUserOmit
 }
 
 /* Types for Logging */

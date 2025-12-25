@@ -225,6 +225,7 @@ export type LibraryWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Library"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Library"> | Date | string
   book?: Prisma.BookOnLibraryListRelationFilter
+  bookRents?: Prisma.BookRentalListRelationFilter
 }
 
 export type LibraryOrderByWithRelationInput = {
@@ -235,6 +236,7 @@ export type LibraryOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   book?: Prisma.BookOnLibraryOrderByRelationAggregateInput
+  bookRents?: Prisma.BookRentalOrderByRelationAggregateInput
 }
 
 export type LibraryWhereUniqueInput = Prisma.AtLeast<{
@@ -248,6 +250,7 @@ export type LibraryWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Library"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Library"> | Date | string
   book?: Prisma.BookOnLibraryListRelationFilter
+  bookRents?: Prisma.BookRentalListRelationFilter
 }, "id">
 
 export type LibraryOrderByWithAggregationInput = {
@@ -283,6 +286,7 @@ export type LibraryCreateInput = {
   createdAt: Date | string
   updatedAt: Date | string
   book?: Prisma.BookOnLibraryCreateNestedManyWithoutLibraryInput
+  bookRents?: Prisma.BookRentalCreateNestedManyWithoutLibraryInput
 }
 
 export type LibraryUncheckedCreateInput = {
@@ -293,6 +297,7 @@ export type LibraryUncheckedCreateInput = {
   createdAt: Date | string
   updatedAt: Date | string
   book?: Prisma.BookOnLibraryUncheckedCreateNestedManyWithoutLibraryInput
+  bookRents?: Prisma.BookRentalUncheckedCreateNestedManyWithoutLibraryInput
 }
 
 export type LibraryUpdateInput = {
@@ -302,6 +307,7 @@ export type LibraryUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   book?: Prisma.BookOnLibraryUpdateManyWithoutLibraryNestedInput
+  bookRents?: Prisma.BookRentalUpdateManyWithoutLibraryNestedInput
 }
 
 export type LibraryUncheckedUpdateInput = {
@@ -312,6 +318,7 @@ export type LibraryUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   book?: Prisma.BookOnLibraryUncheckedUpdateManyWithoutLibraryNestedInput
+  bookRents?: Prisma.BookRentalUncheckedUpdateManyWithoutLibraryNestedInput
 }
 
 export type LibraryCreateManyInput = {
@@ -398,12 +405,27 @@ export type LibraryUpdateOneRequiredWithoutBookNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LibraryUpdateToOneWithWhereWithoutBookInput, Prisma.LibraryUpdateWithoutBookInput>, Prisma.LibraryUncheckedUpdateWithoutBookInput>
 }
 
+export type LibraryCreateNestedOneWithoutBookRentsInput = {
+  create?: Prisma.XOR<Prisma.LibraryCreateWithoutBookRentsInput, Prisma.LibraryUncheckedCreateWithoutBookRentsInput>
+  connectOrCreate?: Prisma.LibraryCreateOrConnectWithoutBookRentsInput
+  connect?: Prisma.LibraryWhereUniqueInput
+}
+
+export type LibraryUpdateOneRequiredWithoutBookRentsNestedInput = {
+  create?: Prisma.XOR<Prisma.LibraryCreateWithoutBookRentsInput, Prisma.LibraryUncheckedCreateWithoutBookRentsInput>
+  connectOrCreate?: Prisma.LibraryCreateOrConnectWithoutBookRentsInput
+  upsert?: Prisma.LibraryUpsertWithoutBookRentsInput
+  connect?: Prisma.LibraryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LibraryUpdateToOneWithWhereWithoutBookRentsInput, Prisma.LibraryUpdateWithoutBookRentsInput>, Prisma.LibraryUncheckedUpdateWithoutBookRentsInput>
+}
+
 export type LibraryCreateWithoutBookInput = {
   name: string
   address: string
   description?: string | null
   createdAt: Date | string
   updatedAt: Date | string
+  bookRents?: Prisma.BookRentalCreateNestedManyWithoutLibraryInput
 }
 
 export type LibraryUncheckedCreateWithoutBookInput = {
@@ -413,6 +435,7 @@ export type LibraryUncheckedCreateWithoutBookInput = {
   description?: string | null
   createdAt: Date | string
   updatedAt: Date | string
+  bookRents?: Prisma.BookRentalUncheckedCreateNestedManyWithoutLibraryInput
 }
 
 export type LibraryCreateOrConnectWithoutBookInput = {
@@ -437,6 +460,7 @@ export type LibraryUpdateWithoutBookInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bookRents?: Prisma.BookRentalUpdateManyWithoutLibraryNestedInput
 }
 
 export type LibraryUncheckedUpdateWithoutBookInput = {
@@ -446,6 +470,61 @@ export type LibraryUncheckedUpdateWithoutBookInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bookRents?: Prisma.BookRentalUncheckedUpdateManyWithoutLibraryNestedInput
+}
+
+export type LibraryCreateWithoutBookRentsInput = {
+  name: string
+  address: string
+  description?: string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+  book?: Prisma.BookOnLibraryCreateNestedManyWithoutLibraryInput
+}
+
+export type LibraryUncheckedCreateWithoutBookRentsInput = {
+  id?: number
+  name: string
+  address: string
+  description?: string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+  book?: Prisma.BookOnLibraryUncheckedCreateNestedManyWithoutLibraryInput
+}
+
+export type LibraryCreateOrConnectWithoutBookRentsInput = {
+  where: Prisma.LibraryWhereUniqueInput
+  create: Prisma.XOR<Prisma.LibraryCreateWithoutBookRentsInput, Prisma.LibraryUncheckedCreateWithoutBookRentsInput>
+}
+
+export type LibraryUpsertWithoutBookRentsInput = {
+  update: Prisma.XOR<Prisma.LibraryUpdateWithoutBookRentsInput, Prisma.LibraryUncheckedUpdateWithoutBookRentsInput>
+  create: Prisma.XOR<Prisma.LibraryCreateWithoutBookRentsInput, Prisma.LibraryUncheckedCreateWithoutBookRentsInput>
+  where?: Prisma.LibraryWhereInput
+}
+
+export type LibraryUpdateToOneWithWhereWithoutBookRentsInput = {
+  where?: Prisma.LibraryWhereInput
+  data: Prisma.XOR<Prisma.LibraryUpdateWithoutBookRentsInput, Prisma.LibraryUncheckedUpdateWithoutBookRentsInput>
+}
+
+export type LibraryUpdateWithoutBookRentsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  book?: Prisma.BookOnLibraryUpdateManyWithoutLibraryNestedInput
+}
+
+export type LibraryUncheckedUpdateWithoutBookRentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  book?: Prisma.BookOnLibraryUncheckedUpdateManyWithoutLibraryNestedInput
 }
 
 
@@ -455,10 +534,12 @@ export type LibraryUncheckedUpdateWithoutBookInput = {
 
 export type LibraryCountOutputType = {
   book: number
+  bookRents: number
 }
 
 export type LibraryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   book?: boolean | LibraryCountOutputTypeCountBookArgs
+  bookRents?: boolean | LibraryCountOutputTypeCountBookRentsArgs
 }
 
 /**
@@ -478,6 +559,13 @@ export type LibraryCountOutputTypeCountBookArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.BookOnLibraryWhereInput
 }
 
+/**
+ * LibraryCountOutputType without action
+ */
+export type LibraryCountOutputTypeCountBookRentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BookRentalWhereInput
+}
+
 
 export type LibrarySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -487,6 +575,7 @@ export type LibrarySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   book?: boolean | Prisma.Library$bookArgs<ExtArgs>
+  bookRents?: boolean | Prisma.Library$bookRentsArgs<ExtArgs>
   _count?: boolean | Prisma.LibraryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["library"]>
 
@@ -520,6 +609,7 @@ export type LibrarySelectScalar = {
 export type LibraryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["library"]>
 export type LibraryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   book?: boolean | Prisma.Library$bookArgs<ExtArgs>
+  bookRents?: boolean | Prisma.Library$bookRentsArgs<ExtArgs>
   _count?: boolean | Prisma.LibraryCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LibraryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -529,6 +619,7 @@ export type $LibraryPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Library"
   objects: {
     book: Prisma.$BookOnLibraryPayload<ExtArgs>[]
+    bookRents: Prisma.$BookRentalPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -932,6 +1023,7 @@ readonly fields: LibraryFieldRefs;
 export interface Prisma__LibraryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   book<T extends Prisma.Library$bookArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Library$bookArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookOnLibraryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bookRents<T extends Prisma.Library$bookRentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Library$bookRentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookRentalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1376,6 +1468,30 @@ export type Library$bookArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.BookOnLibraryScalarFieldEnum | Prisma.BookOnLibraryScalarFieldEnum[]
+}
+
+/**
+ * Library.bookRents
+ */
+export type Library$bookRentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BookRental
+   */
+  select?: Prisma.BookRentalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BookRental
+   */
+  omit?: Prisma.BookRentalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BookRentalInclude<ExtArgs> | null
+  where?: Prisma.BookRentalWhereInput
+  orderBy?: Prisma.BookRentalOrderByWithRelationInput | Prisma.BookRentalOrderByWithRelationInput[]
+  cursor?: Prisma.BookRentalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BookRentalScalarFieldEnum | Prisma.BookRentalScalarFieldEnum[]
 }
 
 /**

@@ -40,21 +40,18 @@ export type SupportRequestMinAggregateOutputType = {
   id: number | null
   user: number | null
   createdAt: Date | null
-  isActive: boolean | null
 }
 
 export type SupportRequestMaxAggregateOutputType = {
   id: number | null
   user: number | null
   createdAt: Date | null
-  isActive: boolean | null
 }
 
 export type SupportRequestCountAggregateOutputType = {
   id: number
   user: number
   createdAt: number
-  isActive: number
   _all: number
 }
 
@@ -73,21 +70,18 @@ export type SupportRequestMinAggregateInputType = {
   id?: true
   user?: true
   createdAt?: true
-  isActive?: true
 }
 
 export type SupportRequestMaxAggregateInputType = {
   id?: true
   user?: true
   createdAt?: true
-  isActive?: true
 }
 
 export type SupportRequestCountAggregateInputType = {
   id?: true
   user?: true
   createdAt?: true
-  isActive?: true
   _all?: true
 }
 
@@ -181,7 +175,6 @@ export type SupportRequestGroupByOutputType = {
   id: number
   user: number
   createdAt: Date
-  isActive: boolean
   _count: SupportRequestCountAggregateOutputType | null
   _avg: SupportRequestAvgAggregateOutputType | null
   _sum: SupportRequestSumAggregateOutputType | null
@@ -211,7 +204,6 @@ export type SupportRequestWhereInput = {
   id?: Prisma.IntFilter<"SupportRequest"> | number
   user?: Prisma.IntFilter<"SupportRequest"> | number
   createdAt?: Prisma.DateTimeFilter<"SupportRequest"> | Date | string
-  isActive?: Prisma.BoolFilter<"SupportRequest"> | boolean
   messages?: Prisma.MessageListRelationFilter
 }
 
@@ -219,26 +211,23 @@ export type SupportRequestOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   user?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   messages?: Prisma.MessageOrderByRelationAggregateInput
 }
 
 export type SupportRequestWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  user?: number
   AND?: Prisma.SupportRequestWhereInput | Prisma.SupportRequestWhereInput[]
   OR?: Prisma.SupportRequestWhereInput[]
   NOT?: Prisma.SupportRequestWhereInput | Prisma.SupportRequestWhereInput[]
-  user?: Prisma.IntFilter<"SupportRequest"> | number
   createdAt?: Prisma.DateTimeFilter<"SupportRequest"> | Date | string
-  isActive?: Prisma.BoolFilter<"SupportRequest"> | boolean
   messages?: Prisma.MessageListRelationFilter
-}, "id">
+}, "id" | "user">
 
 export type SupportRequestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   user?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   _count?: Prisma.SupportRequestCountOrderByAggregateInput
   _avg?: Prisma.SupportRequestAvgOrderByAggregateInput
   _max?: Prisma.SupportRequestMaxOrderByAggregateInput
@@ -253,13 +242,11 @@ export type SupportRequestScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"SupportRequest"> | number
   user?: Prisma.IntWithAggregatesFilter<"SupportRequest"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SupportRequest"> | Date | string
-  isActive?: Prisma.BoolWithAggregatesFilter<"SupportRequest"> | boolean
 }
 
 export type SupportRequestCreateInput = {
   user: number
   createdAt: Date | string
-  isActive: boolean
   messages?: Prisma.MessageCreateNestedManyWithoutSupportRequestInput
 }
 
@@ -267,14 +254,12 @@ export type SupportRequestUncheckedCreateInput = {
   id?: number
   user: number
   createdAt: Date | string
-  isActive: boolean
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSupportRequestInput
 }
 
 export type SupportRequestUpdateInput = {
   user?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   messages?: Prisma.MessageUpdateManyWithoutSupportRequestNestedInput
 }
 
@@ -282,7 +267,6 @@ export type SupportRequestUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSupportRequestNestedInput
 }
 
@@ -290,27 +274,23 @@ export type SupportRequestCreateManyInput = {
   id?: number
   user: number
   createdAt: Date | string
-  isActive: boolean
 }
 
 export type SupportRequestUpdateManyMutationInput = {
   user?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type SupportRequestUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type SupportRequestCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
 }
 
 export type SupportRequestAvgOrderByAggregateInput = {
@@ -322,14 +302,12 @@ export type SupportRequestMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
 }
 
 export type SupportRequestMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
 }
 
 export type SupportRequestSumOrderByAggregateInput = {
@@ -359,14 +337,12 @@ export type SupportRequestUpdateOneRequiredWithoutMessagesNestedInput = {
 export type SupportRequestCreateWithoutMessagesInput = {
   user: number
   createdAt: Date | string
-  isActive: boolean
 }
 
 export type SupportRequestUncheckedCreateWithoutMessagesInput = {
   id?: number
   user: number
   createdAt: Date | string
-  isActive: boolean
 }
 
 export type SupportRequestCreateOrConnectWithoutMessagesInput = {
@@ -388,14 +364,12 @@ export type SupportRequestUpdateToOneWithWhereWithoutMessagesInput = {
 export type SupportRequestUpdateWithoutMessagesInput = {
   user?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type SupportRequestUncheckedUpdateWithoutMessagesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -433,7 +407,6 @@ export type SupportRequestSelect<ExtArgs extends runtime.Types.Extensions.Intern
   id?: boolean
   user?: boolean
   createdAt?: boolean
-  isActive?: boolean
   messages?: boolean | Prisma.SupportRequest$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.SupportRequestCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["supportRequest"]>
@@ -442,24 +415,21 @@ export type SupportRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   id?: boolean
   user?: boolean
   createdAt?: boolean
-  isActive?: boolean
 }, ExtArgs["result"]["supportRequest"]>
 
 export type SupportRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   user?: boolean
   createdAt?: boolean
-  isActive?: boolean
 }, ExtArgs["result"]["supportRequest"]>
 
 export type SupportRequestSelectScalar = {
   id?: boolean
   user?: boolean
   createdAt?: boolean
-  isActive?: boolean
 }
 
-export type SupportRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user" | "createdAt" | "isActive", ExtArgs["result"]["supportRequest"]>
+export type SupportRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user" | "createdAt", ExtArgs["result"]["supportRequest"]>
 export type SupportRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   messages?: boolean | Prisma.SupportRequest$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.SupportRequestCountOutputTypeDefaultArgs<ExtArgs>
@@ -476,7 +446,6 @@ export type $SupportRequestPayload<ExtArgs extends runtime.Types.Extensions.Inte
     id: number
     user: number
     createdAt: Date
-    isActive: boolean
   }, ExtArgs["result"]["supportRequest"]>
   composites: {}
 }
@@ -904,7 +873,6 @@ export interface SupportRequestFieldRefs {
   readonly id: Prisma.FieldRef<"SupportRequest", 'Int'>
   readonly user: Prisma.FieldRef<"SupportRequest", 'Int'>
   readonly createdAt: Prisma.FieldRef<"SupportRequest", 'DateTime'>
-  readonly isActive: Prisma.FieldRef<"SupportRequest", 'Boolean'>
 }
     
 

@@ -75,6 +75,12 @@ export class LibrariesService implements ILibrariesService {
       where: { bookId: id },
     });
 
+    await this.prisma.bookRental.deleteMany({
+      where: {
+        bookId: id
+      }
+    });
+
     const deletedBook = await this.prisma.book.delete({
       where: { id },
     });
@@ -113,6 +119,12 @@ export class LibrariesService implements ILibrariesService {
   }
 
   async deleteLibrary(id: ID): Promise<Library> {
+    await this.prisma.bookRental.deleteMany({
+      where: {
+        libraryId: id
+      }
+    });
+
     const deletedLibrary = await this.prisma.library.delete({
       where: { id },
     });

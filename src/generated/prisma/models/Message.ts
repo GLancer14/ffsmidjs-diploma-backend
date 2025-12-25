@@ -233,6 +233,7 @@ export type MessageWhereInput = {
   readAt?: Prisma.DateTimeNullableFilter<"Message"> | Date | string | null
   supportRequestId?: Prisma.IntFilter<"Message"> | number
   supportRequest?: Prisma.XOR<Prisma.SupportRequestScalarRelationFilter, Prisma.SupportRequestWhereInput>
+  users?: Prisma.MessageOnUserListRelationFilter
 }
 
 export type MessageOrderByWithRelationInput = {
@@ -243,6 +244,7 @@ export type MessageOrderByWithRelationInput = {
   readAt?: Prisma.SortOrderInput | Prisma.SortOrder
   supportRequestId?: Prisma.SortOrder
   supportRequest?: Prisma.SupportRequestOrderByWithRelationInput
+  users?: Prisma.MessageOnUserOrderByRelationAggregateInput
 }
 
 export type MessageWhereUniqueInput = Prisma.AtLeast<{
@@ -256,6 +258,7 @@ export type MessageWhereUniqueInput = Prisma.AtLeast<{
   readAt?: Prisma.DateTimeNullableFilter<"Message"> | Date | string | null
   supportRequestId?: Prisma.IntFilter<"Message"> | number
   supportRequest?: Prisma.XOR<Prisma.SupportRequestScalarRelationFilter, Prisma.SupportRequestWhereInput>
+  users?: Prisma.MessageOnUserListRelationFilter
 }, "id">
 
 export type MessageOrderByWithAggregationInput = {
@@ -290,6 +293,7 @@ export type MessageCreateInput = {
   text: string
   readAt?: Date | string | null
   supportRequest: Prisma.SupportRequestCreateNestedOneWithoutMessagesInput
+  users?: Prisma.MessageOnUserCreateNestedManyWithoutMessagesInput
 }
 
 export type MessageUncheckedCreateInput = {
@@ -299,6 +303,7 @@ export type MessageUncheckedCreateInput = {
   text: string
   readAt?: Date | string | null
   supportRequestId: number
+  users?: Prisma.MessageOnUserUncheckedCreateNestedManyWithoutMessagesInput
 }
 
 export type MessageUpdateInput = {
@@ -307,6 +312,7 @@ export type MessageUpdateInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   supportRequest?: Prisma.SupportRequestUpdateOneRequiredWithoutMessagesNestedInput
+  users?: Prisma.MessageOnUserUpdateManyWithoutMessagesNestedInput
 }
 
 export type MessageUncheckedUpdateInput = {
@@ -316,6 +322,7 @@ export type MessageUncheckedUpdateInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   supportRequestId?: Prisma.IntFieldUpdateOperationsInput | number
+  users?: Prisma.MessageOnUserUncheckedUpdateManyWithoutMessagesNestedInput
 }
 
 export type MessageCreateManyInput = {
@@ -392,6 +399,11 @@ export type MessageSumOrderByAggregateInput = {
   supportRequestId?: Prisma.SortOrder
 }
 
+export type MessageScalarRelationFilter = {
+  is?: Prisma.MessageWhereInput
+  isNot?: Prisma.MessageWhereInput
+}
+
 export type MessageCreateNestedManyWithoutSupportRequestInput = {
   create?: Prisma.XOR<Prisma.MessageCreateWithoutSupportRequestInput, Prisma.MessageUncheckedCreateWithoutSupportRequestInput> | Prisma.MessageCreateWithoutSupportRequestInput[] | Prisma.MessageUncheckedCreateWithoutSupportRequestInput[]
   connectOrCreate?: Prisma.MessageCreateOrConnectWithoutSupportRequestInput | Prisma.MessageCreateOrConnectWithoutSupportRequestInput[]
@@ -438,11 +450,26 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type MessageCreateNestedOneWithoutUsersInput = {
+  create?: Prisma.XOR<Prisma.MessageCreateWithoutUsersInput, Prisma.MessageUncheckedCreateWithoutUsersInput>
+  connectOrCreate?: Prisma.MessageCreateOrConnectWithoutUsersInput
+  connect?: Prisma.MessageWhereUniqueInput
+}
+
+export type MessageUpdateOneRequiredWithoutUsersNestedInput = {
+  create?: Prisma.XOR<Prisma.MessageCreateWithoutUsersInput, Prisma.MessageUncheckedCreateWithoutUsersInput>
+  connectOrCreate?: Prisma.MessageCreateOrConnectWithoutUsersInput
+  upsert?: Prisma.MessageUpsertWithoutUsersInput
+  connect?: Prisma.MessageWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MessageUpdateToOneWithWhereWithoutUsersInput, Prisma.MessageUpdateWithoutUsersInput>, Prisma.MessageUncheckedUpdateWithoutUsersInput>
+}
+
 export type MessageCreateWithoutSupportRequestInput = {
   author: number
   sentAt: Date | string
   text: string
   readAt?: Date | string | null
+  users?: Prisma.MessageOnUserCreateNestedManyWithoutMessagesInput
 }
 
 export type MessageUncheckedCreateWithoutSupportRequestInput = {
@@ -451,6 +478,7 @@ export type MessageUncheckedCreateWithoutSupportRequestInput = {
   sentAt: Date | string
   text: string
   readAt?: Date | string | null
+  users?: Prisma.MessageOnUserUncheckedCreateNestedManyWithoutMessagesInput
 }
 
 export type MessageCreateOrConnectWithoutSupportRequestInput = {
@@ -491,6 +519,56 @@ export type MessageScalarWhereInput = {
   supportRequestId?: Prisma.IntFilter<"Message"> | number
 }
 
+export type MessageCreateWithoutUsersInput = {
+  author: number
+  sentAt: Date | string
+  text: string
+  readAt?: Date | string | null
+  supportRequest: Prisma.SupportRequestCreateNestedOneWithoutMessagesInput
+}
+
+export type MessageUncheckedCreateWithoutUsersInput = {
+  id?: number
+  author: number
+  sentAt: Date | string
+  text: string
+  readAt?: Date | string | null
+  supportRequestId: number
+}
+
+export type MessageCreateOrConnectWithoutUsersInput = {
+  where: Prisma.MessageWhereUniqueInput
+  create: Prisma.XOR<Prisma.MessageCreateWithoutUsersInput, Prisma.MessageUncheckedCreateWithoutUsersInput>
+}
+
+export type MessageUpsertWithoutUsersInput = {
+  update: Prisma.XOR<Prisma.MessageUpdateWithoutUsersInput, Prisma.MessageUncheckedUpdateWithoutUsersInput>
+  create: Prisma.XOR<Prisma.MessageCreateWithoutUsersInput, Prisma.MessageUncheckedCreateWithoutUsersInput>
+  where?: Prisma.MessageWhereInput
+}
+
+export type MessageUpdateToOneWithWhereWithoutUsersInput = {
+  where?: Prisma.MessageWhereInput
+  data: Prisma.XOR<Prisma.MessageUpdateWithoutUsersInput, Prisma.MessageUncheckedUpdateWithoutUsersInput>
+}
+
+export type MessageUpdateWithoutUsersInput = {
+  author?: Prisma.IntFieldUpdateOperationsInput | number
+  sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  text?: Prisma.StringFieldUpdateOperationsInput | string
+  readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  supportRequest?: Prisma.SupportRequestUpdateOneRequiredWithoutMessagesNestedInput
+}
+
+export type MessageUncheckedUpdateWithoutUsersInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  author?: Prisma.IntFieldUpdateOperationsInput | number
+  sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  text?: Prisma.StringFieldUpdateOperationsInput | string
+  readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  supportRequestId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
 export type MessageCreateManySupportRequestInput = {
   id?: number
   author: number
@@ -504,6 +582,7 @@ export type MessageUpdateWithoutSupportRequestInput = {
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   text?: Prisma.StringFieldUpdateOperationsInput | string
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.MessageOnUserUpdateManyWithoutMessagesNestedInput
 }
 
 export type MessageUncheckedUpdateWithoutSupportRequestInput = {
@@ -512,6 +591,7 @@ export type MessageUncheckedUpdateWithoutSupportRequestInput = {
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   text?: Prisma.StringFieldUpdateOperationsInput | string
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.MessageOnUserUncheckedUpdateManyWithoutMessagesNestedInput
 }
 
 export type MessageUncheckedUpdateManyWithoutSupportRequestInput = {
@@ -523,6 +603,35 @@ export type MessageUncheckedUpdateManyWithoutSupportRequestInput = {
 }
 
 
+/**
+ * Count Type MessageCountOutputType
+ */
+
+export type MessageCountOutputType = {
+  users: number
+}
+
+export type MessageCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  users?: boolean | MessageCountOutputTypeCountUsersArgs
+}
+
+/**
+ * MessageCountOutputType without action
+ */
+export type MessageCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MessageCountOutputType
+   */
+  select?: Prisma.MessageCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * MessageCountOutputType without action
+ */
+export type MessageCountOutputTypeCountUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MessageOnUserWhereInput
+}
+
 
 export type MessageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -532,6 +641,8 @@ export type MessageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   readAt?: boolean
   supportRequestId?: boolean
   supportRequest?: boolean | Prisma.SupportRequestDefaultArgs<ExtArgs>
+  users?: boolean | Prisma.Message$usersArgs<ExtArgs>
+  _count?: boolean | Prisma.MessageCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["message"]>
 
 export type MessageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -566,6 +677,8 @@ export type MessageSelectScalar = {
 export type MessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "author" | "sentAt" | "text" | "readAt" | "supportRequestId", ExtArgs["result"]["message"]>
 export type MessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   supportRequest?: boolean | Prisma.SupportRequestDefaultArgs<ExtArgs>
+  users?: boolean | Prisma.Message$usersArgs<ExtArgs>
+  _count?: boolean | Prisma.MessageCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MessageIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   supportRequest?: boolean | Prisma.SupportRequestDefaultArgs<ExtArgs>
@@ -578,6 +691,7 @@ export type $MessagePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Message"
   objects: {
     supportRequest: Prisma.$SupportRequestPayload<ExtArgs>
+    users: Prisma.$MessageOnUserPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -981,6 +1095,7 @@ readonly fields: MessageFieldRefs;
 export interface Prisma__MessageClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   supportRequest<T extends Prisma.SupportRequestDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupportRequestDefaultArgs<ExtArgs>>): Prisma.Prisma__SupportRequestClient<runtime.Types.Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  users<T extends Prisma.Message$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Message$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessageOnUserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1409,6 +1524,30 @@ export type MessageDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Messages to delete.
    */
   limit?: number
+}
+
+/**
+ * Message.users
+ */
+export type Message$usersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MessageOnUser
+   */
+  select?: Prisma.MessageOnUserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MessageOnUser
+   */
+  omit?: Prisma.MessageOnUserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageOnUserInclude<ExtArgs> | null
+  where?: Prisma.MessageOnUserWhereInput
+  orderBy?: Prisma.MessageOnUserOrderByWithRelationInput | Prisma.MessageOnUserOrderByWithRelationInput[]
+  cursor?: Prisma.MessageOnUserWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MessageOnUserScalarFieldEnum | Prisma.MessageOnUserScalarFieldEnum[]
 }
 
 /**

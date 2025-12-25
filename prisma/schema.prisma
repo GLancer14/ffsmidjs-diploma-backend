@@ -9,12 +9,14 @@ datasource db {
 }
 
 model User {
-  id           Int     @id @default(autoincrement())
-  email        String  @unique
+  id           Int             @id @default(autoincrement())
+  email        String          @unique
   passwordHash String
   name         String
   contactPhone String?
-  role         String  @default("client")
+  role         String          @default("client")
+  messages     MessageOnUser[]
+  bookRents    BookRental[]
 }
 
 model Library {
@@ -25,6 +27,7 @@ model Library {
   book        BookOnLibrary[]
   createdAt   DateTime
   updatedAt   DateTime
+  bookRents   BookRental[]
 }
 
 model Book {
@@ -35,44 +38,61 @@ model Book {
   year        Int?
   description String?
   coverImage  String?
+  bookRents   BookRental[]
 }
 
 model BookOnLibrary {
-  book            Book    @relation(fields: [bookId], references: [id])
+  book            Book         @relation(fields: [bookId], references: [id])
   bookId          Int
-  library         Library @relation(fields: [libraryId], references: [id], onDelete: Cascade)
+  library         Library      @relation(fields: [libraryId], references: [id], onDelete: Cascade)
   libraryId       Int
-  totalCopies     Int     @default(1)
-  availableCopies Int     @default(1)
-  isAvailable     Boolean @default(true)
+  totalCopies     Int          @default(1)
+  availableCopies Int          @default(1)
+  isAvailable     Boolean      @default(true)
+  bookRentals     BookRental[]
 
   @@id([bookId, libraryId])
 }
 
 model BookRental {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  libraryId Int
-  bookId    Int
-  dateStart DateTime
-  dateEnd   DateTime
-  status    String   @default("reserved")
+  id                     Int            @id @default(autoincrement())
+  user                   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                 Int
+  library                Library        @relation(fields: [libraryId], references: [id], onDelete: Cascade)
+  libraryId              Int
+  book                   Book           @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  bookId                 Int
+  dateStart              DateTime
+  dateEnd                DateTime
+  status                 String         @default("reserved")
+  bookOnLibrary          BookOnLibrary? @relation(fields: [bookOnLibraryBookId, bookOnLibraryLibraryId], references: [bookId, libraryId])
+  bookOnLibraryBookId    Int?
+  bookOnLibraryLibraryId Int?
 }
 
 model SupportRequest {
   id        Int       @id @default(autoincrement())
-  user      Int
+  user      Int       @unique
   createdAt DateTime
-  isActive  Boolean
   messages  Message[]
 }
 
 model Message {
-  id               Int            @id @default(autoincrement())
+  id               Int             @id @default(autoincrement())
   author           Int
   sentAt           DateTime
   text             String
   readAt           DateTime?
-  supportRequest   SupportRequest @relation(fields: [supportRequestId], references: [id])
+  supportRequest   SupportRequest  @relation(fields: [supportRequestId], references: [id], onDelete: Cascade)
   supportRequestId Int
+  users            MessageOnUser[]
+}
+
+model MessageOnUser {
+  users     User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  Int
+  messages  Message @relation(fields: [messageId], references: [id])
+  messageId Int
+
+  @@id([authorId, messageId])
 }

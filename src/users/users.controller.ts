@@ -23,9 +23,9 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @UsePipes(new UsersValidationPipe(createUserValidationSchema))
-  @UseGuards(AuthenticatedGuard, RolesGuard)
+  // @UseGuards(AuthenticatedGuard, RolesGuard)
   @Post("admin/users/")
-  @Roles("admin")
+  // @Roles("admin")
   async createUser(@Body() user: CreateUserDto) {
     const createdUser = await this.usersService.create(user);
     return {

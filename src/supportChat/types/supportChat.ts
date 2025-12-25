@@ -41,5 +41,5 @@ export interface ISupportRequestClientService {
 export interface ISupportRequestEmployeeService {
   markMessageAsRead(params: MarkMessageAsReadDto);
   getUnreadCount(supportRequest: ID): Promise<Message[]>;
-  closeRequest(supportRequest: ID): Promise<void>;
+  // closeRequest(supportRequest: ID): Promise<void>;
 }

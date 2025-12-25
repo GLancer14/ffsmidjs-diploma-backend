@@ -36,14 +36,14 @@ export class SupportRequestEmployeeService implements ISupportRequestEmployeeSer
     });
   }
 
-  async closeRequest(supportRequest: ID): Promise<void> {
-    this.prisma.supportRequest.update({
-      where: {
-        id: supportRequest
-      },
-      data: {
-        isActive: false
-      }
-    });
-  }
+  // async closeRequest(supportRequest: ID): Promise<void> {
+  //   this.prisma.supportRequest.update({
+  //     where: {
+  //       id: supportRequest
+  //     },
+  //     data: {
+  //       isActive: false
+  //     }
+  //   });
+  // }
 }

@@ -24,6 +24,14 @@ export class UsersService implements IUserService {
         data: { ...userWithHashedPass },
       });
 
+      const requestCreationTime = new Date();
+      await this.prisma.supportRequest.create({
+        data: {
+          user: user.id,
+          createdAt: requestCreationTime,
+        },
+      });
+
       return user;
     } catch(e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === "P2002") {
@@ -71,6 +79,12 @@ export class UsersService implements IUserService {
   }
 
   async deleteUser(userId: ID): Promise<User | null> {
+    await this.prisma.bookRental.deleteMany({
+      where: {
+        userId
+      }
+    });
+
     const deletedUser = await this.prisma.user.delete({
       where: {
         id: userId,

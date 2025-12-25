@@ -52,7 +52,6 @@ export class SupportRequestService implements ISupportRequestService {
       take: params.limit,
       where: {
         user: params.user,
-        isActive: params.isActive,
       },
       include: {
         messages: {
@@ -125,7 +124,6 @@ export class SupportRequestService implements ISupportRequestService {
         data: {
           user: data.author,
           createdAt: requestCreationTime,
-          isActive: true,
           messages: {
             create: {
               author: data.author,

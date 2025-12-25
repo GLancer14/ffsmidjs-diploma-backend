@@ -62,7 +62,6 @@ export class SupportChatController {
       return {
         id: supportRequest.id,
         createdAt: supportRequest.createdAt,
-        isActive: supportRequest.isActive,
         hasNewMessages: Boolean(
           (await this.supportRequestClientService.getUnreadCount(supportRequest.id)).length
         ),

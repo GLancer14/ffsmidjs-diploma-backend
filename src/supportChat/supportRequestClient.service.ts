@@ -15,7 +15,6 @@ export class SupportRequestClientService implements ISupportRequestClientService
       data: {
         user: data.user,
         createdAt: requestCreationTime,
-        isActive: true,
         messages: {
           create: {
             author: data.user,

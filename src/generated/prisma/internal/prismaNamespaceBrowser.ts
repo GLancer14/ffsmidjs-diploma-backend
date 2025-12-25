@@ -57,7 +57,8 @@ export const ModelName = {
   BookOnLibrary: 'BookOnLibrary',
   BookRental: 'BookRental',
   SupportRequest: 'SupportRequest',
-  Message: 'Message'
+  Message: 'Message',
+  MessageOnUser: 'MessageOnUser'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -130,7 +131,9 @@ export const BookRentalScalarFieldEnum = {
   bookId: 'bookId',
   dateStart: 'dateStart',
   dateEnd: 'dateEnd',
-  status: 'status'
+  status: 'status',
+  bookOnLibraryBookId: 'bookOnLibraryBookId',
+  bookOnLibraryLibraryId: 'bookOnLibraryLibraryId'
 } as const
 
 export type BookRentalScalarFieldEnum = (typeof BookRentalScalarFieldEnum)[keyof typeof BookRentalScalarFieldEnum]
@@ -139,8 +142,7 @@ export type BookRentalScalarFieldEnum = (typeof BookRentalScalarFieldEnum)[keyof
 export const SupportRequestScalarFieldEnum = {
   id: 'id',
   user: 'user',
-  createdAt: 'createdAt',
-  isActive: 'isActive'
+  createdAt: 'createdAt'
 } as const
 
 export type SupportRequestScalarFieldEnum = (typeof SupportRequestScalarFieldEnum)[keyof typeof SupportRequestScalarFieldEnum]
@@ -156,6 +158,14 @@ export const MessageScalarFieldEnum = {
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const MessageOnUserScalarFieldEnum = {
+  authorId: 'authorId',
+  messageId: 'messageId'
+} as const
+
+export type MessageOnUserScalarFieldEnum = (typeof MessageOnUserScalarFieldEnum)[keyof typeof MessageOnUserScalarFieldEnum]
 
 
 export const SortOrder = {
