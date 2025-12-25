@@ -133,6 +133,11 @@ export class UsersController {
     return this.usersService.getUsersCount(query);
   }
 
+  @Get("common/users-count/welcome")
+  getUsersCountForWelcome() {
+    return this.usersService.getUsersCountForWelcome();
+  }
+
   // @UseGuards(AuthenticatedGuard, RolesGuard)
   // @Get("manager/users/")
   // @Roles("manager")

@@ -60,6 +60,15 @@ export class BookRentalController {
   //   return this.bookRentalService.findActiveRentsCountByUser(query.userId);
   // }
 
+  @Get("common/rentals-count")
+  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @Roles("client")
+  findRentsCountForWelcome(
+    @Query(new BookRentalValidationPipe(findBookRentalValidationSchema)) query: { userId: ID }
+  ) {
+    return this.bookRentalService.findCountForWelcome(query.userId);
+  }
+
   @Get("client/rentals/:id")
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Roles("client")

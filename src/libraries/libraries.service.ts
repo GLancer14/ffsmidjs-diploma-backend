@@ -225,6 +225,22 @@ export class LibrariesService implements ILibrariesService {
     return this.prisma.library.count();
   }
 
+  async getBooksCountForWelcome(): Promise<{all: number | null, activeRents: number}> {
+    const all = (await this.prisma.bookOnLibrary.aggregate({
+      _sum: {
+        totalCopies: true
+      }
+    }))._sum.totalCopies;
+
+    const activeRents = await this.prisma.bookRental.count({
+      where: {
+        status: "active"
+      }
+    });
+
+    return { all, activeRents };
+  }
+
   findAllBooks(params: Partial<SearchBookParams>): Promise<Book[]> {
     if (!params.author && !params.title && !params.libraryId) {
       return Promise.resolve([]);

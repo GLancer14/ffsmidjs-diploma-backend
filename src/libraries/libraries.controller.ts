@@ -83,6 +83,11 @@ export class LibrariesController {
     return this.librariesService.getLibrariesCount();
   }
 
+  @Get("common/books-count/")
+  getBooksCountForWelcome() {
+    return this.librariesService.getBooksCountForWelcome();
+  }
+
   @UsePipes(new LibrariesValidationPipe(createLibraryValidationSchema))
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Post("admin/libraries/")

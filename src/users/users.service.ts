@@ -140,4 +140,25 @@ export class UsersService implements IUserService {
       where: orCondition.length !== 0 ? { OR: orCondition } : undefined,
     });
   }
+
+  async getUsersCountForWelcome() {
+    const allUsers = await this.prisma.user.count();
+    const usersWithActiveRents = (await this.prisma.bookRental.groupBy({
+      by: ["userId"],
+      where: {
+        status: "active",
+      },
+      _count: {
+        userId: true,
+      }
+    })).length;
+
+    const newMessages = await this.prisma.message.count({
+      where: {
+        readAt: null
+      }
+    });
+
+    return {allUsers, usersWithActiveRents, newMessages};
+  }
 }

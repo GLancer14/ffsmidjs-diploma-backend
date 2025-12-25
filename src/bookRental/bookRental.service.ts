@@ -73,6 +73,23 @@ export class BookRentalService implements IBookRentalService {
     });
   }
 
+  async findCountForWelcome(userId: ID) {
+    const allUserRents = await this.prisma.bookRental.count({
+      where: {
+        userId,
+      },
+    });
+
+    const allUserActiveRents = await this.prisma.bookRental.count({
+      where: {
+        userId,
+        status: "active"
+      },
+    });
+
+    return { all: allUserRents, active: allUserActiveRents };
+  }
+
   // findActiveRentsCountByUser(userId: ID) {
   //   return this.prisma.bookRental.count({
   //     where: {
@@ -120,6 +137,7 @@ export class BookRentalService implements IBookRentalService {
         book: {
           title: rentedBookData?.title,
           author: rentedBookData?.author,
+          coverImage: rentedBookData?.coverImage,
         },
         dateStart: rentData.dateStart,
         dateEnd: rentData.dateEnd,
