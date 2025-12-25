@@ -9,6 +9,21 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class SupportRequestClientService implements ISupportRequestClientService {
   constructor(private prisma: PrismaService) {}
 
+  findClientSupportRequest(userId: ID): Promise<SupportRequest | null> {
+    return this.prisma.supportRequest.findUnique({
+      where: {
+        user: userId,
+      },
+      include: {
+        messages: {
+          orderBy: {
+            sentAt: "asc",
+          }
+        },
+      }
+    })
+  }
+
   async createSupportRequest(data: CreateSupportRequestDto): Promise<SupportRequest> {
     const requestCreationTime = new Date();
     const savedRequest = await this.prisma.supportRequest.create({

@@ -46,6 +46,21 @@ export class SupportRequestService implements ISupportRequestService {
     });
   }
 
+  async findUserSupportRequestForManager(userId: ID): Promise<SupportRequest | null> {
+    return this.prisma.supportRequest.findUnique({
+      where: {
+        user: userId,
+      },
+      include: {
+        messages: {
+          orderBy: {
+            sentAt: "asc",
+          }
+        },
+      }
+    })
+  }
+
   async findSupportRequests(params: GetChatListParamsDto): Promise<SupportRequestWithMessages[]> {
     const supportRequests = (await this.prisma.supportRequest.findMany({
       skip: params.offset,

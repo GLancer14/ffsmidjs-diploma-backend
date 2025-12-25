@@ -45,49 +45,71 @@ export class SupportChatController {
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("client/support-requests/")
   @Roles("client")
-  async getClientRequests(
+  async getClientRequestChat(
     @Req() req: Request,
-    @Query(new SupportChatValidationPipe(
-      supportSearchParamsValidationSchema
-    )) query: GetChatListParamsDto
   ) {
     const user = req.user as RequestUser;
-    const supportRequests = await this.supportRequestService.findSupportRequests({
-      currentUser: user.id,
-      limit: query.limit,
-      offset: query.offset,
-      isActive: query.isActive,
-    });
-    const supportRequestsForResponse = await Promise.all(supportRequests.map(async (supportRequest) => {
-      return {
-        id: supportRequest.id,
-        createdAt: supportRequest.createdAt,
-        hasNewMessages: Boolean(
-          (await this.supportRequestClientService.getUnreadCount(supportRequest.id)).length
-        ),
-      };
-    }));
-
-    return supportRequestsForResponse;
+    return await this.supportRequestClientService.findClientSupportRequest(user.id);
   }
+
+  // @UseGuards(AuthenticatedGuard, RolesGuard)
+  // @Get("client/support-requests/")
+  // @Roles("client")
+  // async getClientRequests(
+  //   @Req() req: Request,
+  //   @Query(new SupportChatValidationPipe(
+  //     supportSearchParamsValidationSchema
+  //   )) query: GetChatListParamsDto
+  // ) {
+  //   const user = req.user as RequestUser;
+  //   const supportRequests = await this.supportRequestService.findSupportRequests({
+  //     currentUser: user.id,
+  //     limit: query.limit,
+  //     offset: query.offset,
+  //     isActive: query.isActive,
+  //   });
+  //   const supportRequestsForResponse = await Promise.all(supportRequests.map(async (supportRequest) => {
+  //     return {
+  //       id: supportRequest.id,
+  //       createdAt: supportRequest.createdAt,
+  //       hasNewMessages: Boolean(
+  //         (await this.supportRequestClientService.getUnreadCount(supportRequest.id)).length
+  //       ),
+  //     };
+  //   }));
+
+  //   return supportRequestsForResponse;
+  // }
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("manager/support-requests/")
   @Roles("admin", "manager")
-  async getRequestsForManager(
+  async getClientRequestForManager(
     @Req() req: Request,
     @Query(new SupportChatValidationPipe(
       supportSearchParamsValidationSchema
     )) query: GetChatListParamsDto
   ) {
-    const currentUser = req.user as RequestUser;
-    const supportRequests = (await this.supportRequestService.findSupportRequests({
-      currentUser: currentUser.id,
-      user: query.user,
-      limit: query.limit,
-      offset: query.offset,
-      // isActive: query.isActive,
-    }))[0];
+    return await this.supportRequestService.findUserSupportRequestForManager(query.user);
+  }
+
+  // @UseGuards(AuthenticatedGuard, RolesGuard)
+  // @Get("manager/support-requests/")
+  // @Roles("admin", "manager")
+  // async getRequestsForManager(
+  //   @Req() req: Request,
+  //   @Query(new SupportChatValidationPipe(
+  //     supportSearchParamsValidationSchema
+  //   )) query: GetChatListParamsDto
+  // ) {
+  //   const currentUser = req.user as RequestUser;
+  //   const supportRequests = (await this.supportRequestService.findSupportRequests({
+  //     currentUser: currentUser.id,
+  //     user: query.user,
+  //     limit: query.limit,
+  //     offset: query.offset,
+  //     // isActive: query.isActive,
+  //   }))[0];
 
     // const supportRequestsForResponse = await Promise.all(supportRequests.map(async (supportRequest) => {
     //   const clientData = await this.usersService.findById(supportRequest.user);
@@ -109,8 +131,8 @@ export class SupportChatController {
     //   };
     // }));
 
-    return supportRequests;
-  }
+    // return supportRequests;
+  // }
 
   @UseGuards(
     AuthenticatedGuard,
