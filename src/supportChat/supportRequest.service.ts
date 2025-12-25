@@ -56,12 +56,9 @@ export class SupportRequestService implements ISupportRequestService {
       },
       include: {
         messages: {
-          where: {
-            OR: [
-              { author: params.currentUser },
-              { author: params.user },
-            ]
-          },
+          // where: {
+          //   author: params.user
+          // },
           orderBy: {
             sentAt: "asc",
           }
