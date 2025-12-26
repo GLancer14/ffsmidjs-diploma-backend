@@ -9,14 +9,14 @@ datasource db {
 }
 
 model User {
-  id           Int             @id @default(autoincrement())
-  email        String          @unique
+  id           Int          @id @default(autoincrement())
+  email        String       @unique
   passwordHash String
   name         String
   contactPhone String?
-  role         String          @default("client")
-  messages     MessageOnUser[]
+  role         String       @default("client")
   bookRents    BookRental[]
+  messages     Message[]
 }
 
 model Library {
@@ -78,21 +78,12 @@ model SupportRequest {
 }
 
 model Message {
-  id               Int             @id @default(autoincrement())
+  id               Int            @id @default(autoincrement())
+  users            User           @relation(fields: [author], references: [id], onDelete: Cascade)
   author           Int
   sentAt           DateTime
   text             String
   readAt           DateTime?
-  supportRequest   SupportRequest  @relation(fields: [supportRequestId], references: [id], onDelete: Cascade)
+  supportRequest   SupportRequest @relation(fields: [supportRequestId], references: [id], onDelete: Cascade)
   supportRequestId Int
-  users            MessageOnUser[]
-}
-
-model MessageOnUser {
-  users     User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  Int
-  messages  Message @relation(fields: [messageId], references: [id])
-  messageId Int
-
-  @@id([authorId, messageId])
 }

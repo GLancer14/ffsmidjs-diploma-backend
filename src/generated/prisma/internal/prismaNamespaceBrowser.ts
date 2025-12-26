@@ -57,8 +57,7 @@ export const ModelName = {
   BookOnLibrary: 'BookOnLibrary',
   BookRental: 'BookRental',
   SupportRequest: 'SupportRequest',
-  Message: 'Message',
-  MessageOnUser: 'MessageOnUser'
+  Message: 'Message'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -158,14 +157,6 @@ export const MessageScalarFieldEnum = {
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
-
-
-export const MessageOnUserScalarFieldEnum = {
-  authorId: 'authorId',
-  messageId: 'messageId'
-} as const
-
-export type MessageOnUserScalarFieldEnum = (typeof MessageOnUserScalarFieldEnum)[keyof typeof MessageOnUserScalarFieldEnum]
 
 
 export const SortOrder = {

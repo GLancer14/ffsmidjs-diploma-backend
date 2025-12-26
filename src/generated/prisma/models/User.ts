@@ -224,8 +224,8 @@ export type UserWhereInput = {
   name?: Prisma.StringFilter<"User"> | string
   contactPhone?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.StringFilter<"User"> | string
-  messages?: Prisma.MessageOnUserListRelationFilter
   bookRents?: Prisma.BookRentalListRelationFilter
+  messages?: Prisma.MessageListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -235,8 +235,8 @@ export type UserOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   contactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
-  messages?: Prisma.MessageOnUserOrderByRelationAggregateInput
   bookRents?: Prisma.BookRentalOrderByRelationAggregateInput
+  messages?: Prisma.MessageOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -249,8 +249,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"User"> | string
   contactPhone?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.StringFilter<"User"> | string
-  messages?: Prisma.MessageOnUserListRelationFilter
   bookRents?: Prisma.BookRentalListRelationFilter
+  messages?: Prisma.MessageListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -285,8 +285,8 @@ export type UserCreateInput = {
   name: string
   contactPhone?: string | null
   role?: string
-  messages?: Prisma.MessageOnUserCreateNestedManyWithoutUsersInput
   bookRents?: Prisma.BookRentalCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUsersInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -296,8 +296,8 @@ export type UserUncheckedCreateInput = {
   name: string
   contactPhone?: string | null
   role?: string
-  messages?: Prisma.MessageOnUserUncheckedCreateNestedManyWithoutUsersInput
   bookRents?: Prisma.BookRentalUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUsersInput
 }
 
 export type UserUpdateInput = {
@@ -306,8 +306,8 @@ export type UserUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  messages?: Prisma.MessageOnUserUpdateManyWithoutUsersNestedInput
   bookRents?: Prisma.BookRentalUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUsersNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -317,8 +317,8 @@ export type UserUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  messages?: Prisma.MessageOnUserUncheckedUpdateManyWithoutUsersNestedInput
   bookRents?: Prisma.BookRentalUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUsersNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -437,7 +437,7 @@ export type UserCreateWithoutBookRentsInput = {
   name: string
   contactPhone?: string | null
   role?: string
-  messages?: Prisma.MessageOnUserCreateNestedManyWithoutUsersInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUsersInput
 }
 
 export type UserUncheckedCreateWithoutBookRentsInput = {
@@ -447,7 +447,7 @@ export type UserUncheckedCreateWithoutBookRentsInput = {
   name: string
   contactPhone?: string | null
   role?: string
-  messages?: Prisma.MessageOnUserUncheckedCreateNestedManyWithoutUsersInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUsersInput
 }
 
 export type UserCreateOrConnectWithoutBookRentsInput = {
@@ -472,7 +472,7 @@ export type UserUpdateWithoutBookRentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  messages?: Prisma.MessageOnUserUpdateManyWithoutUsersNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUsersNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBookRentsInput = {
@@ -482,7 +482,7 @@ export type UserUncheckedUpdateWithoutBookRentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  messages?: Prisma.MessageOnUserUncheckedUpdateManyWithoutUsersNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUsersNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
@@ -545,13 +545,13 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
  */
 
 export type UserCountOutputType = {
-  messages: number
   bookRents: number
+  messages: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  messages?: boolean | UserCountOutputTypeCountMessagesArgs
   bookRents?: boolean | UserCountOutputTypeCountBookRentsArgs
+  messages?: boolean | UserCountOutputTypeCountMessagesArgs
 }
 
 /**
@@ -567,15 +567,15 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MessageOnUserWhereInput
+export type UserCountOutputTypeCountBookRentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BookRentalWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountBookRentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.BookRentalWhereInput
+export type UserCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MessageWhereInput
 }
 
 
@@ -586,8 +586,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   name?: boolean
   contactPhone?: boolean
   role?: boolean
-  messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   bookRents?: boolean | Prisma.User$bookRentsArgs<ExtArgs>
+  messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -620,8 +620,8 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "contactPhone" | "role", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   bookRents?: boolean | Prisma.User$bookRentsArgs<ExtArgs>
+  messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -630,8 +630,8 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    messages: Prisma.$MessageOnUserPayload<ExtArgs>[]
     bookRents: Prisma.$BookRentalPayload<ExtArgs>[]
+    messages: Prisma.$MessagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1034,8 +1034,8 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  messages<T extends Prisma.User$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessageOnUserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bookRents<T extends Prisma.User$bookRentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bookRentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookRentalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  messages<T extends Prisma.User$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1459,30 +1459,6 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.messages
- */
-export type User$messagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the MessageOnUser
-   */
-  select?: Prisma.MessageOnUserSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the MessageOnUser
-   */
-  omit?: Prisma.MessageOnUserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MessageOnUserInclude<ExtArgs> | null
-  where?: Prisma.MessageOnUserWhereInput
-  orderBy?: Prisma.MessageOnUserOrderByWithRelationInput | Prisma.MessageOnUserOrderByWithRelationInput[]
-  cursor?: Prisma.MessageOnUserWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MessageOnUserScalarFieldEnum | Prisma.MessageOnUserScalarFieldEnum[]
-}
-
-/**
  * User.bookRents
  */
 export type User$bookRentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1504,6 +1480,30 @@ export type User$bookRentsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.BookRentalScalarFieldEnum | Prisma.BookRentalScalarFieldEnum[]
+}
+
+/**
+ * User.messages
+ */
+export type User$messagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Message
+   */
+  select?: Prisma.MessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Message
+   */
+  omit?: Prisma.MessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageInclude<ExtArgs> | null
+  where?: Prisma.MessageWhereInput
+  orderBy?: Prisma.MessageOrderByWithRelationInput | Prisma.MessageOrderByWithRelationInput[]
+  cursor?: Prisma.MessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
 }
 
 /**

@@ -189,7 +189,7 @@ export class SupportChatController {
     ClientIdCheckGuard
   )
   @Post("common/support-requests/:id/messages/read")
-  @Roles("manager", "client")
+  @Roles("admin", "manager", "client")
   async markAsRead(
     @Req() req: Request,
     @Body(
@@ -215,3 +215,4 @@ export class SupportChatController {
     return { success: true };
   }
 }
+

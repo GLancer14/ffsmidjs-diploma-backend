@@ -55,6 +55,13 @@ export class SupportRequestService implements ISupportRequestService {
         messages: {
           orderBy: {
             sentAt: "asc",
+          },
+          include: {
+            users: {
+              select: {
+                name: true,
+              }
+            }
           }
         },
       }
@@ -133,22 +140,22 @@ export class SupportRequestService implements ISupportRequestService {
       where: { id: +data.supportRequest },
     });
 
-    if (!supportRequest) {
-      const requestCreationTime = new Date();
-      supportRequest = await this.prisma.supportRequest.create({
-        data: {
-          user: data.author,
-          createdAt: requestCreationTime,
-          messages: {
-            create: {
-              author: data.author,
-              sentAt: requestCreationTime,
-              text: data.text,
-            },
-          }
-        },
-      });
-    }
+    // if (!supportRequest) {
+    //   const requestCreationTime = new Date();
+    //   supportRequest = await this.prisma.supportRequest.create({
+    //     data: {
+    //       user: data.author,
+    //       createdAt: requestCreationTime,
+    //       messages: {
+    //         create: {
+    //           author: data.author,
+    //           sentAt: requestCreationTime,
+    //           text: data.text,
+    //         },
+    //       }
+    //     },
+    //   });
+    // }
 
     const createdMessage = await this.prisma.message.create({
       data: {
@@ -157,10 +164,17 @@ export class SupportRequestService implements ISupportRequestService {
         text: data.text,
         supportRequestId: data.supportRequest,
       },
+      include: {
+        users: {
+          select: {
+            name: true,
+          }
+        }
+      }
     });
-    const authorName = await this.prisma.user.findUnique({
-      where: { id: data.author },
-    });
+    // const authorName = await this.prisma.user.findUnique({
+    //   where: { id: data.author },
+    // });
 
     this.eventEmitter.emit("message.created", {
       supportRequest,

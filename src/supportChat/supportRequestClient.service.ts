@@ -18,6 +18,13 @@ export class SupportRequestClientService implements ISupportRequestClientService
         messages: {
           orderBy: {
             sentAt: "asc",
+          },
+          include: {
+            users: {
+              select: {
+                name: true,
+              }
+            }
           }
         },
       }
@@ -49,7 +56,7 @@ export class SupportRequestClientService implements ISupportRequestClientService
         author: { not: params.user },
         supportRequestId: params.supportRequest,
         sentAt: {
-          lt: new Date(params.createdBefore),
+          lte: new Date(params.createdBefore),
         },
         readAt: null,
       },

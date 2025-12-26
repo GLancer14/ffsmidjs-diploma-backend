@@ -48,9 +48,8 @@ export class SupportChatGateway {
     return this.server.sockets.sockets.get(socketId);
   }
 
-  // @UseGuards(SocketSessionAuthGuard)
+  @UseGuards(SocketSessionAuthGuard)
   @SubscribeMessage("subscribeToChat")
-  // @Roles("manager", "client")
   async subcribeToChatNotifications(
     @ConnectedSocket() client: Socket,
     @MessageBody("chatId") chatId: ID,
@@ -74,8 +73,8 @@ export class SupportChatGateway {
     console.log("user subscribed to chat", chatId)
   }
 
+  @UseGuards(SocketSessionAuthGuard)
   @SubscribeMessage("unsubscribeToChat")
-  @Roles("manager", "client")
   async unsubcribeToChatNotifications(
     @ConnectedSocket() client: Socket,
     @MessageBody("chatId") chatId: ID,
@@ -86,8 +85,8 @@ export class SupportChatGateway {
       throw new WsException("Неверный id пользователя для отмены подписки на оповещения");
     }
 
-    // console.log("client id at unsubscribe process: ", client.id);
-    // console.log("chat Id at unsubscribe: ", chatId);
+    console.log("client id at unsubscribe process: ", client.id);
+    console.log("chat Id at unsubscribe: ", chatId);
 
     this.userChatRooms.get(userId)?.delete(chatId);
     this.chatSubscribers.get(chatId)?.delete(client.id);
@@ -100,10 +99,23 @@ export class SupportChatGateway {
       this.chatSubscribers.delete(chatId);
     }
 
-    // console.log("chat subscriber after unsubscribe: ", this.chatSubscribers)
+    console.log("chat subscriber after unsubscribe: ", this.chatSubscribers)
   }
  
-  handleDisconnect() {
+  handleDisconnect(client: Socket) {
+    const userId = client.data.userId;
+    const userChats = this.userChatRooms.get(userId);
+    
+    if (userChats) {
+      userChats.forEach(chatId => {
+        this.chatSubscribers.get(chatId)?.delete(client.id);
+        if (this.chatSubscribers.get(chatId)?.size === 0) {
+          this.chatSubscribers.delete(chatId);
+        }
+      });
+      this.userChatRooms.delete(userId);
+    }
 
+    console.log("user disconnected from socket");
   }
 }

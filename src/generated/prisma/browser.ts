@@ -52,8 +52,3 @@ export type SupportRequest = Prisma.SupportRequestModel
  * 
  */
 export type Message = Prisma.MessageModel
-/**
- * Model MessageOnUser
- * 
- */
-export type MessageOnUser = Prisma.MessageOnUserModel
