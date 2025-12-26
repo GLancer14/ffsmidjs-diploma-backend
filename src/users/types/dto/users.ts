@@ -17,6 +17,7 @@ export interface RegisterUserResponseDto {
   id: ID;
   email: string;
   name: string;
+  contactPhone: string | null;
 }
 
 export interface RequestUser {

@@ -27,11 +27,15 @@ export class AuthService {
     const savedUser = await this.usersService.create(userData);
 
     if (savedUser) {
-      return {
+      const userForRegister = {
         id: savedUser.id,
         email: savedUser.email,
         name: savedUser.name,
+        contactPhone: savedUser.contactPhone || null,
       };
+      console.log(userForRegister)
+
+      return userForRegister;
     }
   }
 }

@@ -147,6 +147,14 @@ export class SupportChatController {
     return this.supportRequestService.getMessages(params.id);
   }
 
+  // @Get("common/support-requests/:id/messages/count")
+  // @Roles("manager", "client")
+  // getUnreadMessagesCountForClient(@Param(
+  //   new SupportChatValidationPipe(idValidationSchema)
+  // ) params: { id: ID }) {
+  //   return this.supportRequestClientService.getUnreadCount(params.id);
+  // }
+
   @UseGuards(
     AuthenticatedGuard,
     RolesGuard,
