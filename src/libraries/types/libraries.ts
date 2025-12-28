@@ -5,6 +5,8 @@ export interface SearchBookParams {
   libraryId: number;
   title: string;
   author: string;
+  dateStart: Date;
+  dateEnd: Date;
   isAvailable: boolean;
 }
 

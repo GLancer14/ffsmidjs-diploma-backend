@@ -12,7 +12,7 @@ export class PrismaClientExceptionFilter implements ExceptionFilter {
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
     switch (exception.code) {
       case 'P2002':
-        throw new BadRequestException("Пользователь с таким значением уникального поля уже существует.");
+        throw new BadRequestException("Нарушение ограничения уникального поля.");
       case 'P2025':
         throw new BadRequestException("Запись не найдена в базе данных.");
       default:

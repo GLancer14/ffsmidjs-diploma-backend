@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ILibrariesService, SearchBookParams, SearchLibraryParams } from './types/libraries';
 import { ID } from 'src/types/commonTypes';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { BookDto, LibraryDto, UpdateBookDto, UpdateLibraryDto } from './types/dto/libraries';
+import { BookDto, ExistingBookDto, LibraryDto, UpdateBookDto, UpdateLibraryDto } from './types/dto/libraries';
 import { Book, Library } from 'src/generated/prisma/client';
 import path from 'node:path';
 import * as fs from "fs/promises";
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 
 @Injectable()
 export class LibrariesService implements ILibrariesService {
@@ -146,6 +147,34 @@ export class LibrariesService implements ILibrariesService {
     });
   }
 
+  findBookByTitle(title: string, libraryId: number): Promise<Book[] | undefined> {
+    try {
+      return this.prisma.book.findMany({
+        take: 20,
+        where: {
+          title: { contains: title, mode: "insensitive" },
+          
+        },
+          include: {
+            library: {
+              where: {
+                libraryId: { not: libraryId }
+              },
+              select: {
+                libraryId: true,
+              }
+            }
+          }
+      });
+    } catch(e) {
+      if (e instanceof PrismaClientKnownRequestError && e.code === "P2002") {
+        throw new BadRequestException("Данная книга уже есть в этой библиотеке");
+      }
+
+      throw new InternalServerErrorException("Ошибка сервера");
+    }
+  }
+
   findLibraryById(id: ID): Promise<Library | null> {
     return this.prisma.library.findUnique({
       where: { id },
@@ -241,12 +270,12 @@ export class LibrariesService implements ILibrariesService {
     return { all, activeRents };
   }
 
-  findAllBooks(params: Partial<SearchBookParams>): Promise<Book[]> {
+  async findAllBooks(params: Partial<SearchBookParams>): Promise<Book[]> {
     if (!params.author && !params.title && !params.libraryId) {
       return Promise.resolve([]);
     }
 
-    return this.prisma.book.findMany({
+    const availableCopiesNow = await this.prisma.book.findMany({
       where: {
         AND: [
           {
@@ -263,11 +292,13 @@ export class LibrariesService implements ILibrariesService {
               } : {}
             ].filter(cond => Object.keys(cond).length > 0),
           },
-          { library: {
-            some: {
-              isAvailable: params.isAvailable,
+          {
+            library: {
+              some: {
+                isAvailable: params.isAvailable,
+              }
             }
-          } }
+          }
         ],
       },
       include: {
@@ -281,5 +312,38 @@ export class LibrariesService implements ILibrariesService {
         }
       }
     });
+
+    const rentedForCopiesNow = await Promise.all(availableCopiesNow.map(async (book) => {
+      const notAvailableCopiesAccordingToPeriod = await this.prisma.bookRental.findMany({
+        where: {
+          bookId: book.id,
+          dateStart: {
+            lte: params.dateEnd
+          },
+          dateEnd: {
+            gte: params.dateStart
+          }
+        },
+        select: {
+          libraryId: true,
+
+        }
+      });
+
+    }))
+
+    return availableCopiesNow
+  }
+
+  addExistingBookToLibrary(bookData: ExistingBookDto) {
+    return this.prisma.bookOnLibrary.create({
+      data: {
+        bookId: bookData.bookId,
+        libraryId: bookData.libraryId,
+        availableCopies: bookData.availableCopies,
+        totalCopies: bookData.totalCopies,
+      }
+    })
   }
 }
+

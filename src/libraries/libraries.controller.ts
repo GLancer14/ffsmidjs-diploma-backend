@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common';
 import { LibrariesService } from './libraries.service';
 import { type ID } from 'src/types/commonTypes';
-import type { FindBookDto, BookDto, LibraryDto, UpdateLibraryDto, UpdateBookDto } from './types/dto/libraries';
+import type { FindBookDto, BookDto, LibraryDto, UpdateLibraryDto, UpdateBookDto, ExistingBookDto } from './types/dto/libraries';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Book } from 'src/generated/prisma/client';
 import { AuthenticatedGuard } from 'src/auth/guards/local.authenticated.guard';
@@ -25,6 +25,8 @@ import { Roles } from 'src/roles/roles.decorator';
 import multerOptions from 'src/config/multerOptions';
 import { LibrariesValidationPipe } from 'src/validation/libraries.pipe';
 import {
+  addExistingBookValidationSchema,
+  bookSimpleSearchValidationSchema,
   createBookValidationSchema,
   createLibraryValidationSchema,
   findLibrariesValidationSchema,
@@ -47,6 +49,8 @@ export class LibrariesController {
       libraryId: query.library,
       author: query.author,
       title: query.title,
+      dateStart: query.dateStart,
+      dateEnd: query.dateEnd,
       isAvailable: query.availableOnly,
     });
   }
@@ -56,6 +60,13 @@ export class LibrariesController {
     @Param(new LibrariesValidationPipe(idValidationSchema)) params: { id: ID }
   ) {
     return this.librariesService.findBookById(params.id);
+  }
+
+  @Get("common/books/search/:libraryId/:title")
+  getBooksByTitle(
+    @Param(new LibrariesValidationPipe(bookSimpleSearchValidationSchema)) param: { title: string, libraryId: number }
+  ) {
+    return this.librariesService.findBookByTitle(param.title, param.libraryId);
   }
 
   @Get("common/libraries/:id")
@@ -122,6 +133,15 @@ export class LibrariesController {
       ...bookData,
       coverImage: file?.filename,
     });
+  }
+
+  @UseGuards(AuthenticatedGuard, RolesGuard)
+  @Post("admin/books/existing")
+  @Roles("admin", "manager")
+  addExistingBookToLibrary(
+    @Body(new LibrariesValidationPipe(addExistingBookValidationSchema)) bookData: ExistingBookDto,
+  ) {
+    return this.librariesService.addExistingBookToLibrary(bookData);
   }
 
   @UseGuards(AuthenticatedGuard, RolesGuard)

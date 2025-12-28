@@ -4,6 +4,8 @@ export interface FindBookDto {
   library: number;
   title: string;
   author: string;
+  dateStart: Date;
+  dateEnd: Date;
   availableOnly: boolean;
 }
 
@@ -39,4 +41,11 @@ export interface UpdateBookDto {
   description?: string;
   totalCopies?: number;
   availableCopies?: number;
+}
+
+export interface ExistingBookDto {
+  libraryId: number,
+  bookId: number,
+  availableCopies: number,
+  totalCopies: number,
 }
