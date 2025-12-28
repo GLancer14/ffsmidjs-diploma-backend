@@ -153,18 +153,7 @@ export class LibrariesService implements ILibrariesService {
         take: 20,
         where: {
           title: { contains: title, mode: "insensitive" },
-          
         },
-          include: {
-            library: {
-              where: {
-                libraryId: { not: libraryId }
-              },
-              select: {
-                libraryId: true,
-              }
-            }
-          }
       });
     } catch(e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === "P2002") {
@@ -314,25 +303,35 @@ export class LibrariesService implements ILibrariesService {
     });
 
     const rentedForCopiesNow = await Promise.all(availableCopiesNow.map(async (book) => {
-      const notAvailableCopiesAccordingToPeriod = await this.prisma.bookRental.findMany({
-        where: {
-          bookId: book.id,
-          dateStart: {
-            lte: params.dateEnd
+      const bookOnLibraryDataAccordingToReservedCopies = await Promise.all(book.library.map(async (bookOnLibraryData) => {
+        const amountOfReservedBooks = await this.prisma.bookRental.count({
+          where: {
+            bookId: bookOnLibraryData.bookId,
+            libraryId: bookOnLibraryData.libraryId,
+            dateStart: {
+              lte: params.dateEnd || undefined,
+            },
+            dateEnd: {
+              gte: params.dateStart || undefined,
+            }
           },
-          dateEnd: {
-            gte: params.dateStart
-          }
-        },
-        select: {
-          libraryId: true,
+        });
 
-        }
-      });
+        console.log(book.title, amountOfReservedBooks)
 
-    }))
+        return {
+          ...bookOnLibraryData,
+          availableCopies: bookOnLibraryData.availableCopies - amountOfReservedBooks,
+        };
+      }));
 
-    return availableCopiesNow
+      return {
+        ...book,
+        library: bookOnLibraryDataAccordingToReservedCopies,
+      };
+    }));
+
+    return rentedForCopiesNow;
   }
 
   addExistingBookToLibrary(bookData: ExistingBookDto) {

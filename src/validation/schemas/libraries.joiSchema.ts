@@ -4,6 +4,8 @@ export const getBooksValidationSchema = Joi.object().keys({
   library: Joi.number().optional(),
   author: Joi.string().optional().empty(""),
   title: Joi.string().optional().empty(""),
+  dateStart: Joi.date().optional().empty(""),
+  dateEnd: Joi.date().optional().empty(""),
   availableOnly: Joi.boolean().optional(),
 });
 
