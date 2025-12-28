@@ -6,11 +6,13 @@ import { LocalAuthGuard } from './guards/local.auth.guard';
 import { AuthValidationPipe } from 'src/validation/auth.pipe';
 import { registerValidationSchema } from 'src/validation/schemas/auth.joiSchema';
 import { type Request } from 'express';
+import { loginUserValidationSchema } from 'src/validation/schemas/users.joiSchema';
 
 @Controller("api")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  // @UsePipes(new AuthValidationPipe(loginUserValidationSchema))
   @UseGuards(LocalAuthGuard)
   @Post("auth/login")
   login(@Req() req: Request) {

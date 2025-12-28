@@ -1,7 +1,16 @@
 import Joi from "joi";
 
+export const loginUserValidationSchema = Joi.object().keys({
+  email: Joi.string().email().required().messages({
+    "any.required": "Почта не может быть пустой"
+  }),
+  password: Joi.string().required(),
+});
+
 export const createUserValidationSchema = Joi.object().keys({
-  email: Joi.string().email().required(),
+  email: Joi.string().email().required().messages({
+    "any.required": "Почта не может быть пустой"
+  }),
   password: Joi.string().required(),
   name: Joi.string().required(),
   contactPhone: Joi.string().optional().empty(""),

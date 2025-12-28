@@ -1,0 +1,31 @@
+services:
+    backend:
+        build: ./ffsmidjs-diploma-backend
+        volumes:
+            - ./volume:/volume
+        ports:
+            - 3000:3000
+        environment:
+            - DATABASE_URL="postgresql://postgres:1234@localhost:5432/libraries-2?schema=public"
+            - SESSION_SECRET=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+    frontend:
+        build: ./ffsmidjs-diploma-frontend
+        volumes:
+            - ./volume:/volume
+        ports:
+            - 5174:5174
+        environment:
+            - VITE_SERVER_URL=backend
+
+    postgres:
+        image: postgres:17
+        restart: always
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: 1234
+            POSTGRES_DB: libraries-2
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
