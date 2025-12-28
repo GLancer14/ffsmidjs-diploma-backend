@@ -26,14 +26,14 @@ export interface GetChatListParams {
 
 export interface ISupportRequestService {
   findSupportRequestById(id: ID): Promise<SupportRequest | null>;
-  findSupportRequests(params: GetChatListParamsDto & { user?: number }): Promise<SupportRequest[]>;
+  // findSupportRequests(params: GetChatListParamsDto & { user?: number }): Promise<SupportRequest[]>;
   sendMessage(data: SendMessageDto): Promise<Message>;
   getMessages(supportRequest: ID): Promise<Message[]>;
   subscribe(handler: (supportRequest: SupportRequest, message: Message) => void): () => void;
 }
 
 export interface ISupportRequestClientService {
-  createSupportRequest(data: CreateSupportRequestDto): Promise<SupportRequest>;
+  // createSupportRequest(data: CreateSupportRequestDto): Promise<SupportRequest>;
   markMessageAsRead(params: MarkMessageAsReadDto);
   getUnreadCount(supportRequest: ID): Promise<Message[]>;
 }

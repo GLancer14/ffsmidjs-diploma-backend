@@ -4,7 +4,6 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from 'src/users/users.module';
 import { LocalStrategy } from './strategies/local.strategy';
-import { ConfigModule } from '@nestjs/config';
 import { SessionSerializer } from './session.serializer';
 import { PrismaModule } from 'src/prisma/prisma.module';
 
@@ -13,11 +12,15 @@ import { PrismaModule } from 'src/prisma/prisma.module';
     PrismaModule,
     UsersModule,
     PassportModule.register({
-      session: true
+      session: true,
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, SessionSerializer],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    SessionSerializer,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

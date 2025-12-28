@@ -63,10 +63,6 @@ export class BookRentalService implements IBookRentalService {
     return bookRentRecord;
   }
 
-  // delete(id: ID) {
-  //   return Promise.resolve(initialBookRental);
-  // }
-
   findById(id: ID) {
     return this.prisma.bookRental.findUnique({
       where: { id },

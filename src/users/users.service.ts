@@ -43,8 +43,6 @@ export class UsersService implements IUserService {
   }
 
   findById(id: ID): Promise<User | null> {
-
-    console.log(id)
     return this.prisma.user.findUnique({
       where: { id }
     });

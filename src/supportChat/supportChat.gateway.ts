@@ -34,7 +34,6 @@ export class SupportChatGateway {
       subscribers.forEach(socketId => {
         const socket = this.getSocketById(socketId);
         if (socket) {
-          console.log(message)
           socket.emit("newMessage", {
             chatId,
             message,
@@ -70,7 +69,7 @@ export class SupportChatGateway {
     }
     this.chatSubscribers.get(chatId)?.add(client.id);
 
-    console.log("user subscribed to chat", chatId)
+    console.log("user subscribed to chat", chatId);
   }
 
   @UseGuards(SocketSessionAuthGuard)
@@ -99,7 +98,7 @@ export class SupportChatGateway {
       this.chatSubscribers.delete(chatId);
     }
 
-    console.log("chat subscriber after unsubscribe: ", this.chatSubscribers)
+    console.log("chat subscriber after unsubscribe: ", this.chatSubscribers);
   }
  
   handleDisconnect(client: Socket) {

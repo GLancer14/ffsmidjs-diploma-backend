@@ -6,19 +6,12 @@ import { Socket } from 'socket.io';
 export class SocketSessionAuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const client: Socket = context.switchToWs().getClient();
-    
     const req = (client.request as any);
-    
-    console.log(req.session, " . . . ", client.data.user)
-
     if (!req.user) {
       throw new WsException('Unauthorized: No valid session found');
     }
     
     client.data.user = req.user;
-    
-    console.log("WS guard works", req.user)
-
     return true;
   }
 }

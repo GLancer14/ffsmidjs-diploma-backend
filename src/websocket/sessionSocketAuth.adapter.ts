@@ -1,7 +1,5 @@
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { ServerOptions, Socket } from 'socket.io';
-import { createServer } from 'http';
-import session from 'express-session';
 import { RequestHandler } from 'express';
 import { INestApplication } from '@nestjs/common';
 
@@ -41,9 +39,6 @@ export class SessionSocketIoAdapter extends IoAdapter {
 
     io.use((socket: Socket, next: any) => {
       const req = socket.request as any;
-      // if ((socket.request as any).session && (socket.request as any).session.passport) {
-      //   (socket.request as any).user = (socket.request as any).session.passport.user;
-      // }
       if (req.user) {
         socket.data.user = req.user;
       }

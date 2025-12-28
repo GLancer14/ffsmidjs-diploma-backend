@@ -1,4 +1,14 @@
-import { BadRequestException, Body, Controller, Get, Post, Req, UnauthorizedException, UseGuards, UsePipes } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UnauthorizedException,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import type { RegisterUserDto, RequestUser } from 'src/users/types/dto/users';
 import { AuthenticatedGuard } from './guards/local.authenticated.guard';
@@ -12,7 +22,7 @@ import { loginUserValidationSchema } from 'src/validation/schemas/users.joiSchem
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // @UsePipes(new AuthValidationPipe(loginUserValidationSchema))
+  @UsePipes(new AuthValidationPipe(loginUserValidationSchema))
   @UseGuards(LocalAuthGuard)
   @Post("auth/login")
   login(@Req() req: Request) {

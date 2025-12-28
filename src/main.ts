@@ -17,11 +17,9 @@ async function bootstrap() {
   }
 
   const sessionSerializer = app.get(SessionSerializer);
-
   passport.serializeUser((user, done) => {
     sessionSerializer.serializeUser(user, done);
   })
-
   passport.deserializeUser((payload, done) => {
     sessionSerializer.deserializeUser(payload, done);
   })
@@ -47,12 +45,6 @@ async function bootstrap() {
   app.use(sessionMiddleware);
   app.use(passportInitialize);
   app.use(passportSession);
-
-  app.use((req, res, next) => {
-    // console.log("http session: ", req.session);
-    // console.log("http user: ", req.user);
-    next();
-  });
 
   app.useGlobalFilters(
     new GlobalExceptionFilter(),

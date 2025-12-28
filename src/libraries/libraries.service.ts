@@ -280,18 +280,6 @@ export class LibrariesService implements ILibrariesService {
           }
         }
       }
-      // where: {
-      //   OR: [
-      //     { library: {
-            
-      //     }params.libraryId || undefined },
-      //     { author: params.author },
-      //     { title: params.title },
-      //   ],
-      //   AND: [
-      //     { isAvailable: params.isAvailable },
-      //   ],
-      // }
     });
   }
 }

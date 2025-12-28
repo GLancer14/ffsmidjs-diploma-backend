@@ -18,21 +18,6 @@ export interface MessageForRequest {
 
 export type SupportRequestWithMessages = SupportRequest & { messages: MessageForRequest[] };
 
-// const initialMessage: Message = {
-//   author: 0,
-//   sentAt: new Date,
-//   text: "",
-//   readAt: new Date,
-// }
-
-// const initalSupportRequest: SupportRequest = {
-//   id: 0,
-//   user: 0,
-//   createdAt: new Date,
-//   messages: [initialMessage],
-//   isActive: true,
-// }
-
 @Injectable()
 export class SupportRequestService implements ISupportRequestService {
   constructor(
@@ -68,53 +53,53 @@ export class SupportRequestService implements ISupportRequestService {
     })
   }
 
-  async findSupportRequests(params: GetChatListParamsDto): Promise<SupportRequestWithMessages[]> {
-    const supportRequests = (await this.prisma.supportRequest.findMany({
-      skip: params.offset,
-      take: params.limit,
-      where: {
-        user: params.user,
-      },
-      include: {
-        messages: {
-          // where: {
-          //   author: params.user
-          // },
-          orderBy: {
-            sentAt: "asc",
-          }
-        },
-      }
-    }));
+  // async findSupportRequests(params: GetChatListParamsDto): Promise<SupportRequestWithMessages[]> {
+  //   const supportRequests = (await this.prisma.supportRequest.findMany({
+  //     skip: params.offset,
+  //     take: params.limit,
+  //     where: {
+  //       user: params.user,
+  //     },
+  //     include: {
+  //       messages: {
+  //         where: {
+  //           author: params.user
+  //         },
+  //         orderBy: {
+  //           sentAt: "asc",
+  //         }
+  //       },
+  //     }
+  //   }));
 
-    const allMessages = supportRequests.flatMap(sr => sr.messages);
-    const uniqueMessagesAuthors = new Set(allMessages.map(message => message.author));
+  //   const allMessages = supportRequests.flatMap(sr => sr.messages);
+  //   const uniqueMessagesAuthors = new Set(allMessages.map(message => message.author));
     
-    const authorsWithNames = await Promise.all(
-      Array.from(uniqueMessagesAuthors).map(async (authorId) => {
-        const user = await this.prisma.user.findUnique({
-          where: { id: authorId },
-        });
-        return { id: authorId, name: user?.name || "" };
-      })
-    );
+  //   const authorsWithNames = await Promise.all(
+  //     Array.from(uniqueMessagesAuthors).map(async (authorId) => {
+  //       const user = await this.prisma.user.findUnique({
+  //         where: { id: authorId },
+  //       });
+  //       return { id: authorId, name: user?.name || "" };
+  //     })
+  //   );
 
-    const supportRequestsWithAuthorNames: SupportRequestWithMessages[] = supportRequests.map(supportRequest => {
-      const messagesWithAuthorNames: MessageForRequest[] = supportRequest.messages.map(message => {
-        const authorInfo = authorsWithNames.find(author => message.author === author.id);
-        return {
-          ...message,
-          author: authorInfo?.name, 
-        } as MessageForRequest;
-      });
+  //   const supportRequestsWithAuthorNames: SupportRequestWithMessages[] = supportRequests.map(supportRequest => {
+  //     const messagesWithAuthorNames: MessageForRequest[] = supportRequest.messages.map(message => {
+  //       const authorInfo = authorsWithNames.find(author => message.author === author.id);
+  //       return {
+  //         ...message,
+  //         author: authorInfo?.name, 
+  //       } as MessageForRequest;
+  //     });
 
-      return {
-        ...supportRequest,
-        messages: messagesWithAuthorNames,
-      };
-    });
+  //     return {
+  //       ...supportRequest,
+  //       messages: messagesWithAuthorNames,
+  //     };
+  //   });
 
-    return supportRequestsWithAuthorNames;
+  //   return supportRequestsWithAuthorNames;
 
     // const uniqueMessagesAuthors = new Set(supportChat.messages.map(message => message.author));
     // const authorsWithNames = await Promise.all(Array.from(uniqueMessagesAuthors).map(async (author) => {
@@ -133,7 +118,7 @@ export class SupportRequestService implements ISupportRequestService {
 
     // supportChat.messages = supportChatMessagesWithAuthorsNames;
     // return supportChat;
-  }
+  // }
 
   async sendMessage(data: SendMessageDto): Promise<Message> {
     let supportRequest = await this.prisma.supportRequest.findUnique({

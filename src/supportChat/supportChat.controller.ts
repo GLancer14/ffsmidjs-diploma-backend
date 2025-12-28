@@ -25,22 +25,22 @@ export class SupportChatController {
     private readonly usersService: UsersService,
   ) {}
 
-  @UseGuards(AuthenticatedGuard)
+  // @UseGuards(AuthenticatedGuard)
   // @UseGuards(AuthenticatedGuard, RolesGuard)
-  @Post("client/support-requests/")
+  // @Post("client/support-requests/")
   // @Roles("client")
-  createRequest(
-    @Req() req: Request,
-    @Body(new SupportChatValidationPipe(
-      sendMessageValidationSchema
-    )) body: { text: string }
-  ) {
-    const user = req.user as RequestUser;
-    return this.supportRequestClientService.createSupportRequest({
-      text: body.text,
-      user: user.id,
-    });
-  }
+  // createRequest(
+  //   @Req() req: Request,
+  //   @Body(new SupportChatValidationPipe(
+  //     sendMessageValidationSchema
+  //   )) body: { text: string }
+  // ) {
+  //   const user = req.user as RequestUser;
+  //   return this.supportRequestClientService.createSupportRequest({
+  //     text: body.text,
+  //     user: user.id,
+  //   });
+  // }
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("client/support-requests/")

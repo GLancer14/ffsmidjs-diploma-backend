@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import bcrypt from "bcrypt";
 import { UsersService } from 'src/users/users.service';
-import { RegisterUserDto, RegisterUserResponseDto, RequestUser } from 'src/users/types/dto/users';
+import {
+  RegisterUserDto,
+  RegisterUserResponseDto,
+  RequestUser,
+} from 'src/users/types/dto/users';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +37,6 @@ export class AuthService {
         name: savedUser.name,
         contactPhone: savedUser.contactPhone || null,
       };
-      console.log(userForRegister)
 
       return userForRegister;
     }

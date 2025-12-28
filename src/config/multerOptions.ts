@@ -3,7 +3,6 @@ import { existsSync, mkdirSync } from "fs";
 import { diskStorage } from "multer";
 
 const multerOptions = {
-    // dest: "../uploads/images",
     storage: diskStorage({
       destination: (req, file, cb) => {
         const uploadPath = "uploads/images";
