@@ -22,6 +22,11 @@ async function bootstrap() {
     throw new InternalServerErrorException("Отсутствуют данные администратора");
   }
 
+  if (!process.env.CLIENT_URL) {
+    console.log("Отсутствует адрес клиента");
+    throw new InternalServerErrorException("Отсутствуют данные администратора");
+  }
+
   const sessionSerializer = app.get(SessionSerializer);
   passport.serializeUser((user, done) => {
     sessionSerializer.serializeUser(user, done);
@@ -31,7 +36,7 @@ async function bootstrap() {
   })
 
   app.enableCors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 
@@ -63,15 +68,15 @@ async function bootstrap() {
     passportSession,
   ));
 
-  const usersService = app.get(UsersService);
+  // const usersService = app.get(UsersService);
   
-  usersService.upsertAdmin({
-    email: process.env.ADMIN_EMAIL,
-    password: process.env.ADMIN_PASSWORD,
-    name: "администратор",
-    contactPhone: "+79001234567",
-    role: "admin",
-  });
+  // usersService.upsertAdmin({
+  //   email: process.env.ADMIN_EMAIL,
+  //   password: process.env.ADMIN_PASSWORD,
+  //   name: "администратор",
+  //   contactPhone: "+79001234567",
+  //   role: "admin"
+  // });
 
   await app.listen(process.env.PORT ?? 3000);
 }

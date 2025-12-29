@@ -31,6 +31,7 @@ services:
             - SESSION_SECRET=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
             - ADMIN_EMAIL=admin@test.ru
             - ADMIN_PASSWORD=12345678
+            - CLIENT_URL=frontend
 
     frontend:
         build: ./ffsmidjs-diploma-frontend
@@ -39,4 +40,4 @@ services:
         ports:
             - 5173:5173
         environment:
-            - VITE_SERVER_URL=http://localhost:3000
+            - VITE_SERVER_URL=backend

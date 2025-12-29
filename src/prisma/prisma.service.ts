@@ -1,6 +1,8 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/prisma/client";
+import { PrismaClient, User } from "../generated/prisma/client";
+import { RegisterUserDto } from "src/users/types/dto/users";
+import bcrypt from "bcrypt";
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
@@ -11,9 +13,49 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
   onModuleInit() {
     this.$connect;
+
+    if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+      console.log("Отсутствуют данные администратора");
+      throw new InternalServerErrorException("Отсутствуют данные администратора");
+    }
+    
+    this.upsertAdmin({
+      email: process.env.ADMIN_EMAIL,
+      password: process.env.ADMIN_PASSWORD,
+      name: "администратор",
+      contactPhone: "+79001234567",
+      role: "admin",
+    })
   }
 
   onModuleDestroy() {
     this.$disconnect;
+  }
+
+  async upsertAdmin(data: RegisterUserDto): Promise<User | undefined> {
+    const { password, ...userWithoutPass } = data;
+    const passwordHash = await bcrypt.hash(data.password, 10);
+    const userWithHashedPass = {
+      ...userWithoutPass,
+      passwordHash,
+    };
+
+    const user = await this.user.upsert({
+      where: { email: data.email },
+      update: {},
+      create: { ...userWithHashedPass },
+    });
+
+    const requestCreationTime = new Date();
+    await this.supportRequest.upsert({
+      where: { user: user.id },
+      update: {},
+      create: {
+        user: user.id,
+        createdAt: requestCreationTime
+      },
+    });
+
+    return user;
   }
 }
