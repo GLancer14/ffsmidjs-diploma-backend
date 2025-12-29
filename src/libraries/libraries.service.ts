@@ -269,8 +269,8 @@ export class LibrariesService implements ILibrariesService {
         AND: [
           {
             OR: [
-              params.author ? { author: params.author } : {},
-              params.title ? { title: params.title } : {},
+              params.author ? { author: { contains: params.author } } : {},
+              params.title ? { title: { contains: params.title } } : {},
               params.libraryId ? { 
                 library: {
                   some: {
@@ -316,8 +316,6 @@ export class LibrariesService implements ILibrariesService {
             }
           },
         });
-
-        console.log(book.title, amountOfReservedBooks)
 
         return {
           ...bookOnLibraryData,

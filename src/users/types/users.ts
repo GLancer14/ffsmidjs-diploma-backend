@@ -5,6 +5,7 @@ export interface SearchUserParams {
   limit: number;
   offset: number;
   searchString: string;
+  role: string;
   // email: string;
   // name: string;
   // contactPhone: string;

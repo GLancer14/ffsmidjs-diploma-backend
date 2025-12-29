@@ -19,13 +19,13 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
       throw new InternalServerErrorException("Отсутствуют данные администратора");
     }
 
-      this.upsertAdmin({
-        email: process.env.ADMIN_EMAIL,
-        password: process.env.ADMIN_PASSWORD,
-        name: "администратор",
-        contactPhone: "+79001234567",
-        role: "admin",
-      })
+    this.upsertAdmin({
+      email: process.env.ADMIN_EMAIL,
+      password: process.env.ADMIN_PASSWORD,
+      name: "администратор",
+      contactPhone: "+79001234567",
+      role: "admin",
+    });
   }
 
   onModuleDestroy() {
@@ -57,7 +57,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
           update: {},
           create: {
             user: user.id,
-            createdAt: requestCreationTime
+            createdAt: requestCreationTime,
           },
         });
       
@@ -66,7 +66,6 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
         lastError = error;
         console.log(`Failed to create admin user. Retries left: ${retries - 1}`);
         retries -= 1;
-        
         await new Promise(resolve => setTimeout(resolve, 2000));
       }
     }

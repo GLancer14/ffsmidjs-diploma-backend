@@ -11,33 +11,6 @@ import { User } from 'src/generated/prisma/client';
 export class UsersService implements IUserService {
   constructor(private prisma: PrismaService) {}
 
-  async upsertAdmin(data: RegisterUserDto): Promise<User | undefined> {
-    const { password, ...userWithoutPass } = data;
-    const passwordHash = await bcrypt.hash(data.password, 10);
-    const userWithHashedPass = {
-      ...userWithoutPass,
-      passwordHash,
-    };
-
-    const user = await this.prisma.user.upsert({
-      where: { email: data.email },
-      update: {},
-      create: { ...userWithHashedPass },
-    });
-
-    const requestCreationTime = new Date();
-    await this.prisma.supportRequest.upsert({
-      where: { user: user.id },
-      update: {},
-      create: {
-        user: user.id,
-        createdAt: requestCreationTime
-      },
-    });
-
-    return user;
-  }
-
   async create(data: RegisterUserDto): Promise<User | undefined> {
     try {
       const { password, ...userWithoutPass } = data;
@@ -127,28 +100,64 @@ export class UsersService implements IUserService {
     return deletedUser;
   }
 
-  findAll(params: SearchUserParams): Promise<User[]> {
+  async findAll(params: SearchUserParams): Promise<Array<User & { lastActivity: Date }>> {
     let orCondition;
     if (params) {
       orCondition = [
-        { email: { contains: params.searchString } },
-        { name: { contains: params.searchString } },
-        { contactPhone: { contains: params.searchString } },
+        { email: { contains: params.searchString, mode: "insensitive" } },
+        { name: { contains: params.searchString, mode: "insensitive" } },
+        { contactPhone: { contains: params.searchString, mode: "insensitive" } },
       ];
     }
-    
-    // const andCondition = [
-    //   params.email ? { email: { contains: params.email } } : { email: undefined },
-    //   params.name ? { name: { contains: params.name } } : { name: undefined },
-    //   params.contactPhone ? { contactPhone: { contains: params.contactPhone } } : { contactPhone: undefined },
-    // ].filter(Boolean);
 
-    return this.prisma.user.findMany({
+    const foundUsers = await this.prisma.user.findMany({
       skip: params.offset || undefined,
       take: params.limit || undefined,
-      // where: andCondition.length !== 0 ? { AND: andCondition } : undefined,
-      where: orCondition.length !== 0 ? { OR: orCondition } : undefined,
+      where: orCondition.length !== 0
+        ? { OR: orCondition , AND: {role: params.role}}
+        : { role: params.role },
+      include: {
+        bookRents: {
+          select: {
+            dateEnd: true,
+          },
+          where: {
+            status: "active",
+          }
+        }
+      }
     });
+
+    return await Promise.all(foundUsers.map(async (user) => {
+      const lastMessage = await this.prisma.message.aggregate({
+        where: {
+          author: user.id
+        },
+        _max: {
+          sentAt: true,
+        }
+      });
+
+      const lastRentEnd = await this.prisma.bookRental.aggregate({
+        where: {
+          userId: user.id
+        },
+        _max: {
+          dateEnd: true,
+        }
+      });
+
+      const maxDate = new Date(Math.max(
+        lastRentEnd._max.dateEnd?.getTime() || 0,
+        lastMessage._max.sentAt?.getTime() || 0
+      ));
+      
+
+      return {
+        ...user,
+        lastActivity: new Date(maxDate)
+      }
+    }))
   }
 
   getUsersCount(params: { searchString: string }): Promise<number> {

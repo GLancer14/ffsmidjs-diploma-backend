@@ -100,6 +100,7 @@ export class UsersController {
       limit: query.limit,
       offset: query.offset,
       searchString: query.searchString,
+      role: query.role,
       // email: query.email,
       // name: query.name,
       // contactPhone: query.contactPhone,

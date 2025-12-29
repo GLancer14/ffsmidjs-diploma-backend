@@ -5,23 +5,14 @@ import { BookRentalDto, BookRentalResponseDto } from './types/dto/bookRental';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BookRental } from 'src/generated/prisma/client';
 
-// const initialBookRental: BookRental = {
-//   id: 0,
-//   userId: 0,
-//   libraryId: 0,
-//   bookId: 0,
-//   dateStart: new Date(),
-//   dateEnd: new Date(),
-//   status: "reserved",
-//   // createdAt: new Date(),
-//   // updatedAt: new Date(),
-// }
-
 @Injectable()
 export class BookRentalService implements IBookRentalService {
   constructor(private prisma: PrismaService) {}
 
   async rentBook(data: BookRentalDto & { userId: ID }): Promise<BookRental> {
+    const status = new Date() >= new Date(data.dateStart) && new Date() <= new Date(data.dateEnd)
+      ? "active"
+      : "reserved";
     const bookRentRecord = await this.prisma.bookRental.create({
       data: {
         userId: data.userId,
@@ -29,6 +20,7 @@ export class BookRentalService implements IBookRentalService {
         bookId: data.bookId,
         dateStart: new Date(data.dateStart),
         dateEnd: new Date(data.dateEnd),
+        status: status,
       }
     });
 
@@ -36,7 +28,7 @@ export class BookRentalService implements IBookRentalService {
       data: {
         availableCopies: {
           decrement: 1
-        }
+        },
       },
       where: {
         bookId_libraryId: {

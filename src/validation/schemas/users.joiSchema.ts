@@ -38,6 +38,7 @@ export const findUserValidationSchema = Joi.object().keys({
   limit: Joi.number().optional(),
   offset: Joi.number().optional(),
   searchString: Joi.string().optional().empty(""),
+  role: Joi.string().optional().empty(""),
   // email: Joi.string().optional().empty(""),
   // name: Joi.string().optional().empty(""),
   // contactPhone: Joi.string().optional().empty(""),
