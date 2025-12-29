@@ -15,6 +15,7 @@ export interface IUserService {
   findById(id: ID): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
   findAll(params: SearchUserParams): Promise<User[]>;
+  // upsertAdmin(data: Partial<User>): Promise<User | undefined>;
 }
 
 export type Role = "client" | "admin" | "manager";

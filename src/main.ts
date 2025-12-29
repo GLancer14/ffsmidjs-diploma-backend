@@ -8,12 +8,18 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { PrismaClientExceptionFilter } from './prisma/prisma.exceptionFilter';
 import { SessionSocketIoAdapter } from './websocket/sessionSocketAuth.adapter';
 import { SessionSerializer } from './auth/session.serializer';
+import { UsersService } from './users/users.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   if (!process.env.SESSION_SECRET) {
     console.log("Отсутствует ключ сессии");
     throw new InternalServerErrorException("Отсутствует ключ сессии");
+  }
+
+  if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+    console.log("Отсутствуют данные администратора");
+    throw new InternalServerErrorException("Отсутствуют данные администратора");
   }
 
   const sessionSerializer = app.get(SessionSerializer);
@@ -56,6 +62,16 @@ async function bootstrap() {
     passportInitialize,
     passportSession,
   ));
+
+  const usersService = app.get(UsersService);
+  
+  usersService.upsertAdmin({
+    email: process.env.ADMIN_EMAIL,
+    password: process.env.ADMIN_PASSWORD,
+    name: "администратор",
+    contactPhone: "+79001234567",
+    role: "admin",
+  });
 
   await app.listen(process.env.PORT ?? 3000);
 }

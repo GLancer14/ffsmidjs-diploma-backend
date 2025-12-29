@@ -29,6 +29,8 @@ services:
         environment:
             - DATABASE_URL=postgresql://postgres:1234@postgres:5432/libraries-2?schema=public
             - SESSION_SECRET=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+            - ADMIN_EMAIL=admin@test.ru
+            - ADMIN_PASSWORD=12345678
 
     frontend:
         build: ./ffsmidjs-diploma-frontend

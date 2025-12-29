@@ -6,6 +6,7 @@ export interface RegisterUserDto {
   password: string;
   name: string;
   contactPhone?: string;
+  role?: string;
 }
 
 export interface LoginUserDto {

@@ -11,6 +11,33 @@ import { User } from 'src/generated/prisma/client';
 export class UsersService implements IUserService {
   constructor(private prisma: PrismaService) {}
 
+  async upsertAdmin(data: RegisterUserDto): Promise<User | undefined> {
+    const { password, ...userWithoutPass } = data;
+    const passwordHash = await bcrypt.hash(data.password, 10);
+    const userWithHashedPass = {
+      ...userWithoutPass,
+      passwordHash,
+    };
+
+    const user = await this.prisma.user.upsert({
+      where: { email: data.email },
+      update: {},
+      create: { ...userWithHashedPass },
+    });
+
+    const requestCreationTime = new Date();
+    await this.prisma.supportRequest.upsert({
+      where: { user: user.id },
+      update: {},
+      create: {
+        user: user.id,
+        createdAt: requestCreationTime
+      },
+    });
+
+    return user;
+  }
+
   async create(data: RegisterUserDto): Promise<User | undefined> {
     try {
       const { password, ...userWithoutPass } = data;

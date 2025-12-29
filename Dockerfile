@@ -6,6 +6,8 @@ COPY package*.json ./
 COPY ./prisma ./prisma
 RUN npm install
 ENV DATABASE_URL="postgresql://postgres:1234@postgres:5432/libraries-2?schema=public"
+ENV ADMIN_EMAIL=admin@test.ru
+ENV ADMIN_PASSWORD=12345678
 COPY *.js ./
 COPY *.mjs ./
 COPY *.json ./
