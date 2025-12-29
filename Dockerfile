@@ -12,7 +12,6 @@ COPY *.json ./
 COPY *.ts ./
 COPY ./src ./src
 RUN npx prisma generate
-#RUN npx prisma migrate dev --name libraries-2
 
 EXPOSE 3000
 
