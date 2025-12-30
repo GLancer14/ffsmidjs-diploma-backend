@@ -13,7 +13,6 @@ COPY *.mjs ./
 COPY *.json ./
 COPY *.ts ./
 COPY ./src ./src
-RUN npx prisma generate
 
 EXPOSE 3000
 
