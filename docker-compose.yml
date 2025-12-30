@@ -14,8 +14,8 @@ services:
             test: ["CMD-SHELL", "pg_isready -U postgres"]
             interval: 10s
             timeout: 5s
-            retries: 5
-            start_period: 30s
+            retries: 30
+            start_period: 40s
 
     backend:
         build: ./ffsmidjs-diploma-backend
@@ -31,7 +31,7 @@ services:
             - SESSION_SECRET=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
             - ADMIN_EMAIL=admin@test.ru
             - ADMIN_PASSWORD=12345678
-            - CLIENT_URL=frontend
+            - CLIENT_URL=http://frontend:5173
 
     frontend:
         build: ./ffsmidjs-diploma-frontend
@@ -40,4 +40,4 @@ services:
         ports:
             - 5173:5173
         environment:
-            - VITE_SERVER_URL=backend
+            - VITE_SERVER_URL=http://localhost:3000
