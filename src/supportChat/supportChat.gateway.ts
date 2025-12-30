@@ -8,7 +8,17 @@ import { Server, Socket } from "socket.io";
 import { Message, SupportRequest } from "src/generated/prisma/client";
 import { SocketSessionAuthGuard } from "./guards/socketSessionAuth.guard";
 
-@WebSocketGateway({ cors: { origin: [process.env.CLIENT_URL] } })
+@WebSocketGateway({ cors:
+  {
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:5173", 
+      "http://frontend:5173",
+      "http://127.0.0.1:3000",
+      "http://127.0.0.1:5173",
+    ]
+  }
+})
 export class SupportChatGateway {
   @WebSocketServer() server: Server;
   private userChatRooms = new Map<number, Set<number>>();
