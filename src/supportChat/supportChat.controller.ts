@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nest
 import { SupportRequestService } from './supportRequest.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { SupportRequestClientService } from './supportRequestClient.service';
-import type { GetChatListParamsDto, CreateSupportRequestDto } from './types/dto/supportChat';
+import type { GetChatListParamsDto } from './types/dto/supportChat';
 import { type Request } from 'express';
 import { type ID } from 'src/types/commonTypes';
 import { SupportRequestEmployeeService } from './supportRequestEmployee.service';
@@ -13,7 +13,6 @@ import { UsersService } from 'src/users/users.service';
 import { ClientIdCheckGuard } from './guards/clientCheck.guard';
 import { SupportChatValidationPipe } from 'src/validation/supportChat.pipe';
 import { markAsReadValidationSchema, sendMessageValidationSchema, supportSearchParamsValidationSchema } from 'src/validation/schemas/supportChat.joiSchema';
-import { type GetChatListParams } from './types/supportChat';
 import { idValidationSchema } from 'src/validation/schemas/common.joiSchema';
 
 @Controller("api")
@@ -25,23 +24,6 @@ export class SupportChatController {
     private readonly usersService: UsersService,
   ) {}
 
-  // @UseGuards(AuthenticatedGuard)
-  // @UseGuards(AuthenticatedGuard, RolesGuard)
-  // @Post("client/support-requests/")
-  // @Roles("client")
-  // createRequest(
-  //   @Req() req: Request,
-  //   @Body(new SupportChatValidationPipe(
-  //     sendMessageValidationSchema
-  //   )) body: { text: string }
-  // ) {
-  //   const user = req.user as RequestUser;
-  //   return this.supportRequestClientService.createSupportRequest({
-  //     text: body.text,
-  //     user: user.id,
-  //   });
-  // }
-
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("client/support-requests/")
   @Roles("client")
@@ -51,35 +33,6 @@ export class SupportChatController {
     const user = req.user as RequestUser;
     return await this.supportRequestClientService.findClientSupportRequest(user.id);
   }
-
-  // @UseGuards(AuthenticatedGuard, RolesGuard)
-  // @Get("client/support-requests/")
-  // @Roles("client")
-  // async getClientRequests(
-  //   @Req() req: Request,
-  //   @Query(new SupportChatValidationPipe(
-  //     supportSearchParamsValidationSchema
-  //   )) query: GetChatListParamsDto
-  // ) {
-  //   const user = req.user as RequestUser;
-  //   const supportRequests = await this.supportRequestService.findSupportRequests({
-  //     currentUser: user.id,
-  //     limit: query.limit,
-  //     offset: query.offset,
-  //     isActive: query.isActive,
-  //   });
-  //   const supportRequestsForResponse = await Promise.all(supportRequests.map(async (supportRequest) => {
-  //     return {
-  //       id: supportRequest.id,
-  //       createdAt: supportRequest.createdAt,
-  //       hasNewMessages: Boolean(
-  //         (await this.supportRequestClientService.getUnreadCount(supportRequest.id)).length
-  //       ),
-  //     };
-  //   }));
-
-  //   return supportRequestsForResponse;
-  // }
 
   @UseGuards(AuthenticatedGuard, RolesGuard)
   @Get("manager/support-requests/")
@@ -93,47 +46,6 @@ export class SupportChatController {
     return await this.supportRequestService.findUserSupportRequestForManager(query.user);
   }
 
-  // @UseGuards(AuthenticatedGuard, RolesGuard)
-  // @Get("manager/support-requests/")
-  // @Roles("admin", "manager")
-  // async getRequestsForManager(
-  //   @Req() req: Request,
-  //   @Query(new SupportChatValidationPipe(
-  //     supportSearchParamsValidationSchema
-  //   )) query: GetChatListParamsDto
-  // ) {
-  //   const currentUser = req.user as RequestUser;
-  //   const supportRequests = (await this.supportRequestService.findSupportRequests({
-  //     currentUser: currentUser.id,
-  //     user: query.user,
-  //     limit: query.limit,
-  //     offset: query.offset,
-  //     // isActive: query.isActive,
-  //   }))[0];
-
-    // const supportRequestsForResponse = await Promise.all(supportRequests.map(async (supportRequest) => {
-    //   const clientData = await this.usersService.findById(supportRequest.user);
-
-    //   return {
-    //     id: supportRequest.id,
-    //     createdAt: supportRequest.createdAt,
-    //     isActive: supportRequest.isActive,
-    //     hasNewMessages: Boolean(
-    //       (await this.supportRequestEmployeeService.getUnreadCount(supportRequest.id)).length
-    //     ),
-    //     messages: supportRequest.messages,
-    //     client: {
-    //       id: clientData?.id,
-    //       name: clientData?.name,
-    //       email: clientData?.email,
-    //       contactPhone: clientData?.contactPhone,
-    //     },
-    //   };
-    // }));
-
-    // return supportRequests;
-  // }
-
   @UseGuards(
     AuthenticatedGuard,
     RolesGuard,
@@ -146,14 +58,6 @@ export class SupportChatController {
   ) params: { id: ID }) {
     return this.supportRequestService.getMessages(params.id);
   }
-
-  // @Get("common/support-requests/:id/messages/count")
-  // @Roles("manager", "client")
-  // getUnreadMessagesCountForClient(@Param(
-  //   new SupportChatValidationPipe(idValidationSchema)
-  // ) params: { id: ID }) {
-  //   return this.supportRequestClientService.getUnreadCount(params.id);
-  // }
 
   @UseGuards(
     AuthenticatedGuard,
