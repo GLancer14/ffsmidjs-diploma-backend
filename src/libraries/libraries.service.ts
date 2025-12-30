@@ -144,6 +144,13 @@ export class LibrariesService implements ILibrariesService {
   findBookById(id: ID): Promise<Book | null> {
     return this.prisma.book.findUnique({
       where: { id },
+      include: {
+        library: {
+          include: {
+            library: true,
+          }
+        }
+      },
     });
   }
 
